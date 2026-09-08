@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Agua Para Perros - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #f9f9f7;
+            --bg-dark: #1a1a19;
+            --text-light: #0b0b0b;
+            --text-dark: #f0efec;
+            --border-light: rgba(11, 11, 11, 0.1);
+            --border-dark: rgba(255, 255, 255, 0.1);
+            --card-light: #ffffff;
+            --card-dark: #2c2c2a;
+            --accent: #378add;
+            --success: #10a830;
+            --danger: #d03b3b;
+            --warning: #daa500;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-light);
+            border-bottom: 0.5px solid var(--border-light);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.dark-mode .header {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 0.5px solid var(--border-light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        body.dark-mode .theme-toggle {
+            border-color: var(--border-dark);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(11, 11, 11, 0.05);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 0.5px solid var(--border-light);
+            background: var(--card-light);
+            gap: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        body.dark-mode .tabs {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: rgba(11, 11, 11, 0.6);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .tab {
+            color: rgba(240, 239, 236, 0.6);
+        }
+
+        .tab.active {
+            color: var(--text-light);
+            border-bottom-color: var(--accent);
+        }
+
+        body.dark-mode .tab.active {
+            color: var(--text-dark);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 1.5rem 1rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: grid;
+            gap: 2rem;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .metric-card {
+            background: var(--card-light);
+            border: 0.5px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        body.dark-mode .metric-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: rgba(11, 11, 11, 0.6);
+            margin-bottom: 8px;
+        }
+
+        body.dark-mode .metric-label {
+            color: rgba(240, 239, 236, 0.6);
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .metric-delta {
+            font-size: 11px;
+            color: rgba(11, 11, 11, 0.4);
+        }
+
+        body.dark-mode .metric-delta {
+            color: rgba(240, 239, 236, 0.4);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 12px;
+            border: 0.5px solid var(--border-light);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .btn {
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        .btn:hover {
+            background: rgba(11, 11, 11, 0.05);
+        }
+
+        body.dark-mode .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #2e6fb8;
+        }
+
+        .btn-confirm {
+            background: var(--success);
+            color: white;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-light);
+            border: 0.5px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        body.dark-mode .card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        .card h2 {
+            margin: 0 0 1.5rem 0;
+            font-size: 16px;
+        }
+
+        /* Price List */
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(11, 11, 11, 0.02);
+            border: 0.5px solid var(--border-light);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .price-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-dark);
+        }
+
+        .price-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex: 1;
+        }
+
+        .size-label {
+            font-weight: 500;
+            min-width: 60px;
+        }
+
+        .price-display {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .price-edit input {
+            width: 80px;
+            padding: 6px 8px;
+            border: 0.5px solid var(--border-light);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        body.dark-mode .price-edit input {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        .price-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* Variants */
+        .variant-card {
+            padding: 1rem;
+            background: rgba(11, 11, 11, 0.02);
+            border: 0.5px solid var(--border-light);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .variant-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-dark);
+        }
+
+        .variant-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .stock-badge {
+            font-size: 11px;
+            background: rgba(11, 11, 11, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        body.dark-mode .stock-badge {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .colors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .color-tag {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: white;
+            border: 0.5px solid var(--border-light);
+            border-radius: 4px;
+        }
+
+        body.dark-mode .color-tag {
+            background: var(--bg-dark);
+            border-color: var(--border-dark);
+        }
+
+        /* Issues */
+        .issue-card {
+            padding: 1rem;
+            background: rgba(11, 11, 11, 0.02);
+            border: 0.5px solid var(--border-light);
+            border-left: 3px solid rgba(11, 11, 11, 0.3);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .issue-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-dark);
+            border-left-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .issue-card.danger {
+            border-left-color: var(--danger);
+        }
+
+        .issue-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .issue-card.success {
+            border-left-color: var(--success);
+        }
+
+        .issue-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .issue-desc {
+            font-size: 12px;
+            color: rgba(11, 11, 11, 0.7);
+            margin: 0;
+        }
+
+        body.dark-mode .issue-desc {
+            color: rgba(240, 239, 236, 0.7);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 0.5px solid var(--border-light);
+            font-size: 12px;
+            color: rgba(11, 11, 11, 0.6);
+            background: var(--card-light);
+        }
+
+        body.dark-mode .footer {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+            color: rgba(240, 239, 236, 0.6);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem 0.75rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-content">
+                <h1>Agua Para Perros</h1>
+                <button class="theme-toggle" onclick="toggleDarkMode()" title="Cambiar tema">🌙</button>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab" onclick="switchTab('pricing')">💰 Precios</button>
+            <button class="tab" onclick="switchTab('inventory')">📦 Inventario</button>
+            <button class="tab" onclick="switchTab('audit')">✓ Auditoría</button>
+            <button class="tab" onclick="switchTab('content')">🎨 Creativo</button>
+        </nav>
+
+        <div id="notification" class="notification" style="display:none;"></div>
+
+        <main class="content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="section active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Precio promedio</div>
+                        <div class="metric-value" id="avgPrice">€28,28</div>
+                        <div class="metric-delta">de 3 tamaños</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Variantes activas</div>
+                        <div class="metric-value">18</div>
+                        <div class="metric-delta">3 tamaños × 6 colores</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Stock total</div>
+                        <div class="metric-value">180</div>
+                        <div class="metric-delta">en AutoDS</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Audit score</div>
+                        <div class="metric-value">43/100</div>
+                        <div class="metric-delta">6 problemas</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Acciones rápidas</h2>
+                    <div class="grid">
+                        <button class="btn" onclick="copyText('Ver analytics últimos 30 días')">📊 Analytics</button>
+                        <button class="btn" onclick="copyText('Revisar inventario por variante')">📦 Inventario</button>
+                        <button class="btn" onclick="copyText('Auditoría completa de confianza')">✓ Auditoría</button>
+                        <button class="btn" onclick="copyText('Crear anuncio TikTok optimizado')">🎵 TikTok</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing -->
+            <section id="pricing" class="section">
+                <div class="card">
+                    <h2>Gestión de precios</h2>
+                    <div id="priceList"></div>
+                    <button class="btn-primary" onclick="copyText('Sincronizar todos los precios en Shopify')">Sincronizar con Shopify</button>
+                </div>
+            </section>
+
+            <!-- Inventory -->
+            <section id="inventory" class="section">
+                <div class="card">
+                    <h2>Control de inventario</h2>
+                    <div id="inventoryList"></div>
+                </div>
+            </section>
+
+            <!-- Audit -->
+            <section id="audit" class="section">
+                <div class="card">
+                    <h2>Auditoría de confianza</h2>
+                    <div id="auditList"></div>
+                </div>
+            </section>
+
+            <!-- Content -->
+            <section id="content" class="section">
+                <div class="card">
+                    <h2>Generador de contenido</h2>
+                    <p style="margin: 0 0 1.5rem 0; font-size: 13px; color: rgba(11, 11, 11, 0.7);">Genera anuncios optimizados para TikTok y Meta basados en tu audiencia.</p>
+                    <div class="grid">
+                        <button class="btn" onclick="copyText('Genera 5 hooks para TikTok del botellas agua perros')">🎣 Hook TikTok</button>
+                        <button class="btn" onclick="copyText('Crea copy de 150 caracteres para Facebook/Instagram')">📝 Copy Meta</button>
+                        <button class="btn" onclick="copyText('Sugiere storyboard para video de 15 segundos')">📹 Storyboard</button>
+                        <button class="btn" onclick="copyText('Keywords y hashtags para maximizar alcance TikTok')">🏷️ Keywords</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Agua Para Perros Dashboard • v1.0 • <a href="https://aguaparaperros.store" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">Visit store</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const prices = {
+            '300ml': 24.95,
+            '350ml': 27.95,
+            '550ml': 32.95
+        };
+
+        const variants = [
+            { size: '300ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 },
+            { size: '350ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 },
+            { size: '550ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 }
+        ];
+
+        const issues = [
+            { severity: 'danger', title: 'Logo placeholder', desc: 'Usa "TIENDATIENDA" genérico. Reemplazar con logo SVG.' },
+            { severity: 'danger', title: 'Shipping claims falsos', desc: 'Dice "Spain fulfillment" pero viene de China (15-30 días).' },
+            { severity: 'warning', title: 'Themes duplicados', desc: 'Tienes 2 temas activos. Limpiar antes de escalar.' },
+            { severity: 'warning', title: 'AutoDS sync risk', desc: 'Puede sobrescribir cambios de precios manualmente.' },
+            { severity: 'success', title: 'Reviews limpias', desc: 'Las fake reviews fueron removidas correctamente.' }
+        ];
+
+        function initApp() {
+            renderPrices();
+            renderInventory();
+            renderAudit();
+            updateAvgPrice();
+            loadDarkMode();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function renderPrices() {
+            const html = Object.entries(prices).map(([size, price]) => `
+                <div class="price-item">
+                    <div class="price-info">
+                        <div class="size-label">${size}</div>
+                        <div class="price-display">€${price.toFixed(2)}</div>
+                    </div>
+                    <div class="price-actions">
+                        <button class="btn" onclick="editPrice('${size}')">Editar</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('priceList').innerHTML = html;
+        }
+
+        function editPrice(size) {
+            const newPrice = prompt(`Nuevo precio para ${size}:`, prices[size]);
+            if (newPrice && !isNaN(newPrice)) {
+                prices[size] = parseFloat(newPrice);
+                renderPrices();
+                updateAvgPrice();
+                showNotification(`✓ Precio del ${size} actualizado a €${parseFloat(newPrice).toFixed(2)}`);
+            }
+        }
+
+        function updateAvgPrice() {
+            const avg = ((prices['300ml'] + prices['350ml'] + prices['550ml']) / 3).toFixed(2);
+            document.getElementById('avgPrice').textContent = `€${avg}`;
+        }
+
+        function renderInventory() {
+            const html = variants.map(v => `
+                <div class="variant-card">
+                    <div class="variant-header">
+                        <div>${v.size}</div>
+                        <div class="stock-badge">${v.stock} unidades/variante</div>
+                    </div>
+                    <div class="colors-list">
+                        ${v.colors.map(c => `<span class="color-tag">${c}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('inventoryList').innerHTML = html;
+        }
+
+        function renderAudit() {
+            const html = issues.map(issue => `
+                <div class="issue-card ${issue.severity}">
+                    <div class="issue-title">
+                        <span>${issue.severity === 'danger' ? '🔴' : issue.severity === 'warning' ? '🟡' : '✅'}</span>
+                        ${issue.title}
+                    </div>
+                    <div class="issue-desc">${issue.desc}</div>
+                </div>
+            `).join('');
+            document.getElementById('auditList').innerHTML = html;
+        }
+
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.style.display = 'block';
+            setTimeout(() => notif.style.display = 'none', 2500);
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            showNotification('✓ Copiado al portapapeles');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            document.querySelector('.theme-toggle').textContent = icon;
+        }
+
+        function loadDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true' || window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+            }
+            updateThemeIcon();
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
