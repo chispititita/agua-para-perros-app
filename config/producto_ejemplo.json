@@ -1,0 +1,12 @@
+{
+  "titulo": "Botella Bebedero Portátil para Perros",
+  "descripcion_html": "<p>Botella bebedero portátil para paseos y viajes con tu perro.</p>",
+  "imagenes": [
+    "https://example.com/fotos/bebedero-1.jpg",
+    "https://example.com/fotos/bebedero-2.jpg"
+  ],
+  "variantes": [
+    {"opcion": "300ml", "costo": 4.5, "stock": 30},
+    {"opcion": "550ml", "costo": 6.0, "stock": 30}
+  ]
+}

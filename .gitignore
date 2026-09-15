@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+config/config.json
+logs/*.json
+investigacion/mi_candidato.json

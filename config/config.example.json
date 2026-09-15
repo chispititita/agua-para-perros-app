@@ -1,0 +1,19 @@
+{
+  "tienda_dominio": "mi-tienda-dev.myshopify.com",
+  "admin_api_token": "shpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "api_version": "2026-01",
+  "location_id": "gid://shopify/Location/00000000",
+  "idioma": "es",
+  "moneda": "EUR",
+  "pais_envio": "ES",
+  "margen_objetivo": {
+    "multiplicador": 4.0
+  },
+  "datos_negocio": {
+    "nombre_tienda": "Mi Tienda",
+    "email_contacto": "contacto@mitienda.com",
+    "direccion_legal": "Calle Falsa 123, Madrid, España",
+    "politica_devoluciones_dias": 14,
+    "tiempo_envio_estimado": "5-10 días laborables"
+  }
+}
