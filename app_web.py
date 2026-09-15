@@ -34,6 +34,10 @@ LOG_PRODUCTOS = "logs/historial_productos.json"
 LOG_TESTS = "logs/tests_anuncios.json"
 CANDIDATO_PATH = "investigacion/mi_candidato.json"
 
+# Se sube a mano en cada cambio relevante — sirve para confirmar, mirando
+# el pie de página, si estás corriendo la copia más reciente de la app.
+VERSION = "2026-09-15.4"
+
 
 # ---------- utilidades de datos ----------
 
@@ -110,13 +114,14 @@ BASE = """
   <div class="flash {{ categoria }}">{{ mensaje }}</div>
 {% endfor %}
 {{ contenido | safe }}
+<p style="color:#999; font-size:0.75rem; margin-top:40px;">versión {{ version }}</p>
 </body>
 </html>
 """
 
 
 def render(contenido: str) -> str:
-    return render_template_string(BASE, contenido=contenido)
+    return render_template_string(BASE, contenido=contenido, version=VERSION)
 
 
 # ---------- páginas ----------
@@ -291,8 +296,17 @@ def oauth_callback():
         flash("La conexión no se pudo verificar (state inválido). Inténtalo de nuevo.", "error")
         return redirect(url_for("configuracion"))
 
-    if not shopify_oauth.hmac_valido(parametros):
-        flash("La respuesta de Shopify no pasó la verificación de seguridad (HMAC).", "error")
+    diag = shopify_oauth.diagnostico_hmac(parametros)
+    if not diag["coincide"]:
+        flash(
+            "La respuesta de Shopify no pasó la verificación de seguridad (HMAC). "
+            f"Detalle técnico — longitud del client secret cargado: {diag['client_secret_len']} "
+            f"(debe ser mayor que 0; si es 0, el .env no se está leyendo). "
+            f"hmac recibido: {diag['hmac_recibido'][:12]}... | "
+            f"hmac calculado: {diag['hmac_calculado'][:12]}... | "
+            f"parámetros usados: {', '.join(diag['parametros_usados'])}.",
+            "error",
+        )
         return redirect(url_for("configuracion"))
 
     try:

@@ -57,18 +57,31 @@ def url_autorizacion(dominio: str, redirect_uri: str, state: str) -> str:
     return f"https://{dominio}/admin/oauth/authorize?{urllib.parse.urlencode(params)}"
 
 
-def hmac_valido(parametros: dict) -> bool:
-    """Verifica la firma HMAC que Shopify añade a la redirección de vuelta,
-    siguiendo el algoritmo documentado por Shopify para el flujo OAuth."""
+def diagnostico_hmac(parametros: dict) -> dict:
+    """Calcula el HMAC esperado y devuelve el detalle de la comparación,
+    sin exponer el client secret, para poder diagnosticar un fallo real
+    sin adivinar a ciegas."""
     client_secret = os.environ.get("SHOPIFY_CLIENT_SECRET", "")
     hmac_recibido = parametros.get("hmac", "")
-    if not hmac_recibido:
-        return False
 
     resto = {k: v for k, v in parametros.items() if k not in ("hmac", "signature")}
     mensaje = "&".join(f"{k}={v}" for k, v in sorted(resto.items()))
     digest = hmac.new(client_secret.encode(), mensaje.encode(), hashlib.sha256).hexdigest()
-    return hmac.compare_digest(digest, hmac_recibido)
+
+    return {
+        "coincide": bool(hmac_recibido) and hmac.compare_digest(digest, hmac_recibido),
+        "client_secret_len": len(client_secret),
+        "hmac_recibido": hmac_recibido,
+        "hmac_calculado": digest,
+        "mensaje_firmado": mensaje,
+        "parametros_usados": sorted(resto.keys()),
+    }
+
+
+def hmac_valido(parametros: dict) -> bool:
+    """Verifica la firma HMAC que Shopify añade a la redirección de vuelta,
+    siguiendo el algoritmo documentado por Shopify para el flujo OAuth."""
+    return diagnostico_hmac(parametros)["coincide"]
 
 
 def intercambiar_codigo_por_token(dominio: str, code: str) -> str:
