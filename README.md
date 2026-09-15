@@ -6,15 +6,31 @@ no necesitas escribir comandos.
 
 ## Cómo abrirla (para usar todos los días)
 
-**En Windows, sin usar cmd:** haz doble clic en `iniciar_app.bat`. La
-primera vez tarda un poco más porque instala las dependencias solas; se
-abre una ventana negra (déjala abierta mientras usas la app, es el
-servidor) y tu navegador se abre solo en `http://localhost:5000`. Para
-apagar la app, cierra esa ventana.
+### Como una app de escritorio (Windows, recomendado)
 
-Consejo: crea un acceso directo en el escritorio para no tener que
-buscar la carpeta cada vez — clic derecho sobre `iniciar_app.bat` →
-"Enviar a" → "Escritorio (crear acceso directo)".
+1. **Una sola vez:** haz doble clic en `instalar.bat`. Instala todo lo
+   necesario y deja un icono llamado **"Agua Para Perros"** en tu
+   Escritorio (con su propio ícono de gota de agua).
+2. **A partir de ahí:** abre la app haciendo doble clic en ese icono,
+   como cualquier otro programa. Se abre en su propia ventana (sin
+   pestaña de navegador ni ventana negra de consola).
+3. Para cerrarla, cierra la ventana de la app.
+
+Si necesitas volver a crear el icono (por ejemplo, si lo borraste),
+haz doble clic en `crear_acceso_directo.vbs`.
+
+*Nota:* la ventana usa el motor Microsoft Edge WebView2, que ya viene
+incluido en Windows 10/11 actualizados. Si la ventana no llega a
+abrirse, instala el "WebView2 Runtime" desde la web de Microsoft y
+vuelve a intentarlo.
+
+### Alternativa: en el navegador, con la terminal a la vista
+
+Útil si algo falla y quieres ver los mensajes de error del servidor.
+
+**Windows, sin escribir comandos:** doble clic en `iniciar_app.bat`.
+Se abre una ventana negra (el servidor; déjala abierta) y tu navegador
+se abre solo en `http://localhost:5000`.
 
 **Por terminal (cualquier sistema):**
 ```bash
@@ -22,7 +38,7 @@ pip install -r requirements.txt   # solo la primera vez
 python app_web.py
 ```
 
-Con cualquiera de los dos métodos, verás en **http://localhost:5000**:
+Con cualquiera de los métodos, verás en la app:
 - **Configuración** — pega tu dominio de tienda y token una sola vez
 - **Nuevo producto** — formulario para subir un producto con variantes
 - **Investigar productos (IA)** — genera candidatos de producto con la API de Anthropic
