@@ -485,5 +485,18 @@ def velocidad():
 
 
 if __name__ == "__main__":
+    import threading
+    import webbrowser
+
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, port=port, host="0.0.0.0")
+
+    def abrir_navegador():
+        try:
+            webbrowser.open(f"http://localhost:{port}")
+        except Exception:
+            pass
+
+    threading.Timer(1.0, abrir_navegador).start()
+    # use_reloader=False evita que Flask arranque un segundo proceso (el
+    # reloader de depuración), que abriría el navegador dos veces.
+    app.run(debug=True, port=port, host="0.0.0.0", use_reloader=False)

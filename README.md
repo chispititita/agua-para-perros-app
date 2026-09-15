@@ -6,12 +6,23 @@ no necesitas escribir comandos.
 
 ## Cómo abrirla (para usar todos los días)
 
+**En Windows, sin usar cmd:** haz doble clic en `iniciar_app.bat`. La
+primera vez tarda un poco más porque instala las dependencias solas; se
+abre una ventana negra (déjala abierta mientras usas la app, es el
+servidor) y tu navegador se abre solo en `http://localhost:5000`. Para
+apagar la app, cierra esa ventana.
+
+Consejo: crea un acceso directo en el escritorio para no tener que
+buscar la carpeta cada vez — clic derecho sobre `iniciar_app.bat` →
+"Enviar a" → "Escritorio (crear acceso directo)".
+
+**Por terminal (cualquier sistema):**
 ```bash
 pip install -r requirements.txt   # solo la primera vez
 python app_web.py
 ```
 
-Luego abre **http://localhost:5000** en tu navegador. Ahí verás:
+Con cualquiera de los dos métodos, verás en **http://localhost:5000**:
 - **Configuración** — pega tu dominio de tienda y token una sola vez
 - **Nuevo producto** — formulario para subir un producto con variantes
 - **Investigar productos (IA)** — genera candidatos de producto con la API de Anthropic
