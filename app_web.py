@@ -36,7 +36,7 @@ CANDIDATO_PATH = "investigacion/mi_candidato.json"
 
 # Se sube a mano en cada cambio relevante — sirve para confirmar, mirando
 # el pie de página, si estás corriendo la copia más reciente de la app.
-VERSION = "2026-09-15.4"
+VERSION = "2026-09-15.5"
 
 
 # ---------- utilidades de datos ----------
@@ -300,11 +300,10 @@ def oauth_callback():
     if not diag["coincide"]:
         flash(
             "La respuesta de Shopify no pasó la verificación de seguridad (HMAC). "
-            f"Detalle técnico — longitud del client secret cargado: {diag['client_secret_len']} "
-            f"(debe ser mayor que 0; si es 0, el .env no se está leyendo). "
-            f"hmac recibido: {diag['hmac_recibido'][:12]}... | "
-            f"hmac calculado: {diag['hmac_calculado'][:12]}... | "
-            f"parámetros usados: {', '.join(diag['parametros_usados'])}.",
+            f"Detalle técnico — longitud del client secret cargado: {diag['client_secret_len']}. "
+            f"hmac recibido: {diag['hmac_recibido']} | "
+            f"hmac calculado: {diag['hmac_calculado']} | "
+            f"mensaje firmado: {diag['mensaje_firmado']}",
             "error",
         )
         return redirect(url_for("configuracion"))
