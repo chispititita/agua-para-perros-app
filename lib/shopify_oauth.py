@@ -31,6 +31,21 @@ def generar_state() -> str:
     return secrets.token_urlsafe(24)
 
 
+def parametros_callback(query_string: bytes) -> dict:
+    """Parsea el query string de la redirección de vuelta de Shopify SIN
+    tratar '+' como espacio (que es lo que hacen request.args de Flask y
+    urllib.parse.parse_qsl por defecto). El parámetro 'host' que manda
+    Shopify va en base64 y casi siempre lleva un '+' — si se convierte a
+    espacio antes de calcular el HMAC, la firma nunca coincide."""
+    parametros = {}
+    for par in query_string.decode("utf-8").split("&"):
+        if not par:
+            continue
+        clave, _, valor = par.partition("=")
+        parametros[urllib.parse.unquote(clave)] = urllib.parse.unquote(valor)
+    return parametros
+
+
 def url_autorizacion(dominio: str, redirect_uri: str, state: str) -> str:
     client_id = os.environ["SHOPIFY_CLIENT_ID"]
     params = {

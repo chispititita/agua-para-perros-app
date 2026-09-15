@@ -278,7 +278,7 @@ def conectar_shopify():
 
 @app.route("/oauth/callback")
 def oauth_callback():
-    parametros = request.args.to_dict()
+    parametros = shopify_oauth.parametros_callback(request.query_string)
     dominio = parametros.get("shop", "")
     code = parametros.get("code")
 
