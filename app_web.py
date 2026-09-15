@@ -215,11 +215,12 @@ def configuracion():
         bloque_conexion = f"""
         <div class="card">
           <h3>Conectar con Shopify</h3>
-          <p>Inicia sesión en tu tienda y acepta los permisos — no necesitas
-          copiar ningún token. También rellenamos solos el nombre, email,
-          dirección y ubicación de inventario a partir de los datos reales
-          de tu tienda.</p>
-          <form method="get" action="{url_for('conectar_shopify')}">
+          <p>Se abrirá tu navegador normal (Chrome/Edge), no esta ventana
+          — así Shopify te deja completar el inicio de sesión y la
+          verificación en dos pasos sin bloquearlo. Inicia sesión, acepta
+          los permisos, y cuando veas el aviso de "conectado", vuelve
+          aquí y actualiza esta página (F5).</p>
+          <form method="get" action="{url_for('conectar_shopify')}" target="_blank">
             <label>Dominio de la tienda (.myshopify.com)</label>
             <input name="tienda_dominio" placeholder="mi-tienda.myshopify.com" required>
             <button type="submit">Conectar con Shopify</button>
