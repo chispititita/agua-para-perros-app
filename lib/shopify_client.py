@@ -50,3 +50,6 @@ class ShopifyClient:
 
     def listar_ubicaciones(self) -> dict:
         return self._request("GET", "/locations.json")
+
+    def obtener_tienda(self) -> dict:
+        return self._request("GET", "/shop.json")

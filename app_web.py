@@ -14,9 +14,10 @@ import os
 from datetime import datetime, timezone
 
 from dotenv import load_dotenv
-from flask import Flask, render_template_string, request, redirect, url_for, flash
+from flask import Flask, render_template_string, request, redirect, url_for, flash, session
 
 from lib.shopify_client import ShopifyClient
+from lib import shopify_oauth
 from creacion_tienda.subir_producto import subir_producto
 from creacion_tienda.paginas_legales import crear_paginas_legales
 from testeo.economia import calcular_umbrales, evaluar_test
@@ -125,9 +126,9 @@ def inicio():
     tests = cargar_lista(LOG_TESTS)[-10:][::-1]
     productos = cargar_lista(LOG_PRODUCTOS)[-10:][::-1]
 
-    aviso_config = "" if config_existe() else (
-        '<div class="card"><b>Todavía no configuraste la tienda.</b> '
-        f'Ve a <a href="{url_for("configuracion")}">Configuración</a> para empezar.</div>'
+    aviso_config = "" if tienda_conectada() else (
+        '<div class="card"><b>Todavía no conectaste tu tienda de Shopify.</b> '
+        f'Ve a <a href="{url_for("configuracion")}">Configuración</a> para conectarla con un clic.</div>'
     )
 
     filas_tests = "".join(
@@ -155,69 +156,198 @@ def inicio():
     return render(contenido)
 
 
+def tienda_conectada() -> bool:
+    if not config_existe():
+        return False
+    config = cargar_config()
+    return bool(config.get("tienda_dominio")) and bool(config.get("admin_api_token"))
+
+
+def redirect_uri_oauth() -> str:
+    # request.url_root ya incluye el host:puerto con el que se abrió la
+    # app (localhost o 127.0.0.1), tanto en modo navegador como en la
+    # ventana de escritorio.
+    return f"{request.url_root.rstrip('/')}/oauth/callback"
+
+
 @app.route("/configuracion", methods=["GET", "POST"])
 def configuracion():
     config = cargar_config() if config_existe() else {}
 
     if request.method == "POST":
-        config = {
-            "tienda_dominio": request.form["tienda_dominio"].strip(),
-            "admin_api_token": request.form["admin_api_token"].strip(),
-            "api_version": "2026-01",
-            "location_id": request.form["location_id"].strip(),
-            "idioma": "es",
-            "moneda": "EUR",
-            "pais_envio": "ES",
-            "margen_objetivo": {"multiplicador": float(request.form.get("multiplicador", 4.0))},
-            "datos_negocio": {
-                "nombre_tienda": request.form.get("nombre_tienda", ""),
-                "email_contacto": request.form.get("email_contacto", ""),
-                "direccion_legal": request.form.get("direccion_legal", ""),
-                "politica_devoluciones_dias": 14,
-                "tiempo_envio_estimado": "5-10 días laborables",
-            },
+        # Solo se editan aquí preferencias de negocio; la conexión con
+        # Shopify se hace aparte, con el botón "Conectar con Shopify".
+        config["margen_objetivo"] = {"multiplicador": float(request.form.get("multiplicador", 4.0))}
+        config["datos_negocio"] = {
+            **config.get("datos_negocio", {}),
+            "nombre_tienda": request.form.get("nombre_tienda", ""),
+            "email_contacto": request.form.get("email_contacto", ""),
+            "direccion_legal": request.form.get("direccion_legal", ""),
+            "politica_devoluciones_dias": int(request.form.get("politica_devoluciones_dias", 14)),
+            "tiempo_envio_estimado": request.form.get("tiempo_envio_estimado", "5-10 días laborables"),
         }
         guardar_config(config)
-        flash("Configuración guardada.", "ok")
-        return redirect(url_for("inicio"))
+        flash("Preferencias guardadas.", "ok")
+        return redirect(url_for("configuracion"))
 
     dn = config.get("datos_negocio", {})
+
+    if tienda_conectada():
+        bloque_conexion = f"""
+        <div class="card">
+          <h3>Tienda conectada ✅</h3>
+          <p><b>{config['tienda_dominio']}</b></p>
+          <form method="post" action="{url_for('desconectar_shopify')}" onsubmit="return confirm('¿Desconectar esta tienda?');">
+            <button type="submit" style="background:#991b1b">Desconectar</button>
+          </form>
+        </div>
+        """
+    elif not shopify_oauth.credenciales_configuradas():
+        bloque_conexion = f"""
+        <div class="card">
+          <h3>Conectar con Shopify</h3>
+          <p>Todavía falta configurar <code>SHOPIFY_CLIENT_ID</code> y
+          <code>SHOPIFY_CLIENT_SECRET</code> en tu archivo <code>.env</code>
+          (es un paso único — ver el README, sección "Conectar con Shopify").</p>
+        </div>
+        """
+    else:
+        bloque_conexion = f"""
+        <div class="card">
+          <h3>Conectar con Shopify</h3>
+          <p>Inicia sesión en tu tienda y acepta los permisos — no necesitas
+          copiar ningún token. También rellenamos solos el nombre, email,
+          dirección y ubicación de inventario a partir de los datos reales
+          de tu tienda.</p>
+          <form method="get" action="{url_for('conectar_shopify')}">
+            <label>Dominio de la tienda (.myshopify.com)</label>
+            <input name="tienda_dominio" placeholder="mi-tienda.myshopify.com" required>
+            <button type="submit">Conectar con Shopify</button>
+          </form>
+        </div>
+        """
+
     contenido = f"""
+    {bloque_conexion}
     <div class="card">
-      <h3>Configuración de la tienda</h3>
+      <h3>Preferencias</h3>
       <form method="post">
-        <label>Dominio de la tienda (.myshopify.com)</label>
-        <input name="tienda_dominio" value="{config.get('tienda_dominio', '')}" placeholder="mi-tienda-dev.myshopify.com" required>
-
-        <label>Admin API access token</label>
-        <input name="admin_api_token" value="{config.get('admin_api_token', '')}" placeholder="shpat_..." required>
-
-        <label>Location ID</label>
-        <input name="location_id" value="{config.get('location_id', '')}" placeholder="gid://shopify/Location/..." required>
-
         <label>Multiplicador de margen (precio = costo × esto, si no defines precio manual)</label>
         <input name="multiplicador" type="number" step="0.1" value="{config.get('margen_objetivo', {}).get('multiplicador', 4.0)}">
 
-        <label>Nombre de la tienda (para páginas legales)</label>
+        <label>Nombre de la tienda (para páginas legales — se autocompleta al conectar)</label>
         <input name="nombre_tienda" value="{dn.get('nombre_tienda', '')}">
 
-        <label>Email de contacto</label>
+        <label>Email de contacto (se autocompleta al conectar)</label>
         <input name="email_contacto" value="{dn.get('email_contacto', '')}">
 
-        <label>Dirección legal</label>
+        <label>Dirección legal (se autocompleta al conectar)</label>
         <input name="direccion_legal" value="{dn.get('direccion_legal', '')}">
 
-        <button type="submit">Guardar configuración</button>
+        <label>Días de política de devoluciones</label>
+        <input name="politica_devoluciones_dias" type="number" value="{dn.get('politica_devoluciones_dias', 14)}">
+
+        <label>Tiempo de envío estimado</label>
+        <input name="tiempo_envio_estimado" value="{dn.get('tiempo_envio_estimado', '5-10 días laborables')}">
+
+        <button type="submit">Guardar preferencias</button>
       </form>
     </div>
     """
     return render(contenido)
 
 
+@app.route("/conectar-shopify")
+def conectar_shopify():
+    if not shopify_oauth.credenciales_configuradas():
+        flash("Falta configurar SHOPIFY_CLIENT_ID y SHOPIFY_CLIENT_SECRET en .env (ver README).", "error")
+        return redirect(url_for("configuracion"))
+
+    dominio = request.args.get("tienda_dominio", "").strip().lower()
+    if not shopify_oauth.dominio_valido(dominio):
+        flash("Dominio inválido. Debe terminar en .myshopify.com", "error")
+        return redirect(url_for("configuracion"))
+
+    state = shopify_oauth.generar_state()
+    session["oauth_state"] = state
+    session["oauth_dominio"] = dominio
+
+    url = shopify_oauth.url_autorizacion(dominio, redirect_uri_oauth(), state)
+    return redirect(url)
+
+
+@app.route("/oauth/callback")
+def oauth_callback():
+    parametros = request.args.to_dict()
+    dominio = parametros.get("shop", "")
+    code = parametros.get("code")
+
+    if not shopify_oauth.dominio_valido(dominio):
+        flash("Respuesta de Shopify con un dominio inválido.", "error")
+        return redirect(url_for("configuracion"))
+
+    if parametros.get("state") != session.get("oauth_state") or dominio != session.get("oauth_dominio"):
+        flash("La conexión no se pudo verificar (state inválido). Inténtalo de nuevo.", "error")
+        return redirect(url_for("configuracion"))
+
+    if not shopify_oauth.hmac_valido(parametros):
+        flash("La respuesta de Shopify no pasó la verificación de seguridad (HMAC).", "error")
+        return redirect(url_for("configuracion"))
+
+    try:
+        access_token = shopify_oauth.intercambiar_codigo_por_token(dominio, code)
+
+        api_version = "2026-01"
+        client = ShopifyClient(dominio, access_token, api_version)
+        tienda = client.obtener_tienda().get("shop", {})
+        ubicaciones = client.listar_ubicaciones().get("locations", [])
+        location_id = ubicaciones[0]["id"] if ubicaciones else None
+
+        direccion = ", ".join(filter(None, [
+            tienda.get("address1"), tienda.get("city"), tienda.get("province"), tienda.get("country_name"),
+        ]))
+
+        config = cargar_config() if config_existe() else {}
+        config.update({
+            "tienda_dominio": dominio,
+            "admin_api_token": access_token,
+            "api_version": api_version,
+            "location_id": location_id,
+            "idioma": "es",
+            "moneda": tienda.get("currency", "EUR"),
+            "pais_envio": tienda.get("country_code", "ES"),
+            "margen_objetivo": config.get("margen_objetivo", {"multiplicador": 4.0}),
+            "datos_negocio": {
+                "nombre_tienda": tienda.get("name", dominio),
+                "email_contacto": tienda.get("email", ""),
+                "direccion_legal": direccion,
+                "politica_devoluciones_dias": config.get("datos_negocio", {}).get("politica_devoluciones_dias", 14),
+                "tiempo_envio_estimado": config.get("datos_negocio", {}).get("tiempo_envio_estimado", "5-10 días laborables"),
+            },
+        })
+        guardar_config(config)
+        flash(f"¡Tienda '{tienda.get('name', dominio)}' conectada con éxito!", "ok")
+    except Exception as e:
+        flash(f"No se pudo completar la conexión con Shopify: {e}", "error")
+    finally:
+        session.pop("oauth_state", None)
+        session.pop("oauth_dominio", None)
+
+    return redirect(url_for("configuracion"))
+
+
+@app.route("/desconectar-shopify", methods=["POST"])
+def desconectar_shopify():
+    if config_existe():
+        os.remove(CONFIG_PATH)
+    flash("Tienda desconectada.", "ok")
+    return redirect(url_for("configuracion"))
+
+
 @app.route("/nuevo-producto", methods=["GET", "POST"])
 def nuevo_producto():
-    if not config_existe():
-        flash("Configura la tienda primero.", "error")
+    if not tienda_conectada():
+        flash("Conecta tu tienda de Shopify primero.", "error")
         return redirect(url_for("configuracion"))
 
     if request.method == "POST":

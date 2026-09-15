@@ -39,7 +39,7 @@ python app_web.py
 ```
 
 Con cualquiera de los métodos, verás en la app:
-- **Configuración** — pega tu dominio de tienda y token una sola vez
+- **Configuración** — conecta tu tienda de Shopify con un clic (ver abajo)
 - **Nuevo producto** — formulario para subir un producto con variantes
 - **Investigar productos (IA)** — genera candidatos de producto con la API de Anthropic
 - **Registrar test de anuncio** — mete tus números de gasto/ATC/ventas y te dice si matar, seguir o escalar
@@ -63,34 +63,62 @@ cp .env.example .env
 `python-dotenv`). El archivo `.env` está en `.gitignore`: nunca lo
 subas al repositorio.
 
+## Conectar con Shopify (configuración única, ~5 minutos)
+
+La app conecta tu tienda con OAuth real — inicias sesión en Shopify y
+aceptas los permisos, sin copiar ningún token a mano, y de paso se
+autocompletan nombre, email, dirección y ubicación de inventario.
+
+Para que el botón "Conectar con Shopify" funcione, Shopify exige que
+exista una app registrada con un Client ID y Client Secret. Esto se
+hace **una sola vez, para siempre** (sirve para conectar cualquier
+tienda que quieras después, no solo la primera):
+
+1. Entra a [partners.shopify.com](https://partners.shopify.com) (crea
+   una cuenta de Partners gratis si no tienes una) → **Apps** → **Create app**.
+2. Elige **"Create app manually"**, ponle un nombre (ej. "Mi App Dropshipping").
+3. En **App setup**, en "Allowed redirection URL(s)" añade exactamente:
+   ```
+   http://localhost:5000/oauth/callback
+   http://127.0.0.1:5000/oauth/callback
+   ```
+   (Shopify permite `localhost` como excepción a su regla de HTTPS,
+   pensado justo para apps que corren en tu propio PC).
+4. En **Client credentials**, copia el **Client ID** y el **Client secret**.
+5. Pégalos en tu archivo `.env` (créalo con `cp .env.example .env` si
+   no lo tienes):
+   ```
+   SHOPIFY_CLIENT_ID=...
+   SHOPIFY_CLIENT_SECRET=...
+   ```
+6. Reinicia la app (cierra la ventana y vuelve a abrir el icono, o
+   vuelve a correr `python app_web.py`). En **Configuración**, pon el
+   dominio de tu tienda y pulsa **"Conectar con Shopify"** — el resto
+   es iniciar sesión y aceptar.
+
+Si tu tienda es de desarrollo (la creaste desde el Dev Dashboard de
+Partners → Stores → "Store for testing"), el mismo flujo funciona
+igual — Shopify no distingue tiendas de desarrollo a la hora de
+autorizar una app.
+
 ## Flujo completo (por dentro)
 
-1. **Crea la tienda de desarrollo a mano** en tu Partner Dashboard →
-   Dev Dashboard → Stores → Create store → "Store for testing"
-   (2-3 minutos, gratis, ilimitadas).
-2. En esa tienda nueva, ve a **Configuración → Apps y canales de
-   venta → Desarrollar apps** y crea una app personalizada con scopes
-   `write_products`, `write_content`, `read_products`. Copia el
-   **Admin API access token**.
-3. Copia `config/config.example.json` a `config/config.json` y
-   rellena: dominio de la tienda, token, `location_id` (lo ves en
-   Configuración → Ubicaciones, o vía la query `locations` de la API),
-   y tus datos de negocio para las páginas legales.
-4. Copia `config/producto_ejemplo.json` y edítalo con los datos del
-   producto que vas a testear.
-5. Instala dependencias: `pip install -r requirements.txt`.
-6. Ejecuta:
+1. Conecta tu tienda como se explica arriba.
+2. Copia `config/producto_ejemplo.json` y edítalo con los datos del
+   producto que vas a testear (o usa "Nuevo producto" / "Investigar
+   productos (IA)" en la web app).
+3. Ejecuta:
    ```bash
-   python main.py --config config/config.json --producto config/mi_producto.json
+   python main.py --producto config/mi_producto.json
    ```
    Esto crea el producto (en estado `DRAFT`) y las 4 páginas legales.
-7. Aplica tu tema de pago (requiere Shopify CLI):
+4. Aplica tu tema de pago (requiere Shopify CLI):
    ```bash
    npm install -g @shopify/cli   # una sola vez
    shopify auth login             # una sola vez
    python creacion_tienda/aplicar_tema.py --tienda mi-tienda-dev.myshopify.com --carpeta-tema ./mi-tema
    ```
-8. Revisa todo en el admin, publica el producto y el tema
+5. Revisa todo en el admin, publica el producto y el tema
    manualmente, y decide si el producto pasa a plan pagado o se
    descarta.
 
@@ -179,10 +207,8 @@ cada producto nuevo, usando el costo/precio de la primera variante.
 - Manejo de errores en `subir_producto.py`: si la creación de
   variantes falla después de crear el producto, hoy queda un
   producto huérfano — falta rollback o al menos marcarlo en el log.
-- Resolver `location_id` automáticamente vía la query `locations` en
-  vez de pedirlo a mano en el config.
-- Mover el token de la Admin API a variable de entorno en vez de
-  dejarlo en texto plano en `config.json`.
+- Refrescar el token de Shopify si la tienda revoca el acceso
+  (hoy hay que volver a pulsar "Conectar con Shopify" a mano).
 - Un comando `--resumen` que liste productos por estado desde
   `historial_productos.json`, para no perderles la pista con el
   tiempo.
