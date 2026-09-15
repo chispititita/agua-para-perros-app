@@ -2,6 +2,8 @@
 ' Lo ejecuta automaticamente instalar.bat; tambien puedes hacerle doble
 ' clic a mano si borraste el icono del escritorio por error.
 
+On Error Resume Next
+
 Set oShell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 strScriptDir = fso.GetParentFolderName(WScript.ScriptFullName)
@@ -15,5 +17,12 @@ oShortcut.Description = "Agua Para Perros - App de Dropshipping"
 oShortcut.WindowStyle = 7
 oShortcut.Save
 
+If Err.Number <> 0 Then
+    MsgBox "No se pudo crear el icono en el Escritorio." & vbCrLf & _
+           "Error: " & Err.Description, vbCritical, "Error"
+    WScript.Quit 1
+End If
+
 MsgBox "Se creo el icono ""Agua Para Perros"" en tu escritorio." & vbCrLf & _
        "Usalo a partir de ahora para abrir la app.", vbInformation, "Listo"
+WScript.Quit 0
