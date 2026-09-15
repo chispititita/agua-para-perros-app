@@ -24,7 +24,10 @@ from testeo.economia import calcular_umbrales, evaluar_test
 from testeo.velocidad_pagina import revisar_velocidad
 from investigacion.investigador_ia import generar_candidatos
 
-load_dotenv()
+# override=True: si alguna vez quedó una SHOPIFY_CLIENT_ID/SECRET puesta
+# como variable de entorno de Windows, el .env manda igual — evita bugs
+# invisibles donde el .env "parece" correcto pero no es lo que se usa.
+load_dotenv(override=True)
 
 app = Flask(__name__)
 app.secret_key = "solo-uso-local-no-hace-falta-mas-seguridad"
@@ -36,7 +39,7 @@ CANDIDATO_PATH = "investigacion/mi_candidato.json"
 
 # Se sube a mano en cada cambio relevante — sirve para confirmar, mirando
 # el pie de página, si estás corriendo la copia más reciente de la app.
-VERSION = "2026-09-15.5"
+VERSION = "2026-09-15.6"
 
 
 # ---------- utilidades de datos ----------
