@@ -1,0 +1,249 @@
+{% comment %}
+  Size / variant comparator — Agua Para Perros
+  Bloques repetibles: imagen, tamaño, precio, características, botón de compra.
+  Usa "button_link" apuntando a la URL del producto con ?variant=ID para preseleccionar la variante.
+{% endcomment %}
+
+{% style %}
+  #shopify-section-{{ section.id }} .size-compare {
+    padding: {{ section.settings.padding_top }}px 1.5rem {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .size-compare__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .size-compare__header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .size-compare__heading {
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    margin: 0 0 0.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .size-compare__subheading {
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  #shopify-section-{{ section.id }} .size-compare__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  #shopify-section-{{ section.id }} .size-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: {{ section.settings.card_bg }};
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 14px;
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .size-card--highlight {
+    border: 2px solid {{ section.settings.highlight_color }};
+    transform: scale(1.03);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  #shopify-section-{{ section.id }} .size-card__badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: {{ section.settings.highlight_color }};
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__image {
+    width: 100%;
+    max-width: 140px;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__compare-price {
+    font-size: 0.9rem;
+    text-decoration: line-through;
+    opacity: 0.5;
+    margin-left: 0.4rem;
+    font-weight: 400;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    text-align: left;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__features li {
+    display: flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__features li::before {
+    content: "✓";
+    color: {{ section.settings.highlight_color }};
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .size-card__button {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text_color }};
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  #shopify-section-{{ section.id }} .size-card--highlight .size-card__button {
+    background: {{ section.settings.highlight_color }};
+  }
+
+  #shopify-section-{{ section.id }} .size-card__button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+  }
+{% endstyle %}
+
+<div class="size-compare">
+  <div class="size-compare__inner">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="size-compare__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="size-compare__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="size-compare__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="size-compare__grid">
+      {% for block in section.blocks %}
+        <div class="size-card {% if block.settings.highlighted %}size-card--highlight{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.badge_text != blank %}
+            <span class="size-card__badge">{{ block.settings.badge_text }}</span>
+          {% endif %}
+          {% if block.settings.image != blank %}
+            <img class="size-card__image" src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.label | escape }}" loading="lazy" width="140" height="140">
+          {% endif %}
+          {% if block.settings.label != blank %}
+            <p class="size-card__label">{{ block.settings.label }}</p>
+          {% endif %}
+          {% if block.settings.price != blank %}
+            <p class="size-card__price">
+              {{ block.settings.price }}
+              {% if block.settings.compare_price != blank %}
+                <span class="size-card__compare-price">{{ block.settings.compare_price }}</span>
+              {% endif %}
+            </p>
+          {% endif %}
+          {% if block.settings.features != blank %}
+            <ul class="size-card__features">
+              {% assign feature_lines = block.settings.features | newline_to_br | split: '<br />' %}
+              {% for line in feature_lines %}
+                {% if line != blank %}<li>{{ line | strip }}</li>{% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if block.settings.button_label != blank %}
+            <a href="{{ block.settings.button_link | default: '#' }}" class="size-card__button">{{ block.settings.button_label }}</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Comparador de tamaños",
+  "tag": "section",
+  "class": "section-size-comparator",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Título", "default": "Elige el tamaño perfecto" },
+    { "type": "textarea", "id": "subheading", "label": "Subtítulo", "default": "Todos con cierre antifugas y materiales libres de BPA." },
+    { "type": "color", "id": "bg_color", "label": "Fondo de sección", "default": "#ffffff" },
+    { "type": "color", "id": "card_bg", "label": "Fondo de tarjeta", "default": "#f9f9f7" },
+    { "type": "color", "id": "text_color", "label": "Color de texto", "default": "#0b0b0b" },
+    { "type": "color", "id": "highlight_color", "label": "Color de énfasis (más vendido)", "default": "#378add" },
+    { "type": "color", "id": "button_bg", "label": "Fondo del botón", "default": "#0b0b0b" },
+    { "type": "color", "id": "button_text_color", "label": "Texto del botón", "default": "#ffffff" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 }
+  ],
+  "blocks": [
+    {
+      "type": "size",
+      "name": "Tamaño",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Imagen del producto" },
+        { "type": "text", "id": "label", "label": "Nombre del tamaño", "default": "350ml" },
+        { "type": "text", "id": "price", "label": "Precio", "default": "€27,95" },
+        { "type": "text", "id": "compare_price", "label": "Precio tachado (opcional)" },
+        { "type": "text", "id": "badge_text", "label": "Etiqueta (opcional)", "default": "Más vendido" },
+        { "type": "checkbox", "id": "highlighted", "label": "Destacar esta tarjeta", "default": false },
+        { "type": "textarea", "id": "features", "label": "Características (una por línea)", "default": "Ideal para paseos cortos\nCabe en cualquier bolso\n180ml de capacidad útil" },
+        { "type": "text", "id": "button_label", "label": "Texto del botón", "default": "Comprar" },
+        { "type": "url", "id": "button_link", "label": "Enlace del botón" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparador de tamaños",
+      "blocks": [
+        { "type": "size", "settings": { "label": "300ml", "price": "€24,95", "features": "Ideal para paseos cortos\nCompacto y ligero", "button_label": "Comprar" } },
+        { "type": "size", "settings": { "label": "350ml", "price": "€27,95", "badge_text": "Más vendido", "highlighted": true, "features": "El más equilibrado\nPerfecto para el día a día\nCabe en cualquier bolso", "button_label": "Comprar" } },
+        { "type": "size", "settings": { "label": "550ml", "price": "€32,95", "features": "Para paseos largos y viajes\nMáxima autonomía", "button_label": "Comprar" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

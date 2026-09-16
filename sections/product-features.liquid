@@ -1,0 +1,171 @@
+{% comment %}
+  Product features / benefits grid — Agua Para Perros
+  Bloques repetibles: ícono (imagen o emoji), título, descripción.
+{% endcomment %}
+
+{% style %}
+  #shopify-section-{{ section.id }} .features {
+    padding: {{ section.settings.padding_top }}px 1.5rem {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .features__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .features__header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .features__heading {
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    margin: 0 0 0.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .features__subheading {
+    margin: 0;
+    opacity: 0.75;
+    font-size: 1rem;
+  }
+
+  #shopify-section-{{ section.id }} .features__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    gap: 1.5rem 1rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .features__grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      gap: 2rem 1.5rem;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: {% if section.settings.item_align == 'center' %}center{% else %}flex-start{% endif %};
+    text-align: {{ section.settings.item_align }};
+    gap: 0.75rem;
+  }
+
+  #shopify-section-{{ section.id }} .feature__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: {{ section.settings.icon_bg }};
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .feature__icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .feature__icon-emoji {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .feature__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .feature__text {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+    line-height: 1.5;
+  }
+{% endstyle %}
+
+<div class="features">
+  <div class="features__inner">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="features__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="features__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="features__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="features__grid">
+      {% for block in section.blocks %}
+        <div class="feature" {{ block.shopify_attributes }}>
+          <div class="feature__icon">
+            {% if block.settings.icon != blank %}
+              <img src="{{ block.settings.icon | image_url: width: 100 }}" alt="" loading="lazy" width="28" height="28">
+            {% elsif block.settings.emoji != blank %}
+              <span class="feature__icon-emoji">{{ block.settings.emoji }}</span>
+            {% endif %}
+          </div>
+          {% if block.settings.title != blank %}
+            <p class="feature__title">{{ block.settings.title }}</p>
+          {% endif %}
+          {% if block.settings.text != blank %}
+            <p class="feature__text">{{ block.settings.text }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Beneficios del producto",
+  "tag": "section",
+  "class": "section-product-features",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Título", "default": "Por qué elegir Agua Para Perros" },
+    { "type": "textarea", "id": "subheading", "label": "Subtítulo" },
+    { "type": "select", "id": "item_align", "label": "Alineación de cada bloque", "default": "center", "options": [
+      { "value": "left", "label": "Izquierda" },
+      { "value": "center", "label": "Centro" }
+    ]},
+    { "type": "range", "id": "columns_desktop", "label": "Columnas en escritorio", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "Columnas en móvil", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "color", "id": "bg_color", "label": "Fondo de sección", "default": "#f9f9f7" },
+    { "type": "color", "id": "text_color", "label": "Color de texto", "default": "#0b0b0b" },
+    { "type": "color", "id": "icon_bg", "label": "Fondo del ícono", "default": "#e7f1fb" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Beneficio",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Ícono (imagen)" },
+        { "type": "text", "id": "emoji", "label": "Emoji (si no usas imagen)", "default": "💧" },
+        { "type": "text", "id": "title", "label": "Título", "default": "Antifugas" },
+        { "type": "textarea", "id": "text", "label": "Descripción", "default": "Diseño hermético que no gotea en tu bolso ni en el coche." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Beneficios del producto",
+      "blocks": [
+        { "type": "feature", "settings": { "emoji": "💧", "title": "Antifugas", "text": "Cierre hermético que no gotea en tu bolso ni en el coche." } },
+        { "type": "feature", "settings": { "emoji": "🎒", "title": "Ultra portátil", "text": "Se pliega y cabe en cualquier bolsillo o correa." } },
+        { "type": "feature", "settings": { "emoji": "🐾", "title": "Fácil de usar", "text": "Un solo click y tu perro bebe directo del dispensador." } },
+        { "type": "feature", "settings": { "emoji": "♻️", "title": "Materiales seguros", "text": "Libre de BPA, apto para uso alimentario." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
