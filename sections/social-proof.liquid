@@ -1,0 +1,226 @@
+{% comment %}
+  Social proof / reviews & UGC — Agua Para Perros
+  Bloques repetibles: estrellas, foto opcional, testimonio, avatar, nombre, ubicación.
+  Diseño en cuadrícula o carrusel deslizable (sin dependencias JS).
+{% endcomment %}
+
+{% style %}
+  #shopify-section-{{ section.id }} .social-proof {
+    padding: {{ section.settings.padding_top }}px 1.5rem {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .social-proof__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .social-proof__header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .social-proof__heading {
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+    margin: 0 0 0.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .social-proof__subheading {
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  #shopify-section-{{ section.id }} .social-proof__track {
+    display: {% if section.settings.layout == 'carousel' %}flex{% else %}grid{% endif %};
+    {% if section.settings.layout == 'carousel' %}
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+      -webkit-overflow-scrolling: touch;
+    {% else %}
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: 1.25rem;
+    {% endif %}
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .social-proof__track {
+      {% unless section.settings.layout == 'carousel' %}
+        grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      {% endunless %}
+    }
+  }
+
+  #shopify-section-{{ section.id }} .review-card {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    {% if section.settings.layout == 'carousel' %}
+      flex: 0 0 min(280px, 80vw);
+      scroll-snap-align: start;
+    {% endif %}
+  }
+
+  #shopify-section-{{ section.id }} .review-card__stars {
+    color: #f5a623;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__quote {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__photo {
+    width: 100%;
+    border-radius: 8px;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__author {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__avatar-fallback {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: {{ section.settings.icon_bg }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .review-card__location {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin: 0;
+  }
+{% endstyle %}
+
+<div class="social-proof">
+  <div class="social-proof__inner">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="social-proof__header">
+        {% if section.settings.heading != blank %}
+          <h2 class="social-proof__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="social-proof__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="social-proof__track">
+      {% for block in section.blocks %}
+        <div class="review-card" {{ block.shopify_attributes }}>
+          {% if block.settings.rating > 0 %}
+            <div class="review-card__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
+              {% for i in (1..5) %}{% if i <= block.settings.rating %}★{% else %}☆{% endif %}{% endfor %}
+            </div>
+          {% endif %}
+          {% if block.settings.photo != blank %}
+            <img class="review-card__photo" src="{{ block.settings.photo | image_url: width: 500 }}" alt="{{ block.settings.author | escape }}" loading="lazy" width="500" height="375">
+          {% endif %}
+          {% if block.settings.quote != blank %}
+            <p class="review-card__quote">"{{ block.settings.quote }}"</p>
+          {% endif %}
+          <div class="review-card__author">
+            {% if block.settings.avatar != blank %}
+              <img class="review-card__avatar" src="{{ block.settings.avatar | image_url: width: 100 }}" alt="" loading="lazy" width="36" height="36">
+            {% else %}
+              <div class="review-card__avatar-fallback">{{ block.settings.author | slice: 0, 1 }}</div>
+            {% endif %}
+            <div>
+              {% if block.settings.author != blank %}
+                <p class="review-card__name">{{ block.settings.author }}</p>
+              {% endif %}
+              {% if block.settings.location != blank %}
+                <p class="review-card__location">{{ block.settings.location }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Reseñas de clientes",
+  "tag": "section",
+  "class": "section-social-proof",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Título", "default": "Lo que dicen nuestros clientes" },
+    { "type": "textarea", "id": "subheading", "label": "Subtítulo" },
+    { "type": "select", "id": "layout", "label": "Diseño", "default": "grid", "options": [
+      { "value": "grid", "label": "Cuadrícula" },
+      { "value": "carousel", "label": "Carrusel deslizable" }
+    ]},
+    { "type": "range", "id": "columns_desktop", "label": "Columnas en escritorio (cuadrícula)", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "columns_mobile", "label": "Columnas en móvil (cuadrícula)", "min": 1, "max": 2, "step": 1, "default": 1 },
+    { "type": "color", "id": "bg_color", "label": "Fondo de sección", "default": "#ffffff" },
+    { "type": "color", "id": "card_bg", "label": "Fondo de tarjeta", "default": "#f9f9f7" },
+    { "type": "color", "id": "text_color", "label": "Color de texto", "default": "#0b0b0b" },
+    { "type": "color", "id": "icon_bg", "label": "Fondo de avatar (sin imagen)", "default": "#e7f1fb" },
+    { "type": "range", "id": "padding_top", "label": "Espacio superior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Espacio inferior", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 64 }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Reseña",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Calificación", "min": 0, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Testimonio", "default": "Mi perro ya no se queda sin agua en los paseos largos. ¡Cero fugas!" },
+        { "type": "image_picker", "id": "photo", "label": "Foto del cliente/mascota (opcional)" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar del cliente (opcional)" },
+        { "type": "text", "id": "author", "label": "Nombre", "default": "María G." },
+        { "type": "text", "id": "location", "label": "Ubicación", "default": "Madrid, España" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reseñas de clientes",
+      "blocks": [
+        { "type": "review", "settings": { "rating": 5, "quote": "Mi perro ya no se queda sin agua en los paseos largos. ¡Cero fugas!", "author": "María G.", "location": "Madrid, España" } },
+        { "type": "review", "settings": { "rating": 5, "quote": "Súper práctico, cabe en cualquier bolso y es fácil de limpiar.", "author": "Carlos R.", "location": "Barcelona, España" } },
+        { "type": "review", "settings": { "rating": 4, "quote": "Buena calidad y llegó rápido. Mi golden ya lo ama.", "author": "Laura P.", "location": "Valencia, España" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

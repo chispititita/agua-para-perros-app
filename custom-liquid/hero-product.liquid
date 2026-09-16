@@ -1,0 +1,209 @@
+{% comment %}
+  BLOQUE DE CUSTOM LIQUID — Hero "Botella de agua portátil para perros"
+  ------------------------------------------------------------------
+  Cómo usarlo:
+  1. En el Editor de temas, entra a la sección donde quieras este bloque
+     (tiene que ser una sección que acepte bloques, ej. una sección vacía,
+     "Multicolumna", "Contenido personalizado", etc.) y pulsa "Agregar bloque".
+  2. Elige "Liquid personalizado" (Custom Liquid).
+  3. Pega TODO este archivo dentro del campo de código del bloque.
+  4. Reemplaza la línea marcada con "REEMPLAZA AQUÍ" por la URL de tu imagen
+     (sube el producto a Contenido → Archivos en el admin y copia su URL).
+  5. Todo lo demás (textos, colores) se edita directamente en este código,
+     no hay panel de ajustes porque los bloques Liquid personalizados no
+     tienen schema.
+{% endcomment %}
+
+<style>
+  #hero-cl-{{ block.id }} {
+    background: linear-gradient(135deg, #eaf7f8, #d3eef1);
+    padding: 3rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 900px) {
+    #hero-cl-{{ block.id }} .hero-cl__grid {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__eyebrow {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0 0 0.25rem;
+    color: #0b2530;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__heading {
+    font-size: clamp(2.5rem, 6vw + 1rem, 4.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    color: #12879a;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__subheading {
+    font-size: clamp(1.1rem, 1.5vw + 0.8rem, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0.25rem 0 1.75rem;
+    color: #0b2530;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__features {
+    list-style: none;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid #12879a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #12879a;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__feature-title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: #12879a;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__feature-subtitle {
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0;
+    color: #0b2530;
+    opacity: 0.85;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__image-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__image-wrap img {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    background: #12879a;
+    color: #ffffff;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  #hero-cl-{{ block.id }} .hero-cl__button:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+</style>
+
+<div id="hero-cl-{{ block.id }}">
+  <div class="hero-cl__grid">
+    <div>
+      <p class="hero-cl__eyebrow">Botella de agua</p>
+      <h2 class="hero-cl__heading">Portátil</h2>
+      <p class="hero-cl__subheading">Para perros</p>
+
+      <ul class="hero-cl__features">
+        <li class="hero-cl__feature">
+          <span class="hero-cl__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 8.6 7 13a7 7 0 1 1-14 0c0-4.4 7-13 7-13Z"/></svg>
+          </span>
+          <span>
+            <p class="hero-cl__feature-title">Hidratación</p>
+            <p class="hero-cl__feature-subtitle">Rápida y segura</p>
+          </span>
+        </li>
+        <li class="hero-cl__feature">
+          <span class="hero-cl__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </span>
+          <span>
+            <p class="hero-cl__feature-title">Bloqueo</p>
+            <p class="hero-cl__feature-subtitle">Anti-gotas</p>
+          </span>
+        </li>
+        <li class="hero-cl__feature">
+          <span class="hero-cl__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c9 0 14-5 14-14 0 0-13-2-14 8-.4 3 .3 5 0 6Z"/><path d="M5 20c1-3 3-6 8-9"/></svg>
+          </span>
+          <span>
+            <p class="hero-cl__feature-title">Materiales</p>
+            <p class="hero-cl__feature-subtitle">Sin BPA</p>
+          </span>
+        </li>
+        <li class="hero-cl__feature">
+          <span class="hero-cl__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12.2a6 6 0 0 0-8.4-8.4L5 10.5V19h8.5Z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+          </span>
+          <span>
+            <p class="hero-cl__feature-title">Ligera y fácil</p>
+            <p class="hero-cl__feature-subtitle">De transportar</p>
+          </span>
+        </li>
+      </ul>
+
+      <a href="/collections/all" class="hero-cl__button">Comprar ahora</a>
+    </div>
+
+    <div class="hero-cl__image-wrap">
+      {% comment %} REEMPLAZA AQUÍ la URL por la de tu imagen subida en Contenido → Archivos {% endcomment %}
+      <img
+        src="https://cdn.shopify.com/s/files/1/REEMPLAZA/AQUÍ/tu-imagen.jpg"
+        alt="Botella de agua portátil para perros"
+        loading="eager"
+      >
+    </div>
+  </div>
+</div>
