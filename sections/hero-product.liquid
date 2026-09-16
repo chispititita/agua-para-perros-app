@@ -1,0 +1,387 @@
+{% comment %}
+  Hero de producto — Botella de agua portátil para perros
+  Dos modos:
+    - "overlay": sube tu creativo ya diseñado (imagen completa con texto e íconos, como el anuncio original) como fondo.
+    - "split": versión editable con el mismo estilo — título grande + lista de beneficios con íconos a la izquierda,
+      foto del producto a la derecha — para cuando quieras cambiar el copy sin regenerar el diseño.
+{% endcomment %}
+
+{% style %}
+  #shopify-section-{{ section.id }} .hero-product {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ---------- Modo overlay (imagen completa) ---------- */
+  #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ section.settings.overlay_ratio }};
+    background: #e8f4f5;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media img,
+  #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media--mobile {
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media--desktop {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media--mobile {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .hero-product--overlay .hero-product__media--desktop {
+      display: block;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__cta-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0));
+  }
+
+  /* ---------- Modo split (texto editable) ---------- */
+  #shopify-section-{{ section.id }} .hero-product--split {
+    background: linear-gradient(135deg, {{ section.settings.bg_color_1 }}, {{ section.settings.bg_color_2 }});
+    padding: 3rem 1.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 900px) {
+    #shopify-section-{{ section.id }} .hero-product__grid {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__text {
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__eyebrow {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0 0 0.25rem;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__heading {
+    font-size: clamp(2.5rem, 6vw + 1rem, 4.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    color: {{ section.settings.heading_color }};
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__subheading {
+    font-size: clamp(1.1rem, 1.5vw + 0.8rem, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0.25rem 0 1.75rem;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__features {
+    list-style: none;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  #shopify-section-{{ section.id }} .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  #shopify-section-{{ section.id }} .feature-item__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid {{ section.settings.heading_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ section.settings.heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .feature-item__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .feature-item__title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .feature-item__subtitle {
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__image-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__image-wrap img,
+  #shopify-section-{{ section.id }} .hero-product__image-wrap svg {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* ---------- Botón (compartido por ambos modos) ---------- */
+  #shopify-section-{{ section.id }} .hero-product__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    background: {{ section.settings.button_bg }};
+    color: {{ section.settings.button_text_color }};
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  #shopify-section-{{ section.id }} .hero-product__button:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+{% endstyle %}
+
+{% capture icon_drop %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 8.6 7 13a7 7 0 1 1-14 0c0-4.4 7-13 7-13Z"/></svg>
+{% endcapture %}
+{% capture icon_lock %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+{% endcapture %}
+{% capture icon_leaf %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c9 0 14-5 14-14 0 0-13-2-14 8-.4 3 .3 5 0 6Z"/><path d="M5 20c1-3 3-6 8-9"/></svg>
+{% endcapture %}
+{% capture icon_feather %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 12.2a6 6 0 0 0-8.4-8.4L5 10.5V19h8.5Z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+{% endcapture %}
+{% capture icon_paw %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="9" r="1.6"/><circle cx="12" cy="6.5" r="1.6"/><circle cx="17" cy="9" r="1.6"/><path d="M12 13c-3 0-5 2-5 4.2 0 1.5 1.2 2.3 2.6 1.9.9-.3 1.6-.3 2.4 0 1.4.4 2.6-.4 2.6-1.9 0-2.2-2-4.2-5-4.2Z"/></svg>
+{% endcapture %}
+
+<div class="hero-product hero-product--{{ section.settings.layout }}">
+  {% if section.settings.layout == 'overlay' %}
+    <div class="hero-product__media">
+      {% if section.settings.overlay_image_mobile != blank %}
+        <img
+          class="hero-product__media--mobile"
+          src="{{ section.settings.overlay_image_mobile | image_url: width: 1000 }}"
+          alt="{{ section.settings.overlay_image_mobile.alt | default: 'Botella de agua portátil para perros' | escape }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% elsif section.settings.overlay_image != blank %}
+        <img
+          class="hero-product__media--mobile"
+          src="{{ section.settings.overlay_image | image_url: width: 1000 }}"
+          alt="{{ section.settings.overlay_image.alt | default: 'Botella de agua portátil para perros' | escape }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-product__media--mobile' }}
+      {% endif %}
+
+      {% if section.settings.overlay_image != blank %}
+        <img
+          class="hero-product__media--desktop"
+          src="{{ section.settings.overlay_image | image_url: width: 1800 }}"
+          srcset="{{ section.settings.overlay_image | image_url: width: 1200 }} 1200w, {{ section.settings.overlay_image | image_url: width: 1800 }} 1800w, {{ section.settings.overlay_image | image_url: width: 2400 }} 2400w"
+          sizes="100vw"
+          alt="{{ section.settings.overlay_image.alt | default: 'Botella de agua portátil para perros' | escape }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'hero-product__media--desktop' }}
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_button and section.settings.button_label != blank %}
+      <div class="hero-product__cta-wrap">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="hero-product__button">{{ section.settings.button_label }}</a>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="hero-product__grid">
+      <div class="hero-product__text">
+        {% if section.settings.eyebrow_text != blank %}
+          <p class="hero-product__eyebrow">{{ section.settings.eyebrow_text }}</p>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <h2 class="hero-product__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="hero-product__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <ul class="hero-product__features">
+            {% for block in section.blocks %}
+              <li class="feature-item" {{ block.shopify_attributes }}>
+                <span class="feature-item__icon">
+                  {% case block.settings.icon %}
+                    {% when 'drop' %}{{ icon_drop }}
+                    {% when 'lock' %}{{ icon_lock }}
+                    {% when 'leaf' %}{{ icon_leaf }}
+                    {% when 'feather' %}{{ icon_feather }}
+                    {% when 'paw' %}{{ icon_paw }}
+                  {% endcase %}
+                </span>
+                <span>
+                  {% if block.settings.title != blank %}
+                    <p class="feature-item__title">{{ block.settings.title }}</p>
+                  {% endif %}
+                  {% if block.settings.subtitle != blank %}
+                    <p class="feature-item__subtitle">{{ block.settings.subtitle }}</p>
+                  {% endif %}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if section.settings.show_button and section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="hero-product__button">{{ section.settings.button_label }}</a>
+        {% endif %}
+      </div>
+
+      <div class="hero-product__image-wrap">
+        {% if section.settings.product_image != blank %}
+          <img
+            src="{{ section.settings.product_image | image_url: width: 800 }}"
+            srcset="{{ section.settings.product_image | image_url: width: 500 }} 500w, {{ section.settings.product_image | image_url: width: 800 }} 800w"
+            sizes="(min-width: 900px) 420px, 80vw"
+            alt="{{ section.settings.product_image.alt | default: section.settings.heading | escape }}"
+            loading="eager"
+            fetchpriority="high"
+            width="{{ section.settings.product_image.width }}"
+            height="{{ section.settings.product_image.height }}"
+          >
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: '' }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Hero de producto",
+  "tag": "section",
+  "class": "section-hero-product",
+  "settings": [
+    { "type": "select", "id": "layout", "label": "Modo", "default": "overlay", "options": [
+      { "value": "overlay", "label": "Imagen completa (tu creativo ya diseñado)" },
+      { "value": "split", "label": "Texto editable + imagen de producto" }
+    ]},
+
+    { "type": "header", "content": "Modo imagen completa" },
+    { "type": "image_picker", "id": "overlay_image", "label": "Imagen del banner (escritorio)", "info": "Sube aquí tu creativo ya diseñado, con texto e íconos incluidos." },
+    { "type": "image_picker", "id": "overlay_image_mobile", "label": "Imagen del banner (móvil)", "info": "Opcional. Si se deja vacío, se usa la imagen de escritorio." },
+    { "type": "select", "id": "overlay_ratio", "label": "Proporción", "default": "3 / 4", "options": [
+      { "value": "1 / 1", "label": "Cuadrada (1:1)" },
+      { "value": "4 / 5", "label": "Retrato (4:5)" },
+      { "value": "3 / 4", "label": "Retrato alto (3:4)" },
+      { "value": "9 / 16", "label": "Vertical (9:16)" },
+      { "value": "16 / 9", "label": "Horizontal (16:9)" }
+    ]},
+
+    { "type": "header", "content": "Modo texto editable" },
+    { "type": "text", "id": "eyebrow_text", "label": "Texto pequeño superior", "default": "Botella de agua" },
+    { "type": "text", "id": "heading", "label": "Palabra destacada", "default": "Portátil" },
+    { "type": "text", "id": "subheading", "label": "Subtítulo", "default": "Para perros" },
+    { "type": "image_picker", "id": "product_image", "label": "Foto del producto" },
+    { "type": "color", "id": "heading_color", "label": "Color de énfasis", "default": "#12879a" },
+    { "type": "color", "id": "text_color", "label": "Color de texto", "default": "#0b2530" },
+    { "type": "color", "id": "bg_color_1", "label": "Fondo — color 1", "default": "#eaf7f8" },
+    { "type": "color", "id": "bg_color_2", "label": "Fondo — color 2", "default": "#d3eef1" },
+
+    { "type": "header", "content": "Botón (ambos modos)" },
+    { "type": "checkbox", "id": "show_button", "label": "Mostrar botón", "default": true },
+    { "type": "text", "id": "button_label", "label": "Texto del botón", "default": "Comprar ahora" },
+    { "type": "url", "id": "button_link", "label": "Enlace del botón" },
+    { "type": "color", "id": "button_bg", "label": "Fondo del botón", "default": "#12879a" },
+    { "type": "color", "id": "button_text_color", "label": "Texto del botón", "default": "#ffffff" }
+  ],
+  "blocks": [
+    {
+      "type": "feature_item",
+      "name": "Beneficio (solo modo texto)",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Ícono", "default": "drop", "options": [
+          { "value": "drop", "label": "Gota" },
+          { "value": "lock", "label": "Candado" },
+          { "value": "leaf", "label": "Hoja" },
+          { "value": "feather", "label": "Pluma (ligereza)" },
+          { "value": "paw", "label": "Huella" }
+        ]},
+        { "type": "text", "id": "title", "label": "Título", "default": "Hidratación" },
+        { "type": "text", "id": "subtitle", "label": "Descripción", "default": "Rápida y segura" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero de producto",
+      "blocks": [
+        { "type": "feature_item", "settings": { "icon": "drop", "title": "Hidratación", "subtitle": "Rápida y segura" } },
+        { "type": "feature_item", "settings": { "icon": "lock", "title": "Bloqueo", "subtitle": "Anti-gotas" } },
+        { "type": "feature_item", "settings": { "icon": "leaf", "title": "Materiales", "subtitle": "Sin BPA" } },
+        { "type": "feature_item", "settings": { "icon": "feather", "title": "Ligera y fácil", "subtitle": "De transportar" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
