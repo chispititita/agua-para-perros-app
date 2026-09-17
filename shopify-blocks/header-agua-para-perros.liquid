@@ -1,0 +1,210 @@
+{% comment %}
+==================================================================
+BLOQUE: Header de marca — Agua Para Perros
+==================================================================
+CÓMO INSTALARLO
+1. En el editor de temas, entra en la plantilla del producto donde
+   quieras este header.
+2. Añade una sección "Liquid personalizado" (Custom Liquid) al
+   principio del producto y pega aquí TODO este archivo.
+3. No necesita configuración en el editor: todo el contenido se
+   edita directamente en este código (marcado con "EDITAR:").
+
+ANTES DE PUBLICAR, EDITA:
+  - "URL_AQUI_LOGO"  -> URL real de tu logo subido a Shopify
+                        (Ajustes > Archivos), debe empezar por
+                        https://cdn.shopify.com/...
+  - El texto de la franja superior (envío/pago).
+  - El nombre de tienda, el eslogan y los 3 puntos de confianza.
+
+Autocontenido: HTML + CSS + JS en un solo archivo, sin librerías
+externas, sin build step. Prefijo único de clases/funciones: "aphr".
+==================================================================
+{% endcomment %}
+<div class="aphr-root" data-aphr-root>
+<style>
+  .aphr-root{
+    --aphr-cream:#f7f1e4;
+    --aphr-ink:#1b1a17;
+    --aphr-teal:#1f6f68;
+    --aphr-teal-ink:#eef4f2;
+    --aphr-amber:#c98a3e;
+    --aphr-line:rgba(27,26,23,0.12);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--aphr-ink);
+    background:var(--aphr-cream);
+    box-sizing:border-box;
+  }
+  .aphr-root *{ box-sizing:border-box; }
+
+  /* franja superior */
+  .aphr-strip{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--aphr-teal);
+    color:var(--aphr-teal-ink);
+    font-size:12.5px;
+    line-height:1.3;
+    padding:8px 14px;
+    text-align:center;
+  }
+  .aphr-strip svg{ flex:none; width:15px; height:15px; }
+
+  /* header principal */
+  .aphr-main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:18px 20px 16px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    border-bottom:1px solid var(--aphr-line);
+  }
+
+  .aphr-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+  }
+  .aphr-logo{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    object-fit:cover;
+    flex:none;
+    background:#fff;
+    border:1px solid var(--aphr-line);
+  }
+  .aphr-brandtext{ min-width:0; }
+  .aphr-name{
+    margin:0;
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:0.2px;
+    line-height:1.15;
+    white-space:nowrap;
+  }
+  .aphr-tag{
+    margin:2px 0 0;
+    font-size:12.5px;
+    color:rgba(27,26,23,0.62);
+    line-height:1.3;
+    max-width:34ch;
+  }
+
+  /* puntos de confianza */
+  .aphr-trust{
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin:0;
+    padding:0;
+    flex-wrap:wrap;
+  }
+  .aphr-trust li{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--aphr-ink);
+    white-space:nowrap;
+  }
+  .aphr-trust li:not(:last-child){
+    padding-right:18px;
+    border-right:1px solid var(--aphr-line);
+  }
+  .aphr-trust svg{
+    flex:none;
+    width:17px;
+    height:17px;
+    color:var(--aphr-teal);
+  }
+  .aphr-trust .aphr-accent svg{ color:var(--aphr-amber); }
+
+  /* mobile */
+  @media (max-width:640px){
+    .aphr-strip{ font-size:11.5px; padding:7px 12px; }
+    .aphr-main{
+      padding:14px 16px;
+      gap:12px;
+    }
+    .aphr-logo{ width:38px; height:38px; }
+    .aphr-name{ font-size:16.5px; }
+    .aphr-tag{ display:none; }
+    .aphr-trust{
+      width:100%;
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      justify-content:flex-start;
+      gap:14px;
+      padding-bottom:2px;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .aphr-trust::-webkit-scrollbar{ display:none; }
+    .aphr-trust li:not(:last-child){ padding-right:14px; }
+  }
+</style>
+
+  <!-- EDITAR: texto de envío / pago -->
+  <div class="aphr-strip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="15" height="10"></rect><path d="M16 10h3.5l3.5 3.5V17h-7z"></path><circle cx="6" cy="19" r="1.6"></circle><circle cx="18.5" cy="19" r="1.6"></circle></svg>
+    <span>Envío en 24-48h a toda España · Pago 100% seguro</span>
+  </div>
+
+  <div class="aphr-main">
+    <div class="aphr-brand">
+      <!-- EDITAR: sustituye por la URL real de tu logo en cdn.shopify.com -->
+      <img class="aphr-logo" src="URL_AQUI_LOGO" alt="Agua Para Perros" width="46" height="46" loading="lazy">
+      <div class="aphr-brandtext">
+        <!-- EDITAR: nombre de tienda -->
+        <p class="aphr-name">Agua Para Perros</p>
+        <!-- EDITAR: eslogan -->
+        <p class="aphr-tag">Bebederos portátiles para pasear sin preocuparte del agua</p>
+      </div>
+    </div>
+
+    <ul class="aphr-trust">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        <!-- EDITAR: punto de confianza 1 -->
+        <span>Materiales seguros</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.9 8 9 4.8-1.1 8-4.5 8-9V6z"></path></svg>
+        <!-- EDITAR: punto de confianza 2 -->
+        <span>Garantía 30 días</span>
+      </li>
+      <li class="aphr-accent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 12.5 11 14l3.5-3.5"></path></svg>
+        <!-- EDITAR: punto de confianza 3 -->
+        <span>Miles de paseos ya resueltos</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function(){
+  var root = document.currentScript && document.currentScript.previousElementSibling;
+  if(!root || !root.hasAttribute('data-aphr-root')) return;
+  if(root.getAttribute('data-aphr-init')) return;
+  root.setAttribute('data-aphr-init','1');
+
+  function aphrHandleLogoError(){
+    var img = root.querySelector('.aphr-logo');
+    if(!img) return;
+    img.addEventListener('error', function(){
+      img.style.display = 'none';
+    }, { once:true });
+  }
+  aphrHandleLogoError();
+})();
+</script>
