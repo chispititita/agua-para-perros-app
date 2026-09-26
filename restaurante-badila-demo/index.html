@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     SEO — título, descripción y datos básicos
+     ============================================================ -->
+<title>Restaurante Badila – Casa de Comidas en Lavapiés, Madrid | Menú del Día</title>
+<meta name="description" content="Badila, casa de comidas en Lavapiés (Madrid), cerca de Tirso de Molina. Cocina española y mediterránea de mercado, producto fresco de temporada y menú del día. Consulta horario y reserva por teléfono.">
+<meta name="keywords" content="Restaurante Badila Madrid, Restaurante Lavapiés, Menú del día Lavapiés, Restaurante cocina española Madrid, Casa de comidas Lavapiés">
+<link rel="canonical" href="https://www.ejemplo-badila.es/"> <!-- PLACEHOLDER — sustituir por el dominio real cuando esté disponible -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="restaurant">
+<meta property="og:title" content="Restaurante Badila – Casa de Comidas en Lavapiés, Madrid">
+<meta property="og:description" content="Cocina de mercado, producto fresco y menú del día en el corazón de Lavapiés. A un paso de Tirso de Molina.">
+<meta property="og:image" content="images/hero.svg"> <!-- FOTO REAL DEL RESTAURANTE — SUSTITUIR antes de publicar (recomendado 1200x630) -->
+<meta property="og:url" content="https://www.ejemplo-badila.es/"> <!-- PLACEHOLDER — sustituir por el dominio real -->
+<meta property="og:locale" content="es_ES">
+
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+
+<!-- ============================================================
+     Datos estructurados (Schema.org / LocalBusiness — Restaurant)
+     Solo se incluyen los datos confirmados por el cliente.
+     No se inventan valoraciones, precios ni reseñas.
+     ============================================================ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Restaurante Badila",
+  "image": "REEMPLAZAR_CON_URL_DE_FOTO_REAL",
+  "telephone": "+34914297651",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Calle de San Pedro Mártir, 6",
+    "addressLocality": "Madrid",
+    "postalCode": "28012",
+    "addressCountry": "ES"
+  },
+  "servesCuisine": ["Española", "Mediterránea", "Casera"],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Friday", "Saturday", "Sunday"], "opens": "13:30", "closes": "17:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Thursday", "opens": "13:30", "closes": "17:00" }
+  ],
+  "url": "https://www.ejemplo-badila.es/"
+}
+</script>
+<!-- HORARIOS — CONFIRMAR CON EL CLIENTE: los horarios de arriba y los de la sección
+     "Horario" de esta web son una referencia provisional encontrada en fuentes públicas.
+     Deben confirmarse con el restaurante antes de publicar la web. -->
+
+</head>
+<body>
+
+<!-- ======================= CABECERA / MENÚ ======================= -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#inicio" class="brand">
+      <img src="images/logo.svg" alt="Badila" class="brand__logo">
+      <span class="brand__name">Badila</span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#historia">Historia</a>
+      <a href="#menu">Menú</a>
+      <a href="#especialidades">Especialidades</a>
+      <a href="#galeria">Galería</a>
+      <a href="#visitanos">Visítanos</a>
+    </nav>
+
+    <div class="header__cta">
+      <a href="tel:+34914297651" class="btn btn--ghost btn--sm">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+        <span>914 29 76 51</span>
+      </a>
+      <a href="#menu" class="btn btn--primary btn--sm">Ver menú</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#historia">Historia</a>
+    <a href="#menu">Menú</a>
+    <a href="#especialidades">Especialidades</a>
+    <a href="#galeria">Galería</a>
+    <a href="#visitanos">Visítanos</a>
+    <a href="tel:+34914297651" class="btn btn--primary">Llamar: 914 29 76 51</a>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="inicio">
+  <div class="hero__bg">
+    <!-- FOTO REAL DEL RESTAURANTE — SUSTITUIR (fachada o plato representativo, 1920x1080) -->
+    <img src="images/hero.svg" alt="">
+    <div class="hero__overlay"></div>
+  </div>
+  <div class="container hero__content reveal">
+    <p class="eyebrow">Lavapiés, Madrid</p>
+    <h1>Badila</h1>
+    <p class="hero__subtitle">Una casa de comidas en Lavapiés donde el producto de temporada y la cocina casera son protagonistas.</p>
+    <div class="hero__actions">
+      <a href="#menu" class="btn btn--primary btn--lg">Ver menú</a>
+      <a href="https://www.google.com/maps/dir/?api=1&destination=Restaurante%20Badila%2C%20Calle%20de%20San%20Pedro%20M%C3%A1rtir%2C%206%2C%2028012%20Madrid" target="_blank" rel="noopener" class="btn btn--outline-light btn--lg">Cómo llegar</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= HISTORIA / CONCEPTO ======================= -->
+<section class="historia section" id="historia">
+  <div class="container historia__grid">
+    <div class="historia__media reveal">
+      <!-- FOTO REAL DEL RESTAURANTE — SUSTITUIR (interior del local, 900x1000) -->
+      <img src="images/historia.svg" alt="">
+    </div>
+    <div class="historia__text reveal">
+      <p class="eyebrow">Nuestra casa</p>
+      <h2>Cocina de mercado en el corazón de Lavapiés</h2>
+      <p>Badila es una casa de comidas situada en el corazón de Lavapiés, centrada en una cocina de mercado, producto fresco y platos que cambian según la temporada y la disponibilidad del producto.</p>
+      <ul class="checklist">
+        <li>Cocina de mercado, con producto fresco y de temporada</li>
+        <li>Recetas tradicionales y platos caseros</li>
+        <li>Menú del día que varía según la jornada</li>
+        <li>Ambiente sencillo, cercano y sin pretensiones</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= MENÚ DEL DÍA ======================= -->
+<!-- MENÚ ACTUAL — CONFIRMAR CON EL CLIENTE.
+     Los platos son solo placeholders de estructura. No representan
+     el menú real ni precios reales. Sustituir por la carta vigente. -->
+<section class="menu-dia section" id="menu">
+  <div class="container">
+    <div class="section__head section__head--dark reveal">
+      <p class="eyebrow">Cada día es distinto</p>
+      <h2>Menú del día</h2>
+      <p class="section__subtitle">Consulta las propuestas disponibles durante tu visita.</p>
+    </div>
+
+    <div class="menu-board reveal">
+      <div class="menu-board__col">
+        <h3>Primeros</h3>
+        <div class="menu-line"><span>Plato a confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+        <div class="menu-line"><span>Plato a confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+      </div>
+      <div class="menu-board__col">
+        <h3>Segundos</h3>
+        <div class="menu-line"><span>Plato a confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+        <div class="menu-line"><span>Plato a confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+      </div>
+      <div class="menu-board__col">
+        <h3>Postres</h3>
+        <div class="menu-line"><span>Postre a confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+      </div>
+      <div class="menu-board__col">
+        <h3>Bebida</h3>
+        <div class="menu-line"><span>A confirmar</span><i></i><span class="menu-line__price">— €</span></div>
+      </div>
+    </div>
+
+    <p class="menu-note">Estructura orientativa a la espera del menú del día actual. El restaurante podrá actualizar estos platos y precios en cualquier momento.</p>
+
+    <div class="menu-cta">
+      <a href="#visitanos" class="btn btn--primary btn--lg">Consultar menú</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ESPECIALIDADES ======================= -->
+<section class="especialidades section" id="especialidades">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">De toda la vida</p>
+      <h2>Algunos clásicos de Badila</h2>
+      <p class="section__subtitle">Platos que han sido mencionados en distintas ocasiones asociados a la casa. Su disponibilidad varía según el día y la temporada.</p>
+    </div>
+
+    <div class="especialidades__grid">
+      <div class="especialidad-card reveal">
+        <div class="especialidad-card__icon">
+          <svg viewBox="0 0 24 24" class="icon"><circle cx="8" cy="14" r="3.4"/><circle cx="15.5" cy="10.5" r="2.6"/><circle cx="16.5" cy="16" r="2"/></svg>
+        </div>
+        <h3>Albóndigas</h3>
+        <p>Uno de los platos más citados de la casa.</p>
+        <span class="badge">Sujeto a disponibilidad</span>
+      </div>
+      <div class="especialidad-card reveal">
+        <div class="especialidad-card__icon">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M4 11c0-4 3.6-7 8-7s8 3 8 7v1H4v-1z"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2z"/></svg>
+        </div>
+        <h3>Guisos tradicionales</h3>
+        <p>Cocina de cuchara al estilo casero.</p>
+        <span class="badge">Sujeto a disponibilidad</span>
+      </div>
+      <div class="especialidad-card reveal">
+        <div class="especialidad-card__icon">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M20 12c-3 4-7 6-10 6-2 0-4-1-5-2 1-3 3-5 5-6-2 0-4-1-5-3 2-2 5-3 8-2-1-2-1-3 0-5 3 1 5 3 5 6 1 0 2 2 2 6z"/></svg>
+        </div>
+        <h3>Platos de pescado</h3>
+        <p>Según lonja y disponibilidad del día.</p>
+        <span class="badge">Sujeto a disponibilidad</span>
+      </div>
+      <div class="especialidad-card reveal">
+        <div class="especialidad-card__icon">
+          <svg viewBox="0 0 24 24" class="icon"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="0.8" fill="#fff"/><circle cx="13" cy="9" r="0.8" fill="#fff"/><circle cx="15" cy="13" r="0.8" fill="#fff"/><circle cx="10" cy="14" r="0.8" fill="#fff"/></svg>
+        </div>
+        <h3>Arroces</h3>
+        <p>Presencia habitual en la carta de la casa.</p>
+        <span class="badge">Sujeto a disponibilidad</span>
+      </div>
+      <div class="especialidad-card reveal">
+        <div class="especialidad-card__icon">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M12 3c-3 3-5 6-5 9a5 5 0 0 0 10 0c0-3-2-6-5-9z"/></svg>
+        </div>
+        <h3>Postres caseros</h3>
+        <p>Repostería tradicional de casa de comidas.</p>
+        <span class="badge">Sujeto a disponibilidad</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= GALERÍA ======================= -->
+<section class="gallery section" id="galeria">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">Un vistazo a la casa</p>
+      <h2>Galería</h2>
+      <p class="section__subtitle">Imágenes de muestra. Pendiente de sustituir por fotografías reales del local.</p>
+    </div>
+    <div class="gallery__grid" id="gallery-grid">
+      <!-- FOTO REAL DEL RESTAURANTE — SUSTITUIR (cada imagen indica qué foto debe ir aquí) -->
+      <div class="gallery__item" data-src="images/galeria-fachada.svg" role="button" tabindex="0"><img src="images/galeria-fachada.svg" alt="Fachada del restaurante (imagen de muestra)" loading="lazy"></div>
+      <div class="gallery__item" data-src="images/galeria-interior.svg" role="button" tabindex="0"><img src="images/galeria-interior.svg" alt="Interior del restaurante (imagen de muestra)" loading="lazy"></div>
+      <div class="gallery__item" data-src="images/galeria-plato-principal.svg" role="button" tabindex="0"><img src="images/galeria-plato-principal.svg" alt="Plato principal (imagen de muestra)" loading="lazy"></div>
+      <div class="gallery__item" data-src="images/galeria-menu.svg" role="button" tabindex="0"><img src="images/galeria-menu.svg" alt="Menú del día (imagen de muestra)" loading="lazy"></div>
+      <div class="gallery__item" data-src="images/galeria-postre.svg" role="button" tabindex="0"><img src="images/galeria-postre.svg" alt="Postre (imagen de muestra)" loading="lazy"></div>
+      <div class="gallery__item" data-src="images/galeria-detalle.svg" role="button" tabindex="0"><img src="images/galeria-detalle.svg" alt="Detalle del restaurante (imagen de muestra)" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= VISÍTANOS: UBICACIÓN + HORARIO + CONTACTO ======================= -->
+<section class="visitanos section" id="visitanos">
+  <div class="container visitanos__grid">
+
+    <div class="visitanos__col reveal">
+      <p class="eyebrow">Ubicación</p>
+      <h2>Cómo llegar</h2>
+      <p class="visitanos__address">
+        Restaurante Badila<br>
+        Calle de San Pedro Mártir, 6<br>
+        28012 Madrid
+      </p>
+      <p class="visitanos__metro">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7 11.5 7.3 11.7.4.3 1 .3 1.4 0C13 21.5 20 15.4 20 10c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+        Metro Tirso de Molina
+      </p>
+      <a href="https://www.google.com/maps/dir/?api=1&destination=Restaurante%20Badila%2C%20Calle%20de%20San%20Pedro%20M%C3%A1rtir%2C%206%2C%2028012%20Madrid" target="_blank" rel="noopener" class="btn btn--primary">Cómo llegar</a>
+
+      <!-- Integración con Google Maps: sustituir "src" por el enlace real
+           (Google Maps > buscar el restaurante > Compartir > Insertar un mapa) -->
+      <div class="visitanos__map">
+        <iframe src="about:blank" title="Mapa — pendiente de insertar enlace real de Google Maps" loading="lazy"></iframe>
+        <div class="visitanos__map-placeholder">Mapa de Google — insertar enlace real</div>
+      </div>
+    </div>
+
+    <div class="visitanos__col reveal">
+      <p class="eyebrow">Horario</p>
+      <h2>Horario</h2>
+      <!-- HORARIOS — CONFIRMAR CON EL CLIENTE -->
+      <table class="hours-table">
+        <tr><td>Lunes</td><td>Cerrado</td></tr>
+        <tr><td>Martes</td><td>13:30 – 17:30</td></tr>
+        <tr><td>Miércoles</td><td>13:30 – 17:30</td></tr>
+        <tr><td>Jueves</td><td>13:30 – 17:00</td></tr>
+        <tr><td>Viernes</td><td>13:30 – 17:30</td></tr>
+        <tr><td>Sábado</td><td>13:30 – 17:30</td></tr>
+        <tr><td>Domingo</td><td>13:30 – 17:30</td></tr>
+      </table>
+      <p class="hours-note">Horarios sujetos a cambios. Confirmar antes de visitar.</p>
+
+      <div class="visitanos__contact">
+        <p class="eyebrow">Contacto</p>
+        <a href="tel:+34914297651" class="phone-link">914 29 76 51</a>
+        <div class="hero__actions">
+          <a href="tel:+34914297651" class="btn btn--primary">Llamar</a>
+          <!-- DATOS DE RESERVA — CONFIRMAR CON EL CLIENTE: no hay reserva online
+               confirmada; este botón llama por teléfono. Sustituir por el canal
+               real (formulario, WhatsApp, TheFork...) si el restaurante lo habilita. -->
+          <a href="tel:+34914297651" class="btn btn--ghost">Consultar / reservar</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= OPINIONES ======================= -->
+<section class="opiniones section" id="opiniones">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">Opiniones</p>
+      <h2>Opiniones de nuestros clientes</h2>
+      <p class="section__subtitle">Espacio reservado para reseñas reales. Se completará con opiniones verificadas de clientes.</p>
+    </div>
+    <div class="opiniones__grid">
+      <div class="opinion-placeholder reveal">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M7 8h4v6H8l-1 3H5l1-3H4V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2zm9 0h4v6h-3l-1 3h-2l1-3h-1V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2z"/></svg>
+        <span>Reseña pendiente de añadir</span>
+      </div>
+      <div class="opinion-placeholder reveal">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M7 8h4v6H8l-1 3H5l1-3H4V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2zm9 0h4v6h-3l-1 3h-2l1-3h-1V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2z"/></svg>
+        <span>Reseña pendiente de añadir</span>
+      </div>
+      <div class="opinion-placeholder reveal">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M7 8h4v6H8l-1 3H5l1-3H4V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2zm9 0h4v6h-3l-1 3h-2l1-3h-1V8a4 4 0 0 1 4-4v2a2 2 0 0 0-2 2z"/></svg>
+        <span>Reseña pendiente de añadir</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="images/logo.svg" alt="Badila" class="brand__logo brand__logo--light">
+      <span>Badila</span>
+      <p>Calle de San Pedro Mártir, 6, 28012 Madrid — Metro Tirso de Molina</p>
+    </div>
+    <nav class="footer__nav">
+      <a href="#historia">Historia</a>
+      <a href="#menu">Menú</a>
+      <a href="#especialidades">Especialidades</a>
+      <a href="#galeria">Galería</a>
+      <a href="#visitanos">Visítanos</a>
+    </nav>
+    <div class="footer__contact">
+      <a href="tel:+34914297651">914 29 76 51</a>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container"><span id="footer-copy"></span></div>
+  </div>
+</footer>
+
+<!-- Botón flotante de llamada -->
+<a href="tel:+34914297651" class="float-call" aria-label="Llamar a Badila">
+  <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+</a>
+
+<button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" class="icon"><path d="M12 8l-6 6h12z"/></svg>
+</button>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightbox-close" aria-label="Cerrar">&times;</button>
+  <img src="" alt="" id="lightbox-image">
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
