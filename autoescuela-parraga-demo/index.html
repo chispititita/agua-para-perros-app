@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Párraga Autoescuela — Guadarrama, Madrid | Demo conceptual</title>
+<meta name="description" content="Demo conceptual de página web para Párraga, autoescuela en Guadarrama (Madrid). Información sobre permisos de conducir, clases prácticas y contacto por WhatsApp o teléfono.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.ejemplo-parraga.es/"> <!-- PLACEHOLDER — sustituir por el dominio real -->
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Párraga Autoescuela — Guadarrama, Madrid (demo conceptual)">
+<meta property="og:description" content="Propuesta de página web para Párraga Autoescuela: permisos, proceso para sacarte el carnet y contacto directo por WhatsApp.">
+<meta property="og:image" content="images/hero.svg"> <!-- Ilustración genérica — sustituir por foto real -->
+<meta property="og:locale" content="es_ES">
+
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<!-- ============================================================
+     Datos estructurados (Schema.org). Solo se incluyen los campos
+     confirmados (nombre y ubicación aproximada). Teléfono, horario y
+     dirección exacta se añadirán cuando estén confirmados: no se
+     inventan para no publicar información falsa. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DrivingSchool",
+  "name": "Párraga Autoescuela",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Guadarrama",
+    "addressRegion": "Madrid",
+    "addressCountry": "ES"
+  },
+  "url": "https://www.ejemplo-parraga.es/"
+}
+</script>
+<!-- DATOS PENDIENTES DE CONFIRMAR: telephone, openingHoursSpecification,
+     streetAddress e image se añadirán a este bloque cuando el cliente los
+     confirme. -->
+
+</head>
+<body>
+
+<!-- Aviso de demo (discreto, visible en toda la navegación) -->
+<div class="demo-bar">DEMO CONCEPTUAL — propuesta de diseño no oficial para Párraga</div>
+
+<!-- ======================= CABECERA ======================= -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#inicio" class="brand">
+      <img src="images/logo.svg" alt="Párraga Autoescuela" class="brand__logo">
+      <span class="brand__text">
+        <strong>PÁRRAGA</strong>
+        <small>AUTOESCUELA</small>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#permisos">Permisos</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#faq">Preguntas frecuentes</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="header__cta">
+      <a href="#" id="header-whatsapp" target="_blank" rel="noopener" class="btn btn--accent btn--sm">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.8c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"/></svg>
+        <span>WhatsApp</span>
+      </a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#inicio">Inicio</a>
+    <a href="#permisos">Permisos</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#faq">Preguntas frecuentes</a>
+    <a href="#contacto">Contacto</a>
+    <a href="#" id="mobile-whatsapp" target="_blank" rel="noopener" class="btn btn--accent">WhatsApp</a>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="inicio">
+  <div class="container hero__grid">
+    <div class="hero__text reveal">
+      <p class="eyebrow">Párraga · Guadarrama, Madrid</p>
+      <h1>Tu carnet empieza aquí.</h1>
+      <p class="hero__subtitle">Aprende a conducir con confianza y prepárate para conseguir tu permiso de conducir.</p>
+      <div class="hero__actions">
+        <a href="#contacto" class="btn btn--secondary btn--lg">Quiero información</a>
+        <a href="#" id="hero-whatsapp" target="_blank" rel="noopener" class="btn btn--accent btn--lg">Hablar por WhatsApp</a>
+      </div>
+    </div>
+    <div class="hero__media reveal">
+      <div class="hero__image-tag">Imagen ilustrativa</div>
+      <!-- Ilustración genérica — sustituir por una foto real del centro, los
+           coches o los alumnos cuando el cliente la facilite. -->
+      <img src="images/hero.svg" alt="Ilustración de un coche de autoescuela en carretera">
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BLOQUE DE CONFIANZA ======================= -->
+<section class="trust">
+  <div class="container trust__grid" id="trust-grid"></div>
+</section>
+
+<!-- ======================= PERMISOS ======================= -->
+<section class="permits section" id="permisos">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">Formación</p>
+      <h2>Elige tu permiso</h2>
+      <p class="section__subtitle">La oferta de permisos concreta está pendiente de confirmar con el centro.</p>
+    </div>
+    <div class="permits__grid" id="permits-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= NOSOTROS / POR QUÉ ELEGIR PÁRRAGA ======================= -->
+<section class="why section" id="nosotros">
+  <div class="container why__grid">
+    <div class="why__media reveal">
+      <div class="hero__image-tag">Imagen ilustrativa</div>
+      <!-- Ilustración genérica — sustituir por foto real -->
+      <img src="images/nosotros.svg" alt="Ilustración de una clase de conducción" loading="lazy">
+    </div>
+    <div class="why__text reveal">
+      <p class="eyebrow">Por qué elegir Párraga</p>
+      <h2>Un acompañamiento cercano, de principio a fin</h2>
+      <div class="why__list" id="why-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROCESO ======================= -->
+<section class="process section" id="proceso">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2>Conseguir tu carnet es más fácil de lo que parece</h2>
+    </div>
+    <div class="process__grid" id="process-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= CTA FINAL ======================= -->
+<section class="cta-final">
+  <div class="container cta-final__inner reveal">
+    <h2 id="cta-final-title"></h2>
+    <p id="cta-final-text"></p>
+    <div class="hero__actions">
+      <a href="#contacto" class="btn btn--secondary btn--lg">Solicitar información</a>
+      <a href="#" id="cta-final-whatsapp" target="_blank" rel="noopener" class="btn btn--accent btn--lg">WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section class="faq section" id="faq">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow">Dudas frecuentes</p>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq__list" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- ======================= CONTACTO ======================= -->
+<section class="contact section" id="contacto">
+  <div class="container contact__grid">
+    <div class="contact__info reveal">
+      <p class="eyebrow">Contacto</p>
+      <h2>PÁRRAGA AUTOESCUELA</h2>
+      <p class="contact__city" id="contact-city"></p>
+
+      <ul class="contact__list">
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+          <span id="contact-phone-text"></span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20z"/></svg>
+          <span id="contact-whatsapp-text"></span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm16 2.5-8 5.5-8-5.5V7l8 5.5L20 7V6.5z"/></svg>
+          <span id="contact-email"></span>
+        </li>
+      </ul>
+
+      <div class="hours" id="hours-list"></div>
+
+      <div class="contact__actions">
+        <a href="#" id="contact-call" class="btn btn--secondary">Llamar</a>
+        <a href="#" id="contact-whatsapp" target="_blank" rel="noopener" class="btn btn--accent">WhatsApp</a>
+        <a href="#" id="contact-directions" target="_blank" rel="noopener" class="btn btn--ghost">Cómo llegar</a>
+      </div>
+    </div>
+
+    <div class="contact__map reveal">
+      <!-- Mapa generado a partir de la localidad (Guadarrama, Madrid), ya que
+           no se ha confirmado la dirección exacta del centro. Sustituir el
+           "src" por el enlace de "Insertar un mapa" de Google Maps cuando se
+           confirme la ubicación exacta. -->
+      <iframe id="map-frame" src="" title="Mapa de Guadarrama, Madrid" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="images/logo.svg" alt="Párraga Autoescuela" class="brand__logo brand__logo--light">
+      <span>PÁRRAGA AUTOESCUELA</span>
+      <p id="footer-city"></p>
+    </div>
+    <nav class="footer__nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#permisos">Permisos</a>
+      <a href="#contacto">Contacto</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="cookies.html">Cookies</a>
+    </nav>
+  </div>
+  <div class="footer__bottom">
+    <div class="container">
+      <span id="footer-copy"></span>
+      <span class="footer__demo-note">Demo conceptual — diseño no oficial</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Barra fija móvil de conversión -->
+<div class="mobile-bar" id="mobile-bar">
+  <a href="#" id="mobile-bar-call" class="mobile-bar__btn mobile-bar__btn--secondary">
+    <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+    Llamar
+  </a>
+  <a href="#" id="mobile-bar-whatsapp" target="_blank" rel="noopener" class="mobile-bar__btn mobile-bar__btn--accent">
+    <svg viewBox="0 0 24 24" class="icon"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20z"/></svg>
+    WhatsApp
+  </a>
+</div>
+
+<button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" class="icon"><path d="M12 8l-6 6h12z"/></svg>
+</button>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

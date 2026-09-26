@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" width="1000" height="760">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef4ff"/>
+      <stop offset="100%" stop-color="#dbe7ff"/>
+    </linearGradient>
+    <linearGradient id="car" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#0a2540"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="760" fill="url(#bg)"/>
+
+  <!-- sol / acentos decorativos -->
+  <circle cx="860" cy="130" r="70" fill="#ffffff" opacity="0.55"/>
+  <circle cx="120" cy="110" r="34" fill="#2563eb" opacity="0.12"/>
+
+  <!-- carretera -->
+  <rect x="0" y="520" width="1000" height="240" fill="#0a2540"/>
+  <rect x="0" y="520" width="1000" height="10" fill="#2563eb"/>
+  <g stroke="#ffffff" stroke-width="10" stroke-dasharray="46 34" opacity="0.85">
+    <line x1="0" y1="640" x2="1000" y2="640"/>
+  </g>
+
+  <!-- coche (vista lateral simplificada) -->
+  <g transform="translate(230,360)">
+    <rect x="0" y="70" width="520" height="110" rx="26" fill="url(#car)"/>
+    <path d="M60 70 Q120 -10 250 -10 L400 -10 Q460 -10 470 70 Z" fill="url(#car)"/>
+    <path d="M110 68 Q150 20 240 18 L300 18 Q360 18 380 68 Z" fill="#eef4ff" opacity="0.9"/>
+    <line x1="245" y1="20" x2="243" y2="68" stroke="#0a2540" stroke-width="4" opacity="0.5"/>
+    <circle cx="120" cy="188" r="46" fill="#101828"/>
+    <circle cx="120" cy="188" r="18" fill="#dbe7ff"/>
+    <circle cx="400" cy="188" r="46" fill="#101828"/>
+    <circle cx="400" cy="188" r="18" fill="#dbe7ff"/>
+    <rect x="490" y="96" width="26" height="16" rx="4" fill="#f04438"/>
+  </g>
+
+  <!-- placa "L" de aprendizaje -->
+  <g transform="translate(700,300)">
+    <rect x="0" y="0" width="86" height="100" rx="12" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+    <text x="43" y="72" font-family="Arial, sans-serif" font-size="64" font-weight="800" fill="#f04438" text-anchor="middle">L</text>
+  </g>
+
+  <!-- etiqueta discreta -->
+  <g transform="translate(28,700)">
+    <rect width="300" height="34" rx="17" fill="#0a2540" opacity="0.55"/>
+    <text x="150" y="23" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle">Ilustración genérica de autoescuela</text>
+  </g>
+</svg>
