@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1000" width="900" height="1000">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f6f3"/>
+      <stop offset="100%" stop-color="#e7e4dd"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1000" fill="url(#g)"/>
+  <rect x="24" y="24" width="852" height="952" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <text x="450" y="480" font-family="Arial, sans-serif" font-size="28" fill="#14213d" text-anchor="middle">FOTO "SOBRE NOSOTROS"</text>
+  <text x="450" y="516" font-family="Arial, sans-serif" font-size="18" fill="#5b5f66" text-anchor="middle">Sustituye images/about.svg — recomendado 900x1000px</text>
+</svg>

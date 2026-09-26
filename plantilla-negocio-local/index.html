@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantilla Negocio Local</title>
+<meta name="description" content="Plantilla web profesional para negocios locales">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+
+<!-- Tipografías (cámbialas en config.js -> fuentes, y aquí si usas otras de Google Fonts) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ======================= BARRA DE AVISO (opcional) ======================= -->
+<div class="topbar" id="topbar">
+  <div class="container topbar__inner">
+    <span id="topbar-text"></span>
+  </div>
+</div>
+
+<!-- ======================= CABECERA / MENÚ ======================= -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#inicio" class="brand" id="brand">
+      <img src="images/logo.svg" alt="Logo" id="brand-logo" class="brand__logo">
+      <span id="brand-name" class="brand__name"></span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#inicio">Inicio</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#galeria">Galería</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="header__cta">
+      <a href="#" id="header-phone" class="btn btn--ghost btn--sm">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+        <span id="header-phone-text"></span>
+      </a>
+      <a href="#" id="header-whatsapp" target="_blank" rel="noopener" class="btn btn--primary btn--sm">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.8c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"/></svg>
+        <span>WhatsApp</span>
+      </a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#inicio">Inicio</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#galeria">Galería</a>
+    <a href="#opiniones">Opiniones</a>
+    <a href="#contacto">Contacto</a>
+    <a href="#" id="mobile-whatsapp" target="_blank" rel="noopener" class="btn btn--primary">WhatsApp</a>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="inicio">
+  <div class="hero__bg">
+    <img src="images/hero.svg" alt="" id="hero-image">
+    <div class="hero__overlay"></div>
+  </div>
+  <div class="container hero__content reveal">
+    <p class="eyebrow" id="hero-eyebrow"></p>
+    <h1 id="hero-title"></h1>
+    <p class="hero__subtitle" id="hero-subtitle"></p>
+    <div class="hero__actions">
+      <a href="#" id="hero-cta-primary" class="btn btn--primary btn--lg"></a>
+      <a href="#" id="hero-cta-secondary" class="btn btn--outline-light btn--lg"></a>
+    </div>
+    <div class="hero__rating" id="hero-rating"></div>
+  </div>
+  <a href="#servicios" class="scroll-cue" aria-label="Bajar">
+    <svg viewBox="0 0 24 24" class="icon"><path d="M12 16l-6-6h12z"/></svg>
+  </a>
+</section>
+
+<!-- ======================= ESTADÍSTICAS ======================= -->
+<section class="stats">
+  <div class="container stats__grid" id="stats-grid"></div>
+</section>
+
+<!-- ======================= SERVICIOS ======================= -->
+<section class="services section" id="servicios">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow" id="services-eyebrow">Lo que ofrecemos</p>
+      <h2 id="services-title">Nuestros servicios</h2>
+      <p class="section__subtitle" id="services-subtitle"></p>
+    </div>
+    <div class="services__grid" id="services-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= SOBRE NOSOTROS ======================= -->
+<section class="about section" id="nosotros">
+  <div class="container about__grid">
+    <div class="about__media reveal">
+      <img src="images/about.svg" alt="" id="about-image">
+    </div>
+    <div class="about__text reveal">
+      <p class="eyebrow" id="about-eyebrow">Sobre nosotros</p>
+      <h2 id="about-title"></h2>
+      <p id="about-text"></p>
+      <ul class="checklist" id="about-points"></ul>
+      <a href="#" id="about-cta" class="btn btn--primary"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= GALERÍA ======================= -->
+<section class="gallery section" id="galeria">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow" id="gallery-eyebrow">Nuestro trabajo</p>
+      <h2 id="gallery-title">Galería</h2>
+    </div>
+    <div class="gallery__grid" id="gallery-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= OPINIONES ======================= -->
+<section class="testimonials section" id="opiniones">
+  <div class="container">
+    <div class="section__head reveal">
+      <p class="eyebrow" id="testimonials-eyebrow">Opiniones</p>
+      <h2 id="testimonials-title">Lo que dicen nuestros clientes</h2>
+    </div>
+    <div class="testimonials__track" id="testimonials-track"></div>
+  </div>
+</section>
+
+<!-- ======================= CTA FINAL ======================= -->
+<section class="cta-final">
+  <div class="container cta-final__inner reveal">
+    <h2 id="cta-final-title"></h2>
+    <p id="cta-final-subtitle"></p>
+    <div class="hero__actions">
+      <a href="#" id="cta-final-whatsapp" target="_blank" rel="noopener" class="btn btn--primary btn--lg">Escríbenos por WhatsApp</a>
+      <a href="#" id="cta-final-phone" class="btn btn--outline-light btn--lg"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CONTACTO / HORARIO / MAPA ======================= -->
+<section class="contact section" id="contacto">
+  <div class="container contact__grid">
+
+    <div class="contact__info reveal">
+      <p class="eyebrow">Contacto</p>
+      <h2 id="contact-title">¿Hablamos?</h2>
+
+      <ul class="contact__list">
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7 11.5 7.3 11.7.4.3 1 .3 1.4 0C13 21.5 20 15.4 20 10c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+          <span id="contact-address"></span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.2c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1L6.6 10.8z"/></svg>
+          <a href="#" id="contact-phone"></a>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" class="icon"><path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm16 2.5-8 5.5-8-5.5V7l8 5.5L20 7V6.5z"/></svg>
+          <a href="#" id="contact-email"></a>
+        </li>
+      </ul>
+
+      <div class="hours" id="hours-list"></div>
+
+      <div class="socials" id="socials"></div>
+    </div>
+
+    <div class="contact__map reveal">
+      <iframe id="map-frame" src="" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de ubicación"></iframe>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img src="images/logo.svg" alt="Logo" id="footer-logo" class="brand__logo brand__logo--light">
+      <span id="footer-name"></span>
+      <p id="footer-tagline"></p>
+    </div>
+    <nav class="footer__nav">
+      <a href="#servicios">Servicios</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#galeria">Galería</a>
+      <a href="#contacto">Contacto</a>
+      <a href="aviso-legal.html">Aviso legal</a>
+      <a href="politica-privacidad.html">Privacidad</a>
+      <a href="politica-cookies.html">Cookies</a>
+    </nav>
+    <div class="footer__socials" id="footer-socials"></div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container">
+      <span id="footer-copy"></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Botón flotante de WhatsApp -->
+<a href="#" id="float-whatsapp" target="_blank" rel="noopener" class="float-whatsapp" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" class="icon"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.2 0-.3 0-.5s-.6-1.5-.9-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.8c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"/></svg>
+</a>
+
+<!-- Botón volver arriba -->
+<button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" class="icon"><path d="M12 8l-6 6h12z"/></svg>
+</button>
+
+<!-- Lightbox de galería -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox__close" id="lightbox-close" aria-label="Cerrar">&times;</button>
+  <img src="" alt="" id="lightbox-image">
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

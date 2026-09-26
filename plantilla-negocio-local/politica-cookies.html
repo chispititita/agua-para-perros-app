@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Cookies</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html#inicio" class="brand" id="brand">
+      <img src="images/logo.svg" alt="Logo" id="brand-logo" class="brand__logo">
+      <span id="brand-name" class="brand__name"></span>
+    </a>
+    <div style="flex:1"></div>
+    <a href="index.html" class="btn btn--ghost btn--sm">Volver a la web</a>
+  </div>
+</header>
+
+<main class="container legal">
+  <h1>Política de Cookies</h1>
+  <p>Este sitio web de <strong id="legal-nombre"></strong> utiliza cookies propias y, en su caso, de terceros para mejorar la experiencia de navegación.</p>
+
+  <h2>1. ¿Qué son las cookies?</h2>
+  <p>Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo al visitar un sitio web, y que permiten reconocer tu navegador y recordar cierta información sobre tu visita.</p>
+
+  <h2>2. Cookies que utiliza esta web</h2>
+  <p>Esta plantilla, en su versión base, no instala cookies de analítica ni de publicidad. Si en el futuro se incorporan herramientas como Google Analytics, Meta Pixel, chats en vivo o mapas incrustados que generen cookies, esta política deberá actualizarse para reflejarlas, junto con un banner de consentimiento de cookies.</p>
+
+  <h2>3. Cómo gestionar las cookies</h2>
+  <p>Puedes permitir, bloquear o eliminar las cookies instaladas en tu equipo mediante la configuración de las opciones del navegador que utilices (Chrome, Firefox, Safari, Edge, etc.).</p>
+
+  <h2>4. Más información</h2>
+  <p>Si tienes cualquier duda sobre esta política de cookies, puedes contactarnos en <strong id="legal-email"></strong>.</p>
+
+  <p style="margin-top:32px; font-size:0.85rem;">Nota para el editor de la plantilla: si añades Google Analytics, Meta Pixel u otras herramientas de terceros, deberás actualizar este texto y añadir un banner de consentimiento de cookies conforme a la normativa (RGPD / LSSI). Este texto es orientativo y no sustituye el asesoramiento legal profesional.</p>
+</main>
+
+<footer class="footer">
+  <div class="footer__bottom">
+    <div class="container"><span id="footer-copy"></span></div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script>
+  document.getElementById('brand-name').textContent = CONFIG.negocio?.nombre || '';
+  document.getElementById('brand-logo').src = CONFIG.imagenes?.logo || '';
+  document.getElementById('legal-nombre').textContent = CONFIG.legal?.nombreFiscal || CONFIG.negocio?.nombre || '';
+  document.getElementById('legal-email').textContent = CONFIG.legal?.emailContacto || CONFIG.contacto?.email || '';
+  document.getElementById('footer-copy').textContent = `© ${new Date().getFullYear()} ${CONFIG.negocio?.nombre || ''}. Todos los derechos reservados.`;
+  const root = document.documentElement.style;
+  if (CONFIG.colores?.primario) root.setProperty('--color-primario', CONFIG.colores.primario);
+  if (CONFIG.colores?.secundario) root.setProperty('--color-secundario', CONFIG.colores.secundario);
+</script>
+</body>
+</html>

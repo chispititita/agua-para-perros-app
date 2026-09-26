@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de Privacidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html#inicio" class="brand" id="brand">
+      <img src="images/logo.svg" alt="Logo" id="brand-logo" class="brand__logo">
+      <span id="brand-name" class="brand__name"></span>
+    </a>
+    <div style="flex:1"></div>
+    <a href="index.html" class="btn btn--ghost btn--sm">Volver a la web</a>
+  </div>
+</header>
+
+<main class="container legal">
+  <h1>Política de Privacidad</h1>
+  <p>En <strong id="legal-nombre"></strong> nos comprometemos a proteger la privacidad de las personas que visitan nuestro sitio web y se ponen en contacto con nosotros, de acuerdo con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).</p>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <p><strong id="legal-nombre-2"></strong>, con domicilio en <strong id="legal-direccion"></strong> y correo de contacto <strong id="legal-email"></strong>, es el responsable del tratamiento de los datos personales que nos facilites a través de este sitio web.</p>
+
+  <h2>2. ¿Qué datos tratamos?</h2>
+  <p>Únicamente tratamos los datos que el usuario nos proporciona voluntariamente al contactar por teléfono, WhatsApp, correo electrónico o formulario: nombre, teléfono y/o correo electrónico.</p>
+
+  <h2>3. ¿Con qué finalidad?</h2>
+  <p>Utilizamos tus datos para responder a tus consultas, gestionar reservas o citas, y prestarte el servicio solicitado. No se utilizarán tus datos para fines distintos a los indicados sin tu consentimiento expreso.</p>
+
+  <h2>4. ¿Se comparten datos con terceros?</h2>
+  <p>No cedemos tus datos personales a terceros, salvo obligación legal. Si utilizamos WhatsApp para atenderte, ten en cuenta que dicho servicio es propiedad de Meta Platforms Ireland Ltd. y se rige por su propia política de privacidad.</p>
+
+  <h2>5. ¿Cuáles son tus derechos?</h2>
+  <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad enviando un correo a <strong id="legal-email-2"></strong>, indicando el derecho que deseas ejercer y adjuntando copia de tu documento de identidad.</p>
+
+  <h2>6. Plazo de conservación</h2>
+  <p>Los datos se conservarán mientras exista una relación comercial o durante el tiempo necesario para cumplir con las obligaciones legales aplicables.</p>
+
+  <p style="margin-top:32px; font-size:0.85rem;">Nota para el editor de la plantilla: este texto es un modelo genérico orientativo y no sustituye el asesoramiento de un profesional legal. Revísalo y adáptalo antes de publicar la web de tu cliente.</p>
+</main>
+
+<footer class="footer">
+  <div class="footer__bottom">
+    <div class="container"><span id="footer-copy"></span></div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script>
+  document.getElementById('brand-name').textContent = CONFIG.negocio?.nombre || '';
+  document.getElementById('brand-logo').src = CONFIG.imagenes?.logo || '';
+  const nombreFiscal = CONFIG.legal?.nombreFiscal || CONFIG.negocio?.nombre || '';
+  document.getElementById('legal-nombre').textContent = nombreFiscal;
+  document.getElementById('legal-nombre-2').textContent = nombreFiscal;
+  document.getElementById('legal-direccion').textContent = CONFIG.legal?.direccionFiscal || CONFIG.contacto?.direccion || '';
+  const email = CONFIG.legal?.emailContacto || CONFIG.contacto?.email || '';
+  document.getElementById('legal-email').textContent = email;
+  document.getElementById('legal-email-2').textContent = email;
+  document.getElementById('footer-copy').textContent = `© ${new Date().getFullYear()} ${CONFIG.negocio?.nombre || ''}. Todos los derechos reservados.`;
+  const root = document.documentElement.style;
+  if (CONFIG.colores?.primario) root.setProperty('--color-primario', CONFIG.colores.primario);
+  if (CONFIG.colores?.secundario) root.setProperty('--color-secundario', CONFIG.colores.secundario);
+</script>
+</body>
+</html>
