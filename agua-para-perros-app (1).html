@@ -512,7 +512,7 @@
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-label">Precio promedio</div>
-                        <div class="metric-value" id="avgPrice">€28,28</div>
+                        <div class="metric-value" id="avgPrice">€17.99</div>
                         <div class="metric-delta">de 3 tamaños</div>
                     </div>
                     <div class="metric-card">
@@ -526,9 +526,9 @@
                         <div class="metric-delta">en AutoDS</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-label">Audit score</div>
-                        <div class="metric-value">43/100</div>
-                        <div class="metric-delta">6 problemas</div>
+                        <div class="metric-label">Auditoría</div>
+                        <div class="metric-value" id="auditCritical">0</div>
+                        <div class="metric-delta" id="auditTotal">problemas críticos</div>
                     </div>
                 </div>
 
@@ -590,23 +590,28 @@
 
     <script>
         const prices = {
-            '300ml': 24.95,
-            '350ml': 27.95,
-            '550ml': 32.95
+            '300ml': 15.99,
+            '350ml': 17.99,
+            '550ml': 19.99
         };
 
         const variants = [
-            { size: '300ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 },
-            { size: '350ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 },
-            { size: '550ml', colors: ['Azul', 'Rojo', 'Verde', 'Negro', 'Rosa', 'Blanco'], stock: 10 }
+            { size: '300ml', colors: ['Negro', 'Gris', 'Verde', 'Turquesa', 'Rosa', 'Blanco'], stock: 10 },
+            { size: '350ml', colors: ['Negro', 'Gris', 'Verde', 'Turquesa', 'Rosa', 'Blanco'], stock: 10 },
+            { size: '550ml', colors: ['Negro', 'Gris', 'Verde', 'Turquesa', 'Rosa', 'Blanco'], stock: 10 }
         ];
 
+        // Auditoría 26 sep 2026 (datos reales de Shopify, últimos 30 días)
         const issues = [
-            { severity: 'danger', title: 'Logo placeholder', desc: 'Usa "TIENDATIENDA" genérico. Reemplazar con logo SVG.' },
-            { severity: 'danger', title: 'Shipping claims falsos', desc: 'Dice "Spain fulfillment" pero viene de China (15-30 días).' },
-            { severity: 'warning', title: 'Themes duplicados', desc: 'Tienes 2 temas activos. Limpiar antes de escalar.' },
-            { severity: 'warning', title: 'AutoDS sync risk', desc: 'Puede sobrescribir cambios de precios manualmente.' },
-            { severity: 'success', title: 'Reviews limpias', desc: 'Las fake reviews fueron removidas correctamente.' }
+            { severity: 'danger', title: 'Checkout: 16 llegan, 0 pagan (España)', desc: '357 sesiones ES → 28 carritos → 16 checkouts → 0 pedidos. Solo 1 checkout abandonado con email: se van antes de rellenar datos. Hacer compra real de prueba.' },
+            { severity: 'danger', title: 'Imagen "2ª unidad gratis" falsa', desc: 'La galería promete 2ª unidad gratis, pero el pack real es 300ml 2×19,99€. Promesa que no se cumple en el checkout = abandono y riesgo legal.' },
+            { severity: 'danger', title: 'Código 2X1 más barato que el pack', desc: 'El código 2X1 (46%) deja 2×300ml en 17,27€, por debajo del pack automático (19,99€). Regala margen. El título dice "~30€" y está desfasado.' },
+            { severity: 'warning', title: 'Precio bajó de 24,95€ a 15,99€', desc: 'El checkout del 10 sep cobraba 24,95€ por 300ml. Hoy está a 15,99€. Confirmar si fue manual o AutoDS lo sobrescribió.' },
+            { severity: 'warning', title: '68% del tráfico es de EE. UU.', desc: '1.018 sesiones de EE. UU., casi todas "direct", 2 carritos. Tráfico basura: mide la conversión solo con España.' },
+            { severity: 'warning', title: 'Políticas contradictorias', desc: 'Ficha: gratis península y Baleares. Política de envío: solo península. Términos: aceptan PayPal (verificar). Devoluciones: el cliente paga el envío de vuelta.' },
+            { severity: 'warning', title: 'URL del producto en inglés (AutoDS)', desc: '/products/dog-water-bottle-for-pet-dogs-cats-... Cambiar a /products/botella-portatil-perros con redirección.' },
+            { severity: 'warning', title: 'Contacto solo con Gmail personal', desc: 'Crear hola@aguaparaperros.store (gratis con reenvío de Shopify) para dar confianza.' },
+            { severity: 'success', title: 'Ficha llega al carrito', desc: '7,8% de las sesiones de España añaden al carrito y el 57% pasa al checkout. La ficha funciona; el fallo está después.' }
         ];
 
         function initApp() {
@@ -680,6 +685,10 @@
                 </div>
             `).join('');
             document.getElementById('auditList').innerHTML = html;
+            const critical = issues.filter(i => i.severity === 'danger').length;
+            const open = issues.filter(i => i.severity !== 'success').length;
+            document.getElementById('auditCritical').textContent = critical;
+            document.getElementById('auditTotal').textContent = `críticos · ${open} abiertos`;
         }
 
         function showNotification(message) {
