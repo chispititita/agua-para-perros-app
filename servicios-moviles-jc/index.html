@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios Móviles JC · Comparador de móviles</title>
+  <meta name="description" content="Servicios Móviles JC: comparador profesional de móviles. Compara especificaciones, encuentra el móvil ideal con nuestro asistente y descubre dónde comprarlo al mejor precio.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#catalogo">Saltar al catálogo</a>
+
+  <!-- ============ CABECERA ============ -->
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a href="#top" class="logo" aria-label="Servicios Móviles JC, inicio">
+        <span class="logo__mark">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="3" width="16" height="26" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="24.5" r="1.6" fill="currentColor"/></svg>
+        </span>
+        <span class="logo__text">Servicios Móviles <b>JC</b></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Principal">
+        <a href="#asistente">Asistente</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#comparar">Comparar</a>
+        <a href="#guia">Guía de compra</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="header__actions">
+        <button class="icon-btn" id="favBtn" aria-label="Ver favoritos" title="Favoritos">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>
+          <span class="badge" id="favCount">0</span>
+        </button>
+        <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Modo claro / oscuro">
+          <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <span class="pill">Comparador independiente · Actualizado 2025-2026</span>
+          <h1>Encuentra el móvil <span class="grad">perfecto para ti</span> y cómpralo al mejor precio</h1>
+          <p class="lead">Compara especificaciones punto por punto, recibe recomendaciones personalizadas y descubre todas las alternativas de compra: nuevo, reacondicionado o de segunda mano.</p>
+          <div class="search" role="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="search" id="heroSearch" placeholder="Busca un modelo: iPhone 17, Galaxy S25, Pixel…" autocomplete="off" aria-label="Buscar móvil">
+            <ul class="search__results" id="heroResults" role="listbox"></ul>
+          </div>
+          <div class="hero__cta">
+            <a href="#asistente" class="btn btn--primary">Hacer el test (1 min)</a>
+            <a href="#catalogo" class="btn btn--ghost">Explorar catálogo</a>
+          </div>
+          <ul class="stats">
+            <li><b id="statPhones">0</b><span>modelos analizados</span></li>
+            <li><b id="statBrands">0</b><span>marcas</span></li>
+            <li><b>9+</b><span>tiendas comparadas</span></li>
+            <li><b>20+</b><span>datos por móvil</span></li>
+          </ul>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <div class="float-phone fp1"><div class="phone-mock" style="--c:#c96a2b"><i></i></div></div>
+          <div class="float-phone fp2"><div class="phone-mock" style="--c:#4a4e5a"><i></i></div></div>
+          <div class="float-phone fp3"><div class="phone-mock" style="--c:#6b705c"><i></i></div></div>
+          <div class="hero__card">
+            <span>Puntuación JC</span>
+            <div class="mini-ring" style="--v:96"><b>96</b></div>
+            <small>Mejor valorado del mes</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ASISTENTE ============ -->
+    <section class="section" id="asistente">
+      <div class="container">
+        <header class="section__head">
+          <span class="eyebrow">Asistente inteligente</span>
+          <h2>¿No sabes qué móvil elegir? Te ayudamos</h2>
+          <p>Responde 4 preguntas rápidas y te recomendamos los modelos que mejor encajan contigo.</p>
+        </header>
+        <div class="quiz card" id="quiz"></div>
+      </div>
+    </section>
+
+    <!-- ============ CATÁLOGO ============ -->
+    <section class="section section--alt" id="catalogo">
+      <div class="container">
+        <header class="section__head">
+          <span class="eyebrow">Catálogo</span>
+          <h2>Todos los móviles, analizados al detalle</h2>
+          <p>Filtra por lo que te importa y añade hasta 4 modelos al comparador.</p>
+        </header>
+
+        <div class="catalog">
+          <aside class="filters card" id="filters" aria-label="Filtros">
+            <div class="filters__head">
+              <h3>Filtros</h3>
+              <button class="link-btn" id="resetFilters">Limpiar</button>
+            </div>
+
+            <label class="field">
+              <span>Buscar</span>
+              <input type="search" id="fSearch" placeholder="Modelo, marca o procesador">
+            </label>
+
+            <div class="field">
+              <span>Precio máximo: <b id="fPriceVal"></b></span>
+              <input type="range" id="fPrice" min="200" max="2100" step="50">
+            </div>
+
+            <div class="field">
+              <span>Sistema operativo</span>
+              <div class="seg" id="fOs">
+                <button data-v="all" class="on">Todos</button>
+                <button data-v="Android">Android</button>
+                <button data-v="iOS">iOS</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <span>Marcas</span>
+              <div class="chips" id="fBrands"></div>
+            </div>
+
+            <div class="field">
+              <span>Batería mínima: <b id="fBatVal"></b></span>
+              <input type="range" id="fBat" min="3000" max="6000" step="250">
+            </div>
+
+            <div class="field">
+              <span>RAM mínima</span>
+              <select id="fRam">
+                <option value="0">Cualquiera</option>
+                <option value="8">8 GB o más</option>
+                <option value="12">12 GB o más</option>
+                <option value="16">16 GB</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <span>Características</span>
+              <label class="check"><input type="checkbox" value="wireless" class="fFeat"> Carga inalámbrica</label>
+              <label class="check"><input type="checkbox" value="ip68" class="fFeat"> Resistente al agua (IP68)</label>
+              <label class="check"><input type="checkbox" value="tele" class="fFeat"> Con teleobjetivo</label>
+              <label class="check"><input type="checkbox" value="fast" class="fFeat"> Carga rápida (≥ 65 W)</label>
+              <label class="check"><input type="checkbox" value="compact" class="fFeat"> Compacto (≤ 6,3")</label>
+              <label class="check"><input type="checkbox" value="fold" class="fFeat"> Plegable</label>
+              <label class="check"><input type="checkbox" value="upd" class="fFeat"> 6+ años de actualizaciones</label>
+              <label class="check"><input type="checkbox" value="fav" class="fFeat" id="fFav"> Solo mis favoritos</label>
+            </div>
+          </aside>
+
+          <div class="catalog__main">
+            <div class="toolbar">
+              <button class="btn btn--ghost btn--sm filters-toggle" id="filtersToggle">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 5h18M6 12h12M10 19h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+                Filtros
+              </button>
+              <p id="resultCount" aria-live="polite"></p>
+              <label class="sort">
+                <span>Ordenar por</span>
+                <select id="fSort">
+                  <option value="score">Puntuación JC</option>
+                  <option value="value">Calidad / precio</option>
+                  <option value="priceAsc">Precio: menor a mayor</option>
+                  <option value="priceDesc">Precio: mayor a menor</option>
+                  <option value="cam">Mejor cámara</option>
+                  <option value="bat">Mejor batería</option>
+                  <option value="perf">Más potente</option>
+                  <option value="new">Más recientes</option>
+                </select>
+              </label>
+            </div>
+            <div class="grid" id="grid"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMPARADOR ============ -->
+    <section class="section" id="comparar">
+      <div class="container">
+        <header class="section__head">
+          <span class="eyebrow">Comparador</span>
+          <h2>Cara a cara, sin letra pequeña</h2>
+          <p>Resaltamos en verde el mejor dato de cada fila para que veas de un vistazo quién gana.</p>
+        </header>
+        <div id="compareArea"></div>
+      </div>
+    </section>
+
+    <!-- ============ GUÍA ============ -->
+    <section class="section section--alt" id="guia">
+      <div class="container">
+        <header class="section__head">
+          <span class="eyebrow">Guía de compra</span>
+          <h2>Lo que de verdad importa al comprar un móvil</h2>
+          <p>Explicado de forma sencilla, sin tecnicismos innecesarios.</p>
+        </header>
+        <div class="guide">
+          <article class="card guide__item">
+            <div class="guide__icon">💶</div>
+            <h3>Fija tu presupuesto</h3>
+            <p><b>Hasta 300 €:</b> básicos para redes, WhatsApp y fotos del día a día.<br><b>300–600 €:</b> la mejor relación calidad/precio.<br><b>600–1000 €:</b> gama media-alta muy completa.<br><b>+1000 €:</b> lo mejor en cámara y potencia.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">⚙️</div>
+            <h3>Procesador y RAM</h3>
+            <p>Para uso normal bastan <b>8 GB de RAM</b>. Si juegas o editas vídeo, busca procesadores Snapdragon 8, Apple A18/A19 o Dimensity 9000 y 12 GB o más.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">🔋</div>
+            <h3>Batería y carga</h3>
+            <p>Más de <b>5000 mAh</b> suele dar para día y medio. La carga rápida (65 W o más) te permite cargar el móvil en unos 30 minutos. En iPhone la eficiencia compensa su menor capacidad.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">📷</div>
+            <h3>Cámaras</h3>
+            <p>Los megapíxeles no lo son todo: importan el <b>tamaño del sensor</b>, el procesado y tener <b>teleobjetivo</b> para retratos y zoom sin perder calidad.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">📱</div>
+            <h3>Pantalla</h3>
+            <p>Prefiere <b>OLED/AMOLED</b> con <b>120 Hz</b>: negros puros, más fluidez y mejor visibilidad al sol. LTPO ajusta la frecuencia y ahorra batería.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">🛡️</div>
+            <h3>Actualizaciones y garantía</h3>
+            <p>Un móvil con <b>6-7 años</b> de actualizaciones será seguro mucho más tiempo. En la UE tienes <b>3 años de garantía</b> en productos nuevos.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">♻️</div>
+            <h3>¿Nuevo o reacondicionado?</h3>
+            <p>Un reacondicionado de calidad puede ahorrarte un <b>20-40 %</b> con garantía de 12 meses. Ideal para modelos de la generación anterior.</p>
+          </article>
+          <article class="card guide__item">
+            <div class="guide__icon">🧾</div>
+            <h3>Consejos antes de pagar</h3>
+            <p>Compara precios en varias tiendas, revisa la política de devoluciones (14 días mínimo online) y desconfía de ofertas demasiado buenas en vendedores desconocidos.</p>
+          </article>
+        </div>
+
+        <div class="card glossary">
+          <h3>Glosario rápido</h3>
+          <dl>
+            <div><dt>Hz (tasa de refresco)</dt><dd>Veces por segundo que se actualiza la imagen. 120 Hz = más fluidez.</dd></div>
+            <div><dt>LTPO</dt><dd>Tecnología de pantalla que varía los Hz para ahorrar batería.</dd></div>
+            <div><dt>IP68</dt><dd>Protección total contra polvo y sumersión en agua dulce.</dd></div>
+            <div><dt>eSIM</dt><dd>SIM digital integrada: no necesitas tarjeta física.</dd></div>
+            <div><dt>Teleobjetivo</dt><dd>Cámara con zoom óptico para acercar sin perder calidad.</dd></div>
+            <div><dt>Qi2 / MagSafe</dt><dd>Carga inalámbrica magnética con alineación perfecta.</dd></div>
+            <div><dt>mAh</dt><dd>Capacidad de la batería. Más mAh suele significar más autonomía.</dd></div>
+            <div><dt>5G</dt><dd>Red móvil de última generación: más velocidad y menor latencia.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section" id="faq">
+      <div class="container container--narrow">
+        <header class="section__head">
+          <span class="eyebrow">Preguntas frecuentes</span>
+          <h2>Resolvemos tus dudas</h2>
+        </header>
+        <div class="faq">
+          <details><summary>¿Cómo calculáis la Puntuación JC?</summary><p>Combinamos cuatro áreas (rendimiento, cámara, pantalla y autonomía) con pesos equilibrados, basándonos en especificaciones, pruebas de referencia y análisis especializados. La nota de calidad/precio relaciona esa puntuación con el precio de referencia.</p></details>
+          <details><summary>¿Los precios son exactos?</summary><p>Mostramos el precio oficial de lanzamiento como referencia. Los precios reales cambian cada día, por eso te damos enlaces directos a varias tiendas y comparadores para que veas el precio actual.</p></details>
+          <details><summary>¿Vendéis los móviles directamente?</summary><p>No. Servicios Móviles JC es un comparador: te ayudamos a decidir y te enviamos a las tiendas para que compres donde prefieras.</p></details>
+          <details><summary>¿Merece la pena un móvil reacondicionado?</summary><p>Sí, si lo compras en una plataforma con garantía (mínimo 12 meses) y estado de batería certificado. Es una forma excelente de ahorrar y de reducir residuos electrónicos.</p></details>
+          <details><summary>¿Puedo compartir una comparativa?</summary><p>Sí. En el comparador pulsa «Copiar enlace» y comparte la URL: al abrirla se cargarán los mismos móviles.</p></details>
+          <details><summary>¿iPhone o Android?</summary><p>iPhone destaca por su integración con el ecosistema Apple, vídeo y larga vida útil. Android ofrece más variedad de precios, carga más rápida y mayor personalización. Nuestro asistente te ayuda a decidir.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ PIE ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <a href="#top" class="logo">
+          <span class="logo__mark"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="3" width="16" height="26" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="24.5" r="1.6" fill="currentColor"/></svg></span>
+          <span class="logo__text">Servicios Móviles <b>JC</b></span>
+        </a>
+        <p class="muted">Tu comparador de confianza para elegir, comparar y comprar el móvil ideal.</p>
+      </div>
+      <div>
+        <h4>Explorar</h4>
+        <a href="#asistente">Asistente</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#comparar">Comparador</a>
+        <a href="#guia">Guía de compra</a>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <a href="mailto:info@serviciosmovilesjc.es">info@serviciosmovilesjc.es</a>
+        <span class="muted">Lunes a viernes · 9:00–20:00</span>
+      </div>
+    </div>
+    <div class="container footer__legal">
+      <p>© <span id="year"></span> Servicios Móviles JC. Precios y especificaciones orientativos; consulta siempre la tienda antes de comprar. Las marcas pertenecen a sus respectivos propietarios.</p>
+    </div>
+  </footer>
+
+  <!-- Bandeja del comparador -->
+  <div class="tray" id="tray" aria-live="polite">
+    <div class="container tray__inner">
+      <div class="tray__slots" id="traySlots"></div>
+      <div class="tray__actions">
+        <button class="link-btn" id="trayClear">Vaciar</button>
+        <a href="#comparar" class="btn btn--primary btn--sm" id="trayGo">Comparar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalle -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" id="modalPanel"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
