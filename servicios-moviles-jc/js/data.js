@@ -1,8 +1,11 @@
 /* ==========================================================
    Servicios Móviles JC — Base de datos de móviles
-   Precios de lanzamiento orientativos en España (EUR, IVA incl.)
-   Puntuaciones s: perf (rendimiento), cam (cámara), scr (pantalla),
-   bat (autonomía) en escala 0-100.
+   · Precios de lanzamiento orientativos en España (EUR, IVA incl.)
+   · s: puntuaciones 0-100 de rendimiento, cámara, pantalla y autonomía
+   · dim: [alto, ancho, grosor] en mm (plegables: cerrados)
+   · open: medidas abiertos (solo plegables)
+   · colors: [nombre oficial, color] (+ opciones de acabado)
+   · d: diseño para dibujar el móvil (esquinas, cámara frontal, módulo de cámaras)
    ========================================================== */
 const PHONES = [
   {
@@ -14,18 +17,24 @@ const PHONES = [
     s: { perf: 99, cam: 97, scr: 96, bat: 97 },
     pros: ["Autonomía excelente, de las mejores del mercado", "Vídeo de referencia (ProRes, Log, 4K120)", "Teleobjetivo 4x de 48 MP muy versátil", "Chasis de aluminio con cámara de vapor: menos calentamiento"],
     cons: ["Precio muy alto", "Pesado (231 g)", "Carga rápida por debajo de rivales Android"],
-    color: "#c96a2b", tags: ["Gama alta", "Fotografía", "Vídeo"]
+    tags: ["Gama alta", "Fotografía", "Vídeo"],
+    dim: [163.4, 78.0, 8.75],
+    colors: [["Naranja cósmico", "#d8702e"], ["Azul intenso", "#2c3e5c"], ["Plata", "#e3e4e6"]],
+    d: { r: .15, front: "island", bz: 1.35, fin: "metal", cam: { t: "iphone-pro", bump: 3.6, len: .245 } }
   },
   {
     id: "iphone-17-pro", brand: "Apple", name: "iPhone 17 Pro", year: 2025, os: "iOS",
     price: 1319, size: 6.3, panel: "OLED LTPO Super Retina XDR", hz: 120, res: "2622 × 1206",
-    chip: "Apple A19 Pro", ram: [12], sto: [256, 512, 1024], bat: 3998, chg: 40, wchg: 25,
+    chip: "Apple A19 Pro", ram: [12], sto: [256, 512, 1024], bat: 3988, chg: 40, wchg: 25,
     mainMP: 48, cams: "48 MP principal + 48 MP ultra gran angular + 48 MP teleobjetivo 4x",
-    front: 18, weight: 206, ip: "IP68", esim: "Sí (SIM + eSIM)", upd: 6, fold: false,
+    front: 18, weight: 204, ip: "IP68", esim: "Sí (SIM + eSIM)", upd: 6, fold: false,
     s: { perf: 99, cam: 96, scr: 95, bat: 88 },
     pros: ["Todo lo del Pro Max en formato manejable", "Rendimiento tope de gama", "Sistema de cámaras triple de 48 MP"],
     cons: ["Caro", "Batería menor que el Pro Max", "Solo 256 GB de base con precio elevado"],
-    color: "#3d5a80", tags: ["Gama alta", "Compacto", "Fotografía"]
+    tags: ["Gama alta", "Compacto", "Fotografía"],
+    dim: [150.0, 71.9, 8.75],
+    colors: [["Azul intenso", "#2c3e5c"], ["Naranja cósmico", "#d8702e"], ["Plata", "#e3e4e6"]],
+    d: { r: .155, front: "island", bz: 1.35, fin: "metal", cam: { t: "iphone-pro", bump: 3.6, len: .245 } }
   },
   {
     id: "iphone-air", brand: "Apple", name: "iPhone Air", year: 2025, os: "iOS",
@@ -36,7 +45,10 @@ const PHONES = [
     s: { perf: 96, cam: 84, scr: 95, bat: 78 },
     pros: ["Extremadamente fino (5,6 mm) y ligero", "Diseño en titanio muy premium", "Pantalla grande de 120 Hz"],
     cons: ["Una sola cámara trasera", "Autonomía justa", "Solo eSIM", "Altavoz mono"],
-    color: "#9fb7c9", tags: ["Gama alta", "Ligero", "Diseño"]
+    tags: ["Gama alta", "Ligero", "Diseño"],
+    dim: [156.2, 74.7, 5.64],
+    colors: [["Azul cielo", "#c9dcea"], ["Dorado claro", "#ecdcc0"], ["Blanco nube", "#f3f3f1"], ["Negro espacial", "#2b2b2d"]],
+    d: { r: .155, front: "island", bz: 1.35, frame: "ti", fin: "matte", cam: { t: "iphone-air", bump: 2.6, len: .15 } }
   },
   {
     id: "iphone-17", brand: "Apple", name: "iPhone 17", year: 2025, os: "iOS",
@@ -47,7 +59,10 @@ const PHONES = [
     s: { perf: 92, cam: 88, scr: 93, bat: 86 },
     pros: ["Por fin 120 Hz ProMotion y Always-On", "256 GB de base", "Gran equilibrio calidad/precio en Apple", "Nueva cámara frontal Center Stage"],
     cons: ["Sin teleobjetivo", "Carga más lenta que la competencia Android"],
-    color: "#8fa98c", tags: ["Gama media-alta", "Equilibrado"]
+    tags: ["Gama media-alta", "Equilibrado"],
+    dim: [149.6, 71.5, 7.95],
+    colors: [["Lavanda", "#d9cbe8"], ["Salvia", "#b7c4a7"], ["Azul neblina", "#b3c7da"], ["Blanco", "#f2f2f0"], ["Negro", "#2e2f31"]],
+    d: { r: .155, front: "island", bz: 1.4, fin: "matte", cam: { t: "pill-v", n: 2, w: .25, bump: 2.4, len: .23 } }
   },
   {
     id: "iphone-16e", brand: "Apple", name: "iPhone 16e", year: 2025, os: "iOS",
@@ -58,7 +73,10 @@ const PHONES = [
     s: { perf: 88, cam: 78, scr: 78, bat: 88 },
     pros: ["El iPhone más asequible", "Muy buena autonomía", "Compatible con Apple Intelligence"],
     cons: ["Pantalla de 60 Hz", "Sin MagSafe", "Notch clásico en lugar de Dynamic Island", "Una sola cámara"],
-    color: "#e8e8e8", tags: ["Gama media", "Entrada iPhone"]
+    tags: ["Gama media", "Entrada iPhone"],
+    dim: [146.7, 71.5, 7.8],
+    colors: [["Negro", "#2a2a2c"], ["Blanco", "#f1f1ef"]],
+    d: { r: .15, front: "notch", bz: 1.6, fin: "matte", cam: { t: "iphone-single", bump: 1.8, len: .16 } }
   },
   {
     id: "galaxy-s25-ultra", brand: "Samsung", name: "Galaxy S25 Ultra", year: 2025, os: "Android",
@@ -69,7 +87,10 @@ const PHONES = [
     s: { perf: 97, cam: 95, scr: 98, bat: 92 },
     pros: ["Pantalla antirreflejos espectacular", "Zoom 5x y 10x de gran calidad", "S Pen incluido", "7 años de actualizaciones"],
     cons: ["Muy caro", "Grande y pesado", "Carga de 45 W sin grandes cambios"],
-    color: "#4a4e5a", tags: ["Gama alta", "Productividad", "Zoom"]
+    tags: ["Gama alta", "Productividad", "Zoom"],
+    dim: [162.8, 77.6, 8.2],
+    colors: [["Titanio azul plata", "#9fb0c4"], ["Titanio negro", "#3a3b3f"], ["Titanio gris", "#8e8e8c"], ["Titanio blanco plata", "#e2e3e2"]],
+    d: { r: .055, front: "punch", bz: 1.2, frame: "ti", fin: "matte", cam: { t: "galaxy-ultra", bump: 1.6, len: .3 } }
   },
   {
     id: "galaxy-s25", brand: "Samsung", name: "Galaxy S25", year: 2025, os: "Android",
@@ -80,7 +101,10 @@ const PHONES = [
     s: { perf: 96, cam: 86, scr: 91, bat: 80 },
     pros: ["Compacto y ligero con potencia tope", "Teleobjetivo 3x", "7 años de actualizaciones"],
     cons: ["Batería justa para usuarios intensos", "Carga lenta (25 W)"],
-    color: "#7aa2c9", tags: ["Gama alta", "Compacto"]
+    tags: ["Gama alta", "Compacto"],
+    dim: [146.9, 70.5, 7.2],
+    colors: [["Azul hielo", "#c3d6e6"], ["Azul marino", "#28324a"], ["Menta", "#c8e0d2"], ["Plata sombra", "#b9bcc1"]],
+    d: { r: .13, front: "punch", bz: 1.3, fin: "glass", cam: { t: "floating", n: 3, bump: 1.4, len: .3 } }
   },
   {
     id: "galaxy-s25-edge", brand: "Samsung", name: "Galaxy S25 Edge", year: 2025, os: "Android",
@@ -91,7 +115,24 @@ const PHONES = [
     s: { perf: 95, cam: 85, scr: 95, bat: 74 },
     pros: ["Solo 5,8 mm de grosor", "Muy ligero para su tamaño", "Pantalla QHD+ de gran calidad"],
     cons: ["Sin teleobjetivo", "Autonomía discreta", "Precio elevado"],
-    color: "#b8c4ce", tags: ["Gama alta", "Ligero", "Diseño"]
+    tags: ["Gama alta", "Ligero", "Diseño"],
+    dim: [158.2, 75.6, 5.8],
+    colors: [["Titanio plata", "#c9cbcd"], ["Titanio negro azabache", "#2a2b2e"], ["Titanio azul hielo", "#b8cfe0"]],
+    d: { r: .12, front: "punch", bz: 1.3, frame: "ti", fin: "glass", cam: { t: "pill-v", n: 2, w: .27, bump: 3.5, len: .26 } }
+  },
+  {
+    id: "galaxy-s25-fe", brand: "Samsung", name: "Galaxy S25 FE", year: 2025, os: "Android",
+    price: 709, size: 6.7, panel: "Dynamic AMOLED 2X", hz: 120, res: "2340 × 1080",
+    chip: "Samsung Exynos 2400", ram: [8], sto: [128, 256, 512], bat: 4900, chg: 45, wchg: 15,
+    mainMP: 50, cams: "50 MP principal + 12 MP ultra gran angular + 8 MP tele 3x",
+    front: 12, weight: 190, ip: "IP68", esim: "Sí (SIM + eSIM)", upd: 7, fold: false,
+    s: { perf: 82, cam: 80, scr: 88, bat: 84 },
+    pros: ["Experiencia Galaxy S por menos dinero", "Teleobjetivo 3x y carga inalámbrica", "7 años de actualizaciones"],
+    cons: ["Exynos 2400 menos eficiente que Snapdragon", "Marcos algo más gruesos que el S25"],
+    tags: ["Gama media-alta", "Equilibrado"],
+    dim: [161.3, 76.6, 7.4],
+    colors: [["Azul marino", "#2a3550"], ["Azul hielo", "#c3d6e6"], ["Negro azabache", "#232427"], ["Blanco", "#efefef"]],
+    d: { r: .12, front: "punch", bz: 1.6, fin: "glass", cam: { t: "floating", n: 3, bump: 1.5, len: .3 } }
   },
   {
     id: "galaxy-z-fold7", brand: "Samsung", name: "Galaxy Z Fold7", year: 2025, os: "Android",
@@ -102,7 +143,10 @@ const PHONES = [
     s: { perf: 96, cam: 90, scr: 95, bat: 80 },
     pros: ["Plegable libro más fino y ligero de Samsung", "Pantalla interior de 8\" ideal para productividad", "Cámara de 200 MP"],
     cons: ["Precio altísimo", "Sin soporte para S Pen", "Resistencia al polvo limitada (IP48)"],
-    color: "#2b3a55", tags: ["Plegable", "Productividad", "Gama alta"]
+    tags: ["Plegable", "Productividad", "Gama alta"],
+    dim: [158.4, 72.8, 8.9], open: [158.4, 143.2, 4.2],
+    colors: [["Azul sombra", "#34445e"], ["Plata sombra", "#b9bcc0"], ["Negro azabache", "#1f2023"], ["Menta", "#bcd9c7"]],
+    d: { r: .1, front: "fold", bz: 1.4, fin: "glass", cam: { t: "pill-v", n: 3, w: .22, bump: 2.5, len: .33 } }
   },
   {
     id: "galaxy-z-flip7", brand: "Samsung", name: "Galaxy Z Flip7", year: 2025, os: "Android",
@@ -113,7 +157,10 @@ const PHONES = [
     s: { perf: 88, cam: 82, scr: 92, bat: 78 },
     pros: ["Pantalla exterior de borde a borde muy útil", "Diseño de concha compacto y con estilo", "Mejor batería de la saga Flip"],
     cons: ["Sin teleobjetivo", "Exynos algo menos eficiente que Snapdragon", "Pliegue visible"],
-    color: "#1f6f8b", tags: ["Plegable", "Diseño", "Compacto"]
+    tags: ["Plegable", "Diseño", "Compacto"],
+    dim: [85.5, 75.2, 13.7], open: [166.7, 75.2, 6.5],
+    colors: [["Azul sombra", "#2f4a74"], ["Rojo coral", "#e0615b"], ["Negro azabache", "#1f2023"], ["Menta", "#bcd9c7"]],
+    d: { r: .12, front: "flip", bz: 1.5, fin: "glass", cam: { t: "flip", bump: 1.2, len: .3 } }
   },
   {
     id: "galaxy-a56", brand: "Samsung", name: "Galaxy A56 5G", year: 2025, os: "Android",
@@ -124,7 +171,10 @@ const PHONES = [
     s: { perf: 74, cam: 74, scr: 85, bat: 88 },
     pros: ["6 años de actualizaciones", "Carga de 45 W", "Acabado en metal y cristal", "Muy buena pantalla"],
     cons: ["Sin carga inalámbrica", "Cámara macro de relleno"],
-    color: "#8a8fb8", tags: ["Gama media", "Equilibrado"]
+    tags: ["Gama media", "Equilibrado"],
+    dim: [162.2, 77.5, 7.4],
+    colors: [["Grafito", "#3b3c40"], ["Gris claro", "#d9d9db"], ["Oliva", "#9fa48a"], ["Rosa", "#e8c9cf"]],
+    d: { r: .12, front: "punch", bz: 1.8, fin: "glass", cam: { t: "pill-v", n: 3, w: .2, bump: 2.2, len: .3 } }
   },
   {
     id: "galaxy-a36", brand: "Samsung", name: "Galaxy A36 5G", year: 2025, os: "Android",
@@ -135,7 +185,10 @@ const PHONES = [
     s: { perf: 68, cam: 68, scr: 84, bat: 88 },
     pros: ["Gran pantalla AMOLED", "Resistencia IP67", "6 años de actualizaciones por menos de 400 €"],
     cons: ["Rendimiento justo en juegos exigentes", "Cámaras secundarias flojas"],
-    color: "#b99cd6", tags: ["Gama media", "Calidad/precio"]
+    tags: ["Gama media", "Calidad/precio"],
+    dim: [162.9, 78.2, 7.4],
+    colors: [["Lavanda", "#c9bde0"], ["Negro", "#2d2e31"], ["Blanco", "#ececec"], ["Lima", "#dbe8a8"]],
+    d: { r: .12, front: "punch", bz: 1.9, fin: "glass", cam: { t: "pill-v", n: 3, w: .2, bump: 2.2, len: .3 } }
   },
   {
     id: "galaxy-a26", brand: "Samsung", name: "Galaxy A26 5G", year: 2025, os: "Android",
@@ -146,7 +199,10 @@ const PHONES = [
     s: { perf: 58, cam: 62, scr: 80, bat: 86 },
     pros: ["AMOLED 120 Hz y IP67 por menos de 300 €", "6 años de actualizaciones", "Buena autonomía"],
     cons: ["Carga lenta", "Rendimiento modesto"],
-    color: "#5a6b7d", tags: ["Gama de entrada", "Calidad/precio"]
+    tags: ["Gama de entrada", "Calidad/precio"],
+    dim: [164.0, 77.5, 7.7],
+    colors: [["Negro", "#2d2e31"], ["Blanco", "#ececec"], ["Menta", "#c5e2d3"], ["Melocotón", "#f1cbb8"]],
+    d: { r: .12, front: "drop", bz: 2, chin: 1.5, fin: "glass", cam: { t: "pill-v", n: 3, w: .2, bump: 2, len: .3 } }
   },
   {
     id: "galaxy-a16", brand: "Samsung", name: "Galaxy A16 5G", year: 2024, os: "Android",
@@ -157,7 +213,10 @@ const PHONES = [
     s: { perf: 48, cam: 55, scr: 72, bat: 85 },
     pros: ["Muy barato", "6 años de actualizaciones", "Pantalla AMOLED"],
     cons: ["Rendimiento básico", "Cámaras sencillas", "Solo 90 Hz"],
-    color: "#2f3b4c", tags: ["Gama de entrada", "Básico"]
+    tags: ["Gama de entrada", "Básico"],
+    dim: [164.4, 77.9, 7.9],
+    colors: [["Azul negro", "#262a36"], ["Gris", "#9a9ca1"], ["Verde claro", "#c8dcc3"]],
+    d: { r: .12, front: "drop", bz: 2.1, chin: 2.2, fin: "glass", cam: { t: "floating", n: 3, r: .068, bump: 1.5, len: .3 } }
   },
   {
     id: "pixel-10-pro", brand: "Google", name: "Pixel 10 Pro", year: 2025, os: "Android",
@@ -168,7 +227,24 @@ const PHONES = [
     s: { perf: 88, cam: 96, scr: 95, bat: 86 },
     pros: ["Fotografía computacional de referencia", "Pro Res Zoom hasta 100x", "Carga magnética Qi2 (Pixelsnap)", "7 años de actualizaciones y funciones IA"],
     cons: ["Tensor menos potente en juegos que Snapdragon", "Carga por cable lenta"],
-    color: "#6b705c", tags: ["Gama alta", "Fotografía", "IA"]
+    tags: ["Gama alta", "Fotografía", "IA"],
+    dim: [152.8, 72.0, 8.6],
+    colors: [["Moonstone", "#8a96a3"], ["Jade", "#cfe0cf"], ["Porcelana", "#ece7df"], ["Obsidiana", "#2a2b2d"]],
+    d: { r: .17, front: "punch", bz: 1.5, fin: "matte", cam: { t: "pixel-visor", n: 3, bump: 3, len: .14 } }
+  },
+  {
+    id: "pixel-10-pro-xl", brand: "Google", name: "Pixel 10 Pro XL", year: 2025, os: "Android",
+    price: 1299, size: 6.8, panel: "Super Actua LTPO OLED", hz: 120, res: "2992 × 1344",
+    chip: "Google Tensor G5", ram: [16], sto: [256, 512, 1024], bat: 5200, chg: 45, wchg: 25,
+    mainMP: 50, cams: "50 MP principal + 48 MP ultra gran angular + 48 MP periscopio 5x",
+    front: 42, weight: 232, ip: "IP68", esim: "Sí (SIM + eSIM)", upd: 7, fold: false,
+    s: { perf: 88, cam: 96, scr: 96, bat: 92 },
+    pros: ["La mejor cámara de Google en pantalla grande", "Carga de 45 W y Qi2 de 25 W", "Gran autonomía", "7 años de actualizaciones"],
+    cons: ["Pesado (232 g)", "Precio alto"],
+    tags: ["Gama alta", "Fotografía", "IA"],
+    dim: [162.8, 76.6, 8.5],
+    colors: [["Moonstone", "#8a96a3"], ["Jade", "#cfe0cf"], ["Porcelana", "#ece7df"], ["Obsidiana", "#2a2b2d"]],
+    d: { r: .16, front: "punch", bz: 1.5, fin: "matte", cam: { t: "pixel-visor", n: 3, bump: 3, len: .14 } }
   },
   {
     id: "pixel-10", brand: "Google", name: "Pixel 10", year: 2025, os: "Android",
@@ -179,7 +255,24 @@ const PHONES = [
     s: { perf: 86, cam: 88, scr: 90, bat: 87 },
     pros: ["Primer Pixel base con teleobjetivo 5x", "Android puro con 7 años de soporte", "Qi2 magnético"],
     cons: ["Sensor principal inferior al del Pro", "Carga lenta"],
-    color: "#4f6d7a", tags: ["Gama media-alta", "IA", "Equilibrado"]
+    tags: ["Gama media-alta", "IA", "Equilibrado"],
+    dim: [152.8, 72.0, 8.6],
+    colors: [["Índigo", "#3c4a8f"], ["Escarcha", "#dce6ef"], ["Limoncillo", "#dfe39a"], ["Obsidiana", "#2a2b2d"]],
+    d: { r: .17, front: "punch", bz: 1.8, fin: "glass", cam: { t: "pixel-visor", n: 3, bump: 3, len: .14 } }
+  },
+  {
+    id: "pixel-10-pro-fold", brand: "Google", name: "Pixel 10 Pro Fold", year: 2025, os: "Android",
+    price: 1899, size: 8.0, panel: "Super Actua Flex LTPO OLED (exterior 6,4\")", hz: 120, res: "2076 × 2152",
+    chip: "Google Tensor G5", ram: [16], sto: [256, 512, 1024], bat: 5015, chg: 30, wchg: 15,
+    mainMP: 48, cams: "48 MP principal + 10,5 MP ultra gran angular + 10,8 MP teleobjetivo 5x",
+    front: 10, weight: 258, ip: "IP68", esim: "Sí (SIM + eSIM)", upd: 7, fold: true,
+    s: { perf: 86, cam: 88, scr: 94, bat: 86 },
+    pros: ["Primer plegable con IP68", "Pantalla interior de 8\" muy brillante", "Qi2 magnético y 7 años de soporte"],
+    cons: ["Muy pesado (258 g)", "Cámaras por debajo del Pixel 10 Pro", "Precio muy alto"],
+    tags: ["Plegable", "Productividad", "IA"],
+    dim: [155.2, 76.3, 10.8], open: [155.2, 150.2, 5.2],
+    colors: [["Moonstone", "#8a96a3"], ["Jade", "#cfe0cf"]],
+    d: { r: .14, front: "fold", bz: 1.6, fin: "matte", cam: { t: "pixel-fold", bump: 2.5, len: .28 } }
   },
   {
     id: "pixel-9a", brand: "Google", name: "Pixel 9a", year: 2025, os: "Android",
@@ -190,7 +283,10 @@ const PHONES = [
     s: { perf: 78, cam: 84, scr: 86, bat: 90 },
     pros: ["Cámara de gama alta a precio medio", "7 años de actualizaciones", "IP68 y carga inalámbrica", "Gran autonomía"],
     cons: ["Carga lenta", "Marcos de pantalla gruesos"],
-    color: "#c2a8d8", tags: ["Gama media", "Calidad/precio", "Fotografía"]
+    tags: ["Gama media", "Calidad/precio", "Fotografía"],
+    dim: [154.7, 73.3, 8.9],
+    colors: [["Iris", "#aeb2e6"], ["Peonía", "#e9a8c0"], ["Porcelana", "#ece7df"], ["Obsidiana", "#2a2b2d"]],
+    d: { r: .16, front: "punch", bz: 2.6, fin: "matte", cam: { t: "pixel-a", bump: .4, len: .12 } }
   },
   {
     id: "xiaomi-15-ultra", brand: "Xiaomi", name: "Xiaomi 15 Ultra", year: 2025, os: "Android",
@@ -201,7 +297,10 @@ const PHONES = [
     s: { perf: 97, cam: 98, scr: 95, bat: 90 },
     pros: ["Una de las mejores cámaras del mercado (Leica)", "Sensor de 1 pulgada", "Carga de 90 W y 80 W inalámbrica"],
     cons: ["Muy caro", "Pesado y con módulo de cámara enorme", "HyperOS con algo de bloatware"],
-    color: "#1b1b1b", tags: ["Gama alta", "Fotografía", "Zoom"]
+    tags: ["Gama alta", "Fotografía", "Zoom"],
+    dim: [161.3, 75.3, 9.35],
+    colors: [["Plata cromado", "#d7d8da", { two: "#1e1e20" }], ["Negro", "#1e1e1f"], ["Blanco", "#efefed"]],
+    d: { r: .13, front: "punch", bz: 1.5, fin: "glass", cam: { t: "circle-center", bump: 4.5, len: .36 } }
   },
   {
     id: "xiaomi-15", brand: "Xiaomi", name: "Xiaomi 15", year: 2025, os: "Android",
@@ -212,7 +311,10 @@ const PHONES = [
     s: { perf: 97, cam: 90, scr: 92, bat: 92 },
     pros: ["Compacto con batería enorme", "Tres cámaras de 50 MP", "Carga ultrarrápida"],
     cons: ["Precio alto en lanzamiento", "Software con publicidad en algunas apps"],
-    color: "#5b8c85", tags: ["Gama alta", "Compacto", "Batería"]
+    tags: ["Gama alta", "Compacto", "Batería"],
+    dim: [152.3, 71.2, 8.08],
+    colors: [["Verde", "#8fb3a2"], ["Blanco", "#f1f1ef"], ["Negro", "#232325"], ["Plata líquida", "#c6c8cc"]],
+    d: { r: .14, front: "punch", bz: 1.4, fin: "glass", cam: { t: "grid", size: .45, slots: "LLLF", island: "same", bump: 2.5, len: .25 } }
   },
   {
     id: "redmi-note-14-pro-plus", brand: "Xiaomi", name: "Redmi Note 14 Pro+ 5G", year: 2025, os: "Android",
@@ -223,7 +325,10 @@ const PHONES = [
     s: { perf: 70, cam: 76, scr: 86, bat: 90 },
     pros: ["Carga de 120 W (100% en ~20 min)", "Teleobjetivo en gama media", "IP68 y cristal Gorilla Victus 2"],
     cons: ["Menos años de actualizaciones", "Ultra gran angular flojo"],
-    color: "#6f5aa8", tags: ["Gama media", "Calidad/precio", "Carga rápida"]
+    tags: ["Gama media", "Calidad/precio", "Carga rápida"],
+    dim: [162.5, 74.7, 8.75],
+    colors: [["Morado lavanda", "#b8a6d9"], ["Azul escarcha", "#a9c3dd"], ["Negro medianoche", "#222326"]],
+    d: { r: .14, front: "punch", bz: 1.7, fin: "glass", cam: { t: "grid", size: .46, slots: "LLLF", island: "glass", bump: 2.6, len: .27 } }
   },
   {
     id: "poco-f7-pro", brand: "Xiaomi", name: "POCO F7 Pro", year: 2025, os: "Android",
@@ -234,7 +339,24 @@ const PHONES = [
     s: { perf: 92, cam: 72, scr: 90, bat: 94 },
     pros: ["Potencia de gama alta por 500 €", "Pantalla 2K", "Batería de 6000 mAh con 90 W", "Ideal para gaming"],
     cons: ["Sin teleobjetivo", "Sin carga inalámbrica", "Cámaras discretas para el precio"],
-    color: "#c9a227", tags: ["Gaming", "Calidad/precio", "Batería"]
+    tags: ["Gaming", "Calidad/precio", "Batería"],
+    dim: [160.26, 75.0, 8.12],
+    colors: [["Plata", "#c9ccd1"], ["Azul", "#3b5b8f"], ["Negro", "#222325"]],
+    d: { r: .13, front: "punch", bz: 1.6, fin: "glass", cam: { t: "grid", size: .44, slots: "LFL-", island: "glass", bump: 2.4, len: .25 } }
+  },
+  {
+    id: "oneplus-15", brand: "OnePlus", name: "OnePlus 15", year: 2025, os: "Android",
+    price: 969, size: 6.78, panel: "LTPO AMOLED 1.5K", hz: 165, res: "2772 × 1272",
+    chip: "Snapdragon 8 Elite Gen 5", ram: [12, 16], sto: [256, 512], bat: 7300, chg: 120, wchg: 50,
+    mainMP: 50, cams: "50 MP principal + 50 MP ultra gran angular + 50 MP tele 3,5x",
+    front: 32, weight: 211, ip: "IP68/IP69", esim: "Sí (SIM + eSIM)", upd: 6, fold: false,
+    s: { perf: 99, cam: 89, scr: 95, bat: 99 },
+    pros: ["Batería gigante de 7300 mAh", "Pantalla de 165 Hz ideal para juegos", "Carga de 120 W y 50 W inalámbrica", "El procesador más potente de Qualcomm"],
+    cons: ["Cámaras un paso por detrás de los mejores", "Menos presencia en tiendas físicas"],
+    tags: ["Gama alta", "Batería", "Gaming"],
+    dim: [161.4, 76.7, 8.1],
+    colors: [["Sand Storm", "#c8b59a"], ["Ultra Violet", "#8b7fc9"], ["Negro infinito", "#1d1d1f"]],
+    d: { r: .13, front: "punch", bz: 1.3, fin: "matte", cam: { t: "grid", size: .44, slots: "LLLF", island: "same", bump: 2.5, len: .25 } }
   },
   {
     id: "oneplus-13", brand: "OnePlus", name: "OnePlus 13", year: 2025, os: "Android",
@@ -245,7 +367,10 @@ const PHONES = [
     s: { perf: 97, cam: 90, scr: 95, bat: 97 },
     pros: ["Batería de 6000 mAh con carga de 100 W", "Pantalla 2K brillantísima", "IP68 + IP69", "Precio competitivo para su nivel"],
     cons: ["Procesado fotográfico algo irregular", "Menos presencia en tiendas físicas"],
-    color: "#0f4c5c", tags: ["Gama alta", "Batería", "Carga rápida"]
+    tags: ["Gama alta", "Batería", "Carga rápida"],
+    dim: [162.9, 76.5, 8.5],
+    colors: [["Midnight Ocean", "#1f3654", { fin: "leather" }], ["Arctic Dawn", "#eeeeec"], ["Black Eclipse", "#1d1d1f"]],
+    d: { r: .13, front: "punch", bz: 1.3, fin: "matte", cam: { t: "grid", shape: "circle", size: .47, slots: "LLL", island: "same", flashOut: true, bump: 3, len: .25 } }
   },
   {
     id: "oneplus-13r", brand: "OnePlus", name: "OnePlus 13R", year: 2025, os: "Android",
@@ -256,7 +381,10 @@ const PHONES = [
     s: { perf: 91, cam: 78, scr: 91, bat: 95 },
     pros: ["Rendimiento flagship a precio medio", "Autonomía brutal", "Teleobjetivo 2x"],
     cons: ["Sin carga inalámbrica", "Solo IP65"],
-    color: "#3a6ea5", tags: ["Gama media-alta", "Batería", "Gaming"]
+    tags: ["Gama media-alta", "Batería", "Gaming"],
+    dim: [161.7, 75.8, 8.0],
+    colors: [["Astral Trail", "#c7c8ca"], ["Nebula Noir", "#26272a"]],
+    d: { r: .13, front: "punch", bz: 1.5, fin: "matte", cam: { t: "grid", shape: "circle", size: .45, slots: "LLL", island: "same", flashOut: true, bump: 2.6, len: .24 } }
   },
   {
     id: "nothing-phone-3a", brand: "Nothing", name: "Nothing Phone (3a)", year: 2025, os: "Android",
@@ -267,7 +395,10 @@ const PHONES = [
     s: { perf: 68, cam: 74, scr: 84, bat: 88 },
     pros: ["Diseño transparente único con luces Glyph", "Teleobjetivo 2x por 349 €", "Software limpio (Nothing OS)"],
     cons: ["Solo IP64", "Sin carga inalámbrica"],
-    color: "#d9d9d9", tags: ["Gama media", "Diseño", "Calidad/precio"]
+    tags: ["Gama media", "Diseño", "Calidad/precio"],
+    dim: [163.52, 77.5, 8.35],
+    colors: [["Blanco", "#e9e9e9"], ["Negro", "#1c1c1e"], ["Azul", "#4a6fa5"]],
+    d: { r: .12, front: "punch", bz: 1.9, fin: "glass", cam: { t: "nothing", bump: 2, len: .2 } }
   },
   {
     id: "motorola-edge-60-pro", brand: "Motorola", name: "Motorola Edge 60 Pro", year: 2025, os: "Android",
@@ -278,7 +409,10 @@ const PHONES = [
     s: { perf: 80, cam: 78, scr: 88, bat: 93 },
     pros: ["Batería de 6000 mAh muy ligera (186 g)", "Carga inalámbrica en gama media", "Certificación militar MIL-STD-810H", "512 GB de base"],
     cons: ["Menos actualizaciones", "Pantalla curva que no gusta a todos"],
-    color: "#2e6b5e", tags: ["Gama media", "Batería", "Resistente"]
+    tags: ["Gama media", "Batería", "Resistente"],
+    dim: [160.7, 73.1, 8.2],
+    colors: [["Pantone Dazzling Blue", "#2c3f8f"], ["Pantone Shadow", "#2f3134"], ["Pantone Sparkling Grape", "#5b3a6e"]],
+    d: { r: .12, front: "punch", bz: 1.2, fin: "leather", cam: { t: "grid", size: .42, slots: "LLLF", island: "same", bump: 2.2, len: .24 } }
   },
   {
     id: "moto-g85", brand: "Motorola", name: "moto g85 5G", year: 2024, os: "Android",
@@ -289,7 +423,10 @@ const PHONES = [
     s: { perf: 55, cam: 62, scr: 82, bat: 84 },
     pros: ["Muy ligero", "Pantalla pOLED 120 Hz", "256 GB por menos de 300 €"],
     cons: ["Pocas actualizaciones", "Protección IP52 limitada"],
-    color: "#3b5bdb", tags: ["Gama de entrada", "Ligero"]
+    tags: ["Gama de entrada", "Ligero"],
+    dim: [161.9, 73.1, 7.6],
+    colors: [["Azul cobalto", "#304e9b"], ["Verde oliva", "#6c7a52"], ["Gris urbano", "#6e7277"]],
+    d: { r: .12, front: "punch", bz: 1.8, fin: "leather", cam: { t: "pill-v", n: 2, w: .23, island: "same", bump: 1.6, len: .22 } }
   },
   {
     id: "honor-magic7-pro", brand: "Honor", name: "Honor Magic7 Pro", year: 2025, os: "Android",
@@ -300,7 +437,10 @@ const PHONES = [
     s: { perf: 96, cam: 93, scr: 94, bat: 91 },
     pros: ["Teleobjetivo de 200 MP", "Carga de 100 W y 80 W inalámbrica", "7 años de actualizaciones"],
     cons: ["Pesado", "MagicOS recargado", "Precio de lanzamiento alto"],
-    color: "#6d4c41", tags: ["Gama alta", "Fotografía", "Carga rápida"]
+    tags: ["Gama alta", "Fotografía", "Carga rápida"],
+    dim: [162.7, 77.1, 8.8],
+    colors: [["Gris sombra lunar", "#8c8f95"], ["Azul brisa", "#a9c5d9"], ["Negro", "#1f1f21"]],
+    d: { r: .13, front: "island", bz: 1.5, fin: "matte", cam: { t: "grid", pos: "tc", size: .52, slots: "LLLF", island: "glass", bump: 3.5, len: .33 } }
   }
 ];
 

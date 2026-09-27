@@ -1,0 +1,4 @@
+Guarda aquí tus fotos de móviles (JPG, PNG o WEBP, fondo transparente o blanco).
+Después añade la ruta de cada foto en js/fotos.js, por ejemplo:
+  "pixel-10-pro": "img/moviles/pixel-10-pro.webp",
+El nombre de cada móvil (su "id") está en js/data.js.
