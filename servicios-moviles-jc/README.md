@@ -15,6 +15,9 @@ Descomprime el ZIP y abre `index.html` con doble clic en cualquier navegador. Pa
 - **Ficha de cada móvil**: galería con colores, puntuaciones, pros/contras, «ideal para», especificaciones completas, **dónde comprar** (tienda oficial, Amazon, PcComponentes, MediaMarkt, El Corte Inglés, Fnac, Idealo, Google Shopping, Back Market y Wallapop), calculadora de financiación, **alternativas** y «comparar con…».
 - Búsqueda instantánea con miniaturas, enlaces directos a cada ficha (`#movil=id`), modo claro/oscuro y diseño adaptado a móvil.
 
+## Generar fotos con OpenAI (opcional)
+Abre `generar-fotos.html` en el navegador, pega tu clave de API de OpenAI y pulsa «Generar fotos». La herramienta usa el dibujo a escala de cada móvil como referencia para crear una foto de estudio realista (fondo transparente) y te descarga un ZIP. Descomprímelo dentro de esta carpeta aceptando reemplazar `js/fotos.js` y las fotos aparecerán en la web con la nota «Imagen orientativa generada con IA». Coste aproximado: 1,5 € (calidad media) o 6 € (alta) por las 31 fotos.
+
 ## Añadir fotos reales (opcional)
 Las imágenes son ilustraciones propias, así que no hay problemas de derechos. Si tienes fotos con permiso de uso:
 1. Guárdalas en `img/moviles/` (JPG, PNG o WEBP; mejor con fondo transparente o blanco).

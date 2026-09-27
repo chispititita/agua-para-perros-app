@@ -6,6 +6,8 @@
    carpeta img/moviles/ y escribe aquí la ruta de cada una.
    La foto sustituirá al dibujo en el catálogo y en la ficha.
 
+   También puedes generarlas con OpenAI abriendo generar-fotos.html.
+
    Ejemplo:
      "iphone-17-pro-max": "img/moviles/iphone-17-pro-max.webp",
      "galaxy-s25-ultra": "img/moviles/galaxy-s25-ultra.jpg",

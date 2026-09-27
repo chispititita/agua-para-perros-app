@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de fotos · Servicios Móviles JC</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .gen { padding: 40px 0 80px; }
+    .gen h1 { font-size: clamp(28px, 4vw, 40px); }
+    .panel { padding: 24px; margin-bottom: 20px; }
+    .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .panel label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+    .panel input[type=password], .panel input[type=text], .panel select { padding: 11px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); width: 100%; }
+    .panel label.check { display: flex; font-weight: 500; }
+    .steps { margin: 0 0 8px; padding-left: 20px; color: var(--muted); }
+    .steps li { margin-bottom: 6px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+    .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .item { padding: 12px; display: grid; gap: 8px; }
+    .item header { display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: 14px; }
+    .item header input { width: 17px; height: 17px; accent-color: var(--primary); }
+    .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .pic { height: 150px; border-radius: 10px; background: var(--stage); display: grid; place-items: center; overflow: hidden; font-size: 12px; color: var(--muted); text-align: center; padding: 4px; }
+    .pic img, .pic svg { max-height: 100%; max-width: 100%; }
+    .status { font-size: 13px; color: var(--muted); min-height: 18px; }
+    .status.ok { color: var(--good); } .status.err { color: var(--bad); }
+    .bar-total { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; flex: 1; min-width: 160px; }
+    .bar-total span { display: block; height: 100%; width: 0; background: var(--grad); transition: width .3s; }
+    .warn { background: var(--primary-soft); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="gen">
+    <div class="container">
+      <a href="index.html" class="link-btn">← Volver a la web</a>
+      <h1>Generar fotos de los móviles con OpenAI</h1>
+      <p class="muted">Esta herramienta crea una foto de estudio realista de cada móvil. Usa el dibujo a escala de la web como referencia para que la IA respete la forma, las cámaras y el color de cada modelo.</p>
+
+      <section class="card panel">
+        <h3>Cómo se usa</h3>
+        <ol class="steps">
+          <li>Crea una clave en <b>platform.openai.com → API keys</b> (necesitas saldo en tu cuenta).</li>
+          <li>Pégala abajo, elige la calidad y pulsa <b>Generar fotos</b>. Tarda unos minutos.</li>
+          <li>Revisa las fotos y pulsa <b>Descargar ZIP</b>.</li>
+          <li>Descomprime ese ZIP <b>dentro de la carpeta de la web</b> (la que contiene <code>index.html</code>) y acepta reemplazar <code>js/fotos.js</code>. ¡Listo!</li>
+        </ol>
+        <p class="warn">🔒 Tu clave solo se usa en este navegador para hablar directamente con OpenAI; no se guarda ni se envía a ningún otro sitio. No subas este archivo con tu clave escrita a ningún servidor.</p>
+        <div class="row" style="margin-top:16px">
+          <label>Clave de API de OpenAI<input type="password" id="key" placeholder="sk-..." autocomplete="off"></label>
+          <label>Modelo<input type="text" id="model" value="gpt-image-1"></label>
+          <label>Calidad<select id="quality"><option value="low">Baja (más barata, para probar)</option><option value="medium" selected>Media (recomendada)</option><option value="high">Alta (mejor acabado)</option></select></label>
+        </div>
+        <label class="check" style="margin-top:14px"><input type="checkbox" id="fidelity" checked> Máxima fidelidad a la referencia (desmárcalo si OpenAI da error con este modelo)</label>
+        <p class="note">Coste aproximado con gpt-image-1: unos 0,05 € por foto en calidad media y unos 0,20 € en alta (unos 1,5 € / 6 € las 31 fotos). Consulta los precios actuales en OpenAI.</p>
+        <div class="actions">
+          <button class="btn btn--primary" id="start">Generar fotos</button>
+          <button class="btn btn--ghost" id="stop" disabled>Detener</button>
+          <button class="btn btn--ghost" id="download" disabled>Descargar ZIP</button>
+          <div class="bar-total"><span id="total"></span></div>
+          <b id="count">0 / 0</b>
+        </div>
+      </section>
+
+      <div class="actions" style="margin-bottom:12px">
+        <button class="link-btn" id="all">Marcar todos</button>
+        <button class="link-btn" id="none">Desmarcar todos</button>
+        <span class="muted" style="font-size:14px">Izquierda: referencia · Derecha: foto generada</span>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/fotos.js"></script>
+  <script src="js/render.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    const $ = s => document.querySelector(s);
+    const results = {};          // id -> Uint8Array (PNG)
+    let running = false, stopFlag = false;
+
+    const prompt = p => `Photorealistic studio product photo of the ${p.brand} ${p.name} smartphone in the colour "${p.colors[0][0]}". ` +
+      `Keep exactly the same composition, proportions, camera module layout, button positions and colours as the reference image: ` +
+      `the back of the phone on the left and the front with the lock screen on the right, slightly overlapping. ` +
+      `Premium e-commerce product photography, soft even studio lighting, realistic glass and metal materials, subtle reflections, ` +
+      `crisp details, centred, transparent background. No text, no brand logos, no watermark, no hands, no props.`;
+
+    // Dibujo SVG -> PNG 1024x1536 para usarlo como referencia
+    function reference(p) {
+      return new Promise((resolve, reject) => {
+        const svg = PhoneArt.svg(p, { view: "duo", color: 0 });
+        const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+        const img = new Image();
+        img.onload = () => {
+          const W = 1024, H = 1536, c = document.createElement("canvas");
+          c.width = W; c.height = H;
+          const ctx = c.getContext("2d"), pad = 90;
+          const s = Math.min((W - 2 * pad) / img.width, (H - 2 * pad) / img.height);
+          const w = img.width * s, h = img.height * s;
+          ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+          URL.revokeObjectURL(url);
+          c.toBlob(b => b ? resolve(b) : reject(new Error("No se pudo crear la referencia")), "image/png");
+        };
+        img.onerror = () => reject(new Error("No se pudo dibujar la referencia"));
+        img.src = url;
+      });
+    }
+
+    async function generate(p) {
+      const fd = new FormData();
+      fd.append("model", $("#model").value.trim() || "gpt-image-1");
+      fd.append("prompt", prompt(p));
+      fd.append("image", await reference(p), p.id + ".png");
+      fd.append("size", "1024x1536");
+      fd.append("quality", $("#quality").value);
+      fd.append("background", "transparent");
+      if ($("#fidelity").checked) fd.append("input_fidelity", "high");
+      const r = await fetch("https://api.openai.com/v1/images/edits", {
+        method: "POST", headers: { Authorization: "Bearer " + $("#key").value.trim() }, body: fd
+      });
+      let j = {};
+      try { j = await r.json(); } catch (e) { /* respuesta sin JSON */ }
+      if (!r.ok) throw new Error((j.error && j.error.message) || "Error " + r.status);
+      const b64 = j.data && j.data[0] && j.data[0].b64_json;
+      if (!b64) throw new Error("OpenAI no devolvió ninguna imagen");
+      return Uint8Array.from(atob(b64), ch => ch.charCodeAt(0));
+    }
+
+    // Lista de móviles
+    $("#list").innerHTML = PHONES.map(p => `
+      <article class="card item" id="it-${p.id}">
+        <header><input type="checkbox" checked data-id="${p.id}" aria-label="Incluir ${p.name}">${p.name}</header>
+        <div class="pics"><div class="pic">${PhoneArt.svg(p, { view: "duo", color: 0, cls: "" })}</div><div class="pic" id="res-${p.id}">Pendiente</div></div>
+        <div class="status" id="st-${p.id}"></div>
+      </article>`).join("");
+    const setStatus = (id, t, cls = "") => { const el = $("#st-" + id); el.textContent = t; el.className = "status " + cls; };
+    const checked = () => [...document.querySelectorAll("#list input:checked")].map(i => i.dataset.id);
+    $("#all").onclick = () => document.querySelectorAll("#list input").forEach(i => { i.checked = true; });
+    $("#none").onclick = () => document.querySelectorAll("#list input").forEach(i => { i.checked = false; });
+
+    function progress(done, total) {
+      $("#count").textContent = `${done} / ${total}`;
+      $("#total").style.width = total ? (done / total * 100) + "%" : "0";
+    }
+
+    $("#start").onclick = async () => {
+      if (running) return;
+      if (!/^sk-/.test($("#key").value.trim())) { alert("Pega primero tu clave de API de OpenAI (empieza por sk-)."); return; }
+      const ids = checked().filter(id => !results[id]);
+      if (!ids.length) { alert("No hay móviles pendientes marcados."); return; }
+      running = true; stopFlag = false;
+      $("#start").disabled = true; $("#stop").disabled = false;
+      let done = 0; progress(0, ids.length);
+      const queue = ids.slice();
+      const worker = async () => {
+        while (queue.length && !stopFlag) {
+          const id = queue.shift(), p = PHONES.find(x => x.id === id);
+          setStatus(id, "Generando…");
+          try {
+            const png = await generate(p);
+            results[id] = png;
+            const url = URL.createObjectURL(new Blob([png], { type: "image/png" }));
+            $("#res-" + id).innerHTML = `<img src="${url}" alt="Foto generada del ${p.name}">`;
+            setStatus(id, "✓ Lista", "ok");
+          } catch (e) {
+            setStatus(id, "✗ " + e.message, "err");
+            if (/api key|401|incorrect|billing|quota/i.test(e.message)) { stopFlag = true; alert("OpenAI ha rechazado la petición: " + e.message); }
+          }
+          progress(++done, ids.length);
+          $("#download").disabled = !Object.keys(results).length;
+        }
+      };
+      await Promise.all([worker(), worker(), worker()]);
+      running = false;
+      $("#start").disabled = false; $("#stop").disabled = true;
+      $("#start").textContent = "Generar pendientes";
+    };
+    $("#stop").onclick = () => { stopFlag = true; $("#stop").disabled = true; };
+
+    // ZIP sin compresión (img/moviles/*.png + js/fotos.js)
+    const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+    const crc32 = d => { let c = 0xffffffff; for (let i = 0; i < d.length; i++) c = CRC[(c ^ d[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
+    function makeZip(files) {
+      const enc = new TextEncoder(), parts = [], central = [];
+      let offset = 0;
+      for (const f of files) {
+        const name = enc.encode(f.name), crc = crc32(f.data), size = f.data.length;
+        const lh = new DataView(new ArrayBuffer(30));
+        lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+        lh.setUint16(12, 0x21, true); lh.setUint32(14, crc, true); lh.setUint32(18, size, true); lh.setUint32(22, size, true);
+        lh.setUint16(26, name.length, true);
+        parts.push(lh.buffer, name, f.data);
+        const ch = new DataView(new ArrayBuffer(46));
+        ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+        ch.setUint16(14, 0x21, true); ch.setUint32(16, crc, true); ch.setUint32(20, size, true); ch.setUint32(24, size, true);
+        ch.setUint16(28, name.length, true); ch.setUint32(42, offset, true);
+        central.push(ch.buffer, name);
+        offset += 30 + name.length + size;
+      }
+      const cdSize = central.reduce((a, b) => a + b.byteLength, 0);
+      const end = new DataView(new ArrayBuffer(22));
+      end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+      end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+      return new Blob([...parts, ...central, end.buffer], { type: "application/zip" });
+    }
+
+    $("#download").onclick = () => {
+      const prev = typeof FOTOS !== "undefined" ? FOTOS : {};
+      const map = Object.assign({}, prev);
+      Object.keys(results).forEach(id => { map[id] = `img/moviles/${id}.png`; });
+      const js = `/* ==========================================================\n   Fotos de los móviles (generadas con OpenAI)\n   Para quitar una foto, borra su línea: se volverá a ver el dibujo.\n   ========================================================== */\nconst FOTOS = {\n${Object.entries(map).map(([k, v]) => `  "${k}": "${v}"`).join(",\n")}\n};\nconst FOTOS_NOTA = "Imagen orientativa generada con IA";\n`;
+      const files = Object.entries(results).map(([id, data]) => ({ name: `img/moviles/${id}.png`, data }));
+      files.push({ name: "js/fotos.js", data: new TextEncoder().encode(js) });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(makeZip(files));
+      a.download = "fotos-moviles-jc.zip";
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+  })();
+  </script>
+</body>
+</html>

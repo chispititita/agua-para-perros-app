@@ -9,6 +9,7 @@
   const MAX_COMPARE = 4;
   const CMP_COLORS = ["#4f6bff", "#e2475b", "#12a76a", "#e0892a"];
   const PHOTOS = typeof FOTOS !== "undefined" ? FOTOS : {};
+  const PHOTO_NOTE = typeof FOTOS_NOTA !== "undefined" ? FOTOS_NOTA : "Foto del móvil";
   const eur = n => n.toLocaleString("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
   const num = n => n.toLocaleString("es-ES");
   const dec = n => String(n).replace(".", ",");
@@ -900,7 +901,7 @@
           <div class="art-box m-stage" id="mStage" data-art="${p.id}" data-view="${mview}">${art(p, mview)}</div>
           <div class="m-views" role="group" aria-label="Cambiar vista">${views.map(([v, l]) => `<button data-mview="${v}" class="${v === mview ? "on" : ""}" aria-pressed="${v === mview}">${l}</button>`).join("")}</div>
           ${swatches(p)}
-          <p class="m-note muted">Ilustración a escala · ${mm(p.dim)}${p.open ? " (cerrado)" : ""} · ${p.weight} g</p>
+          <p class="m-note muted">${PHOTOS[p.id] ? esc(PHOTO_NOTE) : "Ilustración a escala"} · ${mm(p.dim)}${p.open ? " (cerrado)" : ""} · ${p.weight} g</p>
         </div>
         <div class="m-info">
           <div class="pcard__brand">${esc(p.brand)} · ${p.year} · ${p.os}</div>
