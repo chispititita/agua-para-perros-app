@@ -1,0 +1,37 @@
+# Crea la llave de firma de la app (solo hay que hacerlo UNA vez).
+# Descarga el artefacto "llave-jaque-arena", guarda su contenido en un sitio seguro
+# y copia los 4 valores a Settings → Secrets and variables → Actions → Secrets. Después borra la ejecución.
+name: Ajedrez · crear llave de firma (una vez)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  llave:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generar llave
+        run: |
+          CLAVE=$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)
+          keytool -genkeypair -v -keystore subida.jks -alias jaquearena -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$CLAVE" -keypass "$CLAVE" -dname "CN=Jaque Arena, O=Jaque Arena, C=ES"
+          mkdir llave
+          cp subida.jks llave/
+          {
+            echo "Copia cada valor como un secreto de GitHub (Settings → Secrets and variables → Actions → New repository secret)."
+            echo "GUARDA ESTE ARCHIVO Y subida.jks EN UN SITIO SEGURO: sin ellos no podrás publicar actualizaciones."
+            echo
+            echo "ANDROID_KEY_ALIAS = jaquearena"
+            echo "ANDROID_KEYSTORE_PASSWORD = $CLAVE"
+            echo "ANDROID_KEY_PASSWORD = $CLAVE"
+            echo "ANDROID_KEYSTORE_BASE64 = (el texto largo de abajo, entero)"
+            echo
+            base64 -w0 subida.jks
+            echo
+          } > llave/LEEME-secretos.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: llave-jaque-arena
+          path: llave/
+          retention-days: 1

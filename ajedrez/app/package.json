@@ -1,0 +1,23 @@
+{
+  "name": "jaque-arena",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Jaque Arena: ajedrez online apostando monedas virtuales",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "android": "vite build && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "chess.js": "^1.4.0",
+    "cordova-plugin-purchase": "^13.18.0",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "vite": "^8.3.0"
+  }
+}

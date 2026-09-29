@@ -1,0 +1,8 @@
+{
+  "appId": "com.jaquearena.app",
+  "appName": "Jaque Arena",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  }
+}

@@ -1,0 +1,27 @@
+# Despliegue del servidor de Jaque Arena en Render (https://render.com): New → Blueprint → elige este repositorio.
+services:
+  - type: web
+    name: jaque-arena-servidor
+    runtime: node
+    rootDir: ajedrez/servidor
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/arrancar.js
+    plan: starter            # el plan gratuito no guarda datos entre reinicios; hace falta un disco
+    healthCheckPath: /
+    disk:
+      name: datos
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: NODE_VERSION
+        value: "22"
+      - key: COMISION
+        value: "0.10"
+      - key: ADMIN_KEY
+        generateValue: true
+      - key: ANDROID_PACKAGE
+        value: com.jaquearena.app
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#14161c">
+  <title>Jaque Arena</title>
+  <link rel="stylesheet" href="/src/estilos.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Bienvenida: elegir nombre -->
+    <section id="p-bienvenida" class="pantalla">
+      <div class="centro">
+        <div class="logo">♚<span>Jaque Arena</span></div>
+        <p class="lema">Ajedrez online. Reta a otros jugadores y apuesta tus monedas.</p>
+        <form id="form-nombre" class="tarjeta">
+          <label for="nombre">¿Cómo te llamamos?</label>
+          <input id="nombre" maxlength="20" placeholder="Tu nombre de jugador" autocomplete="off" required>
+          <button class="boton oro">Empezar · 1.000 monedas gratis</button>
+        </form>
+        <p class="letra-pequena">Las monedas son virtuales: no tienen valor real y no se pueden cambiar por dinero ni premios.</p>
+      </div>
+    </section>
+
+    <!-- Inicio -->
+    <section id="p-inicio" class="pantalla">
+      <header class="barra">
+        <button class="perfil-mini" data-ir="perfil"><span id="i-nombre"></span><small id="i-elo"></small></button>
+        <button class="saldo" data-ir="tienda"><span class="moneda">●</span><b id="i-monedas">0</b><span class="mas">+</span></button>
+      </header>
+      <div class="contenido">
+        <div class="logo pequeno">♚<span>Jaque Arena</span></div>
+        <button id="b-bonus" class="tarjeta bonus" hidden>🎁 Recoge tu bonus diario: <b id="i-bonus"></b> monedas</button>
+        <button class="boton oro grande" data-ir="mesas">⚔ Jugar online</button>
+        <button class="boton grande" data-ir="maquina">🤖 Contra la máquina</button>
+        <div class="fila-botones">
+          <button class="boton" data-ir="ranking">🏆 Ranking</button>
+          <button class="boton" data-ir="tienda">🪙 Tienda</button>
+        </div>
+        <p id="i-conexion" class="letra-pequena"></p>
+      </div>
+    </section>
+
+    <!-- Mesas de apuesta -->
+    <section id="p-mesas" class="pantalla">
+      <header class="barra"><button class="volver" data-ir="inicio">‹</button><h2>Elige mesa</h2>
+        <button class="saldo" data-ir="tienda"><span class="moneda">●</span><b class="monedas"></b></button></header>
+      <div class="contenido">
+        <p class="ayuda" id="texto-mesas"></p>
+        <div id="lista-mesas" class="lista-mesas"></div>
+      </div>
+    </section>
+
+    <!-- Buscando rival -->
+    <section id="p-buscando" class="pantalla">
+      <div class="centro">
+        <div class="buscador">♞</div>
+        <h2>Buscando rival…</h2>
+        <p class="ayuda" id="texto-buscando"></p>
+        <button class="boton" id="b-cancelar-busqueda">Cancelar</button>
+      </div>
+    </section>
+
+    <!-- Contra la máquina -->
+    <section id="p-maquina" class="pantalla">
+      <header class="barra"><button class="volver" data-ir="inicio">‹</button><h2>Contra la máquina</h2><span></span></header>
+      <div class="contenido">
+        <p class="ayuda">Entrena sin apostar. Elige la dificultad:</p>
+        <button class="boton grande" data-nivel="1">Fácil</button>
+        <button class="boton grande" data-nivel="2">Normal</button>
+        <button class="boton grande" data-nivel="3">Difícil</button>
+      </div>
+    </section>
+
+    <!-- Partida -->
+    <section id="p-partida" class="pantalla">
+      <div class="jugador rival">
+        <div><b id="p-rival-nombre"></b> <small id="p-rival-elo"></small></div>
+        <div class="reloj" id="p-reloj-rival">--:--</div>
+      </div>
+      <div id="tablero" class="tablero"></div>
+      <div class="jugador yo">
+        <div><b id="p-yo-nombre"></b> <small id="p-yo-elo"></small></div>
+        <div class="reloj" id="p-reloj-yo">--:--</div>
+      </div>
+      <div class="bote" id="p-bote"></div>
+      <div class="aviso-partida" id="p-aviso"></div>
+      <div class="jugadas" id="p-jugadas"></div>
+      <div class="fila-botones acciones-partida">
+        <button class="boton" id="b-tablas">½ Tablas</button>
+        <button class="boton peligro" id="b-rendirse">🏳 Rendirse</button>
+      </div>
+    </section>
+
+    <!-- Ranking -->
+    <section id="p-ranking" class="pantalla">
+      <header class="barra"><button class="volver" data-ir="inicio">‹</button><h2>Ranking</h2><span></span></header>
+      <div class="contenido"><ol id="lista-ranking" class="lista-ranking"></ol></div>
+    </section>
+
+    <!-- Tienda -->
+    <section id="p-tienda" class="pantalla">
+      <header class="barra"><button class="volver" data-ir="inicio">‹</button><h2>Tienda</h2>
+        <button class="saldo"><span class="moneda">●</span><b class="monedas"></b></button></header>
+      <div class="contenido">
+        <div id="lista-paquetes" class="lista-paquetes"></div>
+        <p class="letra-pequena">Las monedas son virtuales y solo sirven dentro del juego. No se pueden cambiar por dinero ni por premios reales.</p>
+      </div>
+    </section>
+
+    <!-- Perfil -->
+    <section id="p-perfil" class="pantalla">
+      <header class="barra"><button class="volver" data-ir="inicio">‹</button><h2>Perfil</h2><span></span></header>
+      <div class="contenido">
+        <div class="tarjeta" id="datos-perfil"></div>
+        <a class="boton" id="enlace-privacidad" target="_blank">Política de privacidad</a>
+        <button class="boton peligro" id="b-borrar-cuenta">Borrar mi cuenta</button>
+      </div>
+    </section>
+
+    <!-- Ventanas -->
+    <div id="modal" class="modal" hidden>
+      <div class="tarjeta modal-caja">
+        <h2 id="modal-titulo"></h2>
+        <p id="modal-texto"></p>
+        <div class="fila-botones" id="modal-botones"></div>
+      </div>
+    </div>
+    <div id="promocion" class="modal" hidden><div class="tarjeta promocion" id="promocion-piezas"></div></div>
+    <div id="toast" class="toast" hidden></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
