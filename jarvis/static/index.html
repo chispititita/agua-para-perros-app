@@ -12,9 +12,8 @@
     <div class="logo">J.A.R.V.I.S.</div>
     <button class="tab activa" data-seccion="jarvis">◉ Jarvis</button>
     <button class="tab" data-seccion="dinero">€ Dinero</button>
-    <button class="tab" data-seccion="vicios">⛓ Vicios</button>
+    <button class="tab" data-seccion="habitos">◎ Hábitos</button>
     <button class="tab" data-seccion="tareas">✓ Tareas</button>
-    <button class="tab" data-seccion="estudio">✦ Estudio</button>
     <button class="tab" data-seccion="ajustes">⚙ Memoria</button>
     <div class="conexiones" id="conexiones"></div>
   </nav>
@@ -40,10 +39,10 @@
           </label>
           <select id="selectorVoz" title="Voz de Jarvis"></select>
           <div class="rapidos">
-            <button data-rapido="Buenos días Jarvis. Hazme el repaso del día: dinero, vicios y tareas, y dime por dónde empiezo.">☀ Buenos días</button>
-            <button data-rapido="¿Cómo voy con mis vicios esta semana? Sé sincero.">⛓ Mis vicios</button>
-            <button data-rapido="¿Cómo van las ventas de la tienda esta semana?">🛒 Ventas</button>
-            <button data-rapido="Dame una idea de anuncio para la tienda y créame la imagen en formato 4:5.">✦ Idea de anuncio</button>
+            <button data-rapido="Buenos días Jarvis. Hazme el repaso del día: hábitos, dinero y tareas, y dime por dónde empiezo.">☀ Buenos días</button>
+            <button data-rapido="¿Cómo voy con mis hábitos esta semana? Sé sincero.">◎ Mis hábitos</button>
+            <button data-rapido="Ayúdame a crear un buen hábito nuevo. Pregúntame lo que necesites y configúralo.">＋ Nuevo hábito</button>
+            <button data-rapido="Tengo ganas de recaer. Ayúdame a aguantar ahora mismo.">⚠ Tengo ganas de recaer</button>
             <button data-rapido="Voy a dormir. Hazme un cierre del día y dime qué tengo mañana.">☾ Cierre del día</button>
           </div>
         </div>
@@ -66,12 +65,12 @@
       <form class="formulario" id="formDinero">
         <select name="tipo"><option value="gasto">Gasto</option><option value="ingreso">Ingreso</option></select>
         <input name="cantidad" type="number" step="0.01" min="0" placeholder="Cantidad €" required>
-        <input name="categoria" placeholder="Categoría (comida, anuncios…)" list="categorias">
+        <input name="categoria" placeholder="Categoría (comida, ocio…)" list="categorias">
         <input name="descripcion" placeholder="Descripción">
         <button type="submit">Añadir</button>
         <datalist id="categorias">
           <option value="saldo inicial"><option value="comida"><option value="ocio"><option value="transporte">
-          <option value="tienda"><option value="anuncios"><option value="vicios"><option value="ventas"><option value="sueldo">
+          <option value="casa"><option value="hábitos"><option value="sueldo">
         </datalist>
       </form>
       <div class="dos-columnas">
@@ -80,16 +79,20 @@
       </div>
     </section>
 
-    <!-- ============================ VICIOS ============================ -->
-    <section id="vicios" class="seccion">
-      <h2>Vicios</h2>
-      <p class="ayuda">Apunta cada vez que caigas (o díselo a Jarvis: «Jarvis, me he fumado dos cigarros»). Lo importante es ver la tendencia.</p>
-      <div class="rejilla" id="rejillaVicios"></div>
-      <h3>Añadir o ajustar un vicio</h3>
-      <form class="formulario" id="formVicio">
-        <input name="nombre" placeholder="Nombre (tabaco, alcohol, apuestas…)" required>
-        <input name="limite_diario" type="number" step="0.5" min="0" placeholder="Límite diario (0 = dejarlo)">
-        <input name="coste_unidad" type="number" step="0.01" min="0" placeholder="€ por unidad">
+    <!-- ============================ HÁBITOS ============================ -->
+    <section id="habitos" class="seccion">
+      <h2>Hábitos</h2>
+      <p class="ayuda">Marca lo que haces cada día, o díselo a Jarvis: «Jarvis, hoy he ido al gimnasio», «Jarvis, me he fumado dos cigarros».</p>
+      <h3>Buenos hábitos</h3>
+      <div class="rejilla" id="rejillaBuenos"></div>
+      <h3>Hábitos que quiero dejar</h3>
+      <div class="rejilla" id="rejillaMalos"></div>
+      <h3>Añadir o ajustar un hábito</h3>
+      <form class="formulario" id="formHabito">
+        <select name="tipo"><option value="bueno">Bueno (quiero hacerlo)</option><option value="malo">Malo (quiero dejarlo)</option></select>
+        <input name="nombre" placeholder="Nombre (gimnasio, leer, tabaco…)" required>
+        <input name="meta_diaria" type="number" step="0.5" min="0" placeholder="Meta al día" id="metaHabito">
+        <input name="coste_unidad" type="number" step="0.01" min="0" placeholder="€ por unidad" id="costeHabito" hidden>
         <input name="objetivo" placeholder="Objetivo">
         <button type="submit">Guardar</button>
       </form>
@@ -100,39 +103,14 @@
       <h2>Trabajos y tareas</h2>
       <form class="formulario" id="formTarea">
         <input name="titulo" placeholder="¿Qué tienes que hacer?" required>
-        <input name="area" placeholder="Área (tienda, personal…)" list="areas">
+        <input name="area" placeholder="Área (personal, salud…)" list="areas">
         <select name="prioridad"><option value="alta">Alta</option><option value="media" selected>Media</option><option value="baja">Baja</option></select>
         <input name="fecha_limite" type="date">
         <button type="submit">Añadir</button>
-        <datalist id="areas"><option value="tienda"><option value="personal"><option value="salud"><option value="estudios"><option value="trabajo"></datalist>
+        <datalist id="areas"><option value="personal"><option value="casa"><option value="salud"><option value="estudios"><option value="trabajo"></datalist>
       </form>
       <label class="interruptor"><input type="checkbox" id="verHechas"><span>Mostrar hechas</span></label>
       <ul class="lista tareas" id="listaTareas"></ul>
-    </section>
-
-    <!-- ============================ ESTUDIO ============================ -->
-    <section id="estudio" class="seccion">
-      <h2>Estudio de contenido IA</h2>
-      <p class="ayuda">Crea imágenes y vídeos para anuncios, reels, TikTok y la web de tu tienda. Escribe la idea en español y pulsa «Mejorar con IA» para que Jarvis escriba un prompt profesional.</p>
-      <form class="formulario estudio" id="formEstudio">
-        <div class="fila">
-          <label><input type="radio" name="tipo" value="imagen" checked> Imagen</label>
-          <label><input type="radio" name="tipo" value="video"> Vídeo</label>
-          <select name="formato" id="formato">
-            <option value="1:1">1:1 · Feed</option><option value="4:5">4:5 · Post Instagram</option>
-            <option value="9:16">9:16 · Reel / TikTok / Story</option><option value="16:9">16:9 · Banner web</option>
-          </select>
-          <select name="imagen_base" id="imagenBase" hidden><option value="">Sin imagen de partida</option></select>
-        </div>
-        <input name="texto" id="textoVideo" placeholder="Texto grande en el vídeo (opcional): «Tu perro nunca más con sed»" hidden>
-        <textarea name="prompt" id="promptEstudio" rows="4" placeholder="Ej: perro golden bebiendo de nuestra botella portátil en un parque al atardecer" required></textarea>
-        <div class="fila">
-          <button type="button" id="mejorarPrompt" class="secundario">✦ Mejorar con IA</button>
-          <button type="submit">Generar</button>
-          <span class="ayuda" id="avisoEstudio"></span>
-        </div>
-      </form>
-      <div class="galeria" id="galeria"></div>
     </section>
 
     <!-- ============================ MEMORIA / AJUSTES ============================ -->

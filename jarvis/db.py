@@ -1,11 +1,10 @@
-"""Base de datos local (SQLite) de Jarvis: dinero, vicios, tareas, memoria y contenidos generados."""
+"""Base de datos local (SQLite) de Jarvis: dinero, hábitos, tareas y memoria."""
 import sqlite3
 from contextlib import contextmanager
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
 DATA_DIR = Path(__file__).parent / "data"
-MEDIA_DIR = DATA_DIR / "media"
 DB_PATH = DATA_DIR / "jarvis.db"
 
 SCHEMA = """
@@ -17,17 +16,18 @@ CREATE TABLE IF NOT EXISTS movimientos (
     categoria TEXT NOT NULL DEFAULT 'otros',
     descripcion TEXT NOT NULL DEFAULT ''
 );
-CREATE TABLE IF NOT EXISTS vicios (
+CREATE TABLE IF NOT EXISTS habitos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL UNIQUE COLLATE NOCASE,
-    limite_diario REAL,
+    tipo TEXT NOT NULL DEFAULT 'malo' CHECK (tipo IN ('bueno', 'malo')),
+    meta_diaria REAL,
     coste_unidad REAL NOT NULL DEFAULT 0,
     objetivo TEXT NOT NULL DEFAULT '',
     creado TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS registros_vicio (
+CREATE TABLE IF NOT EXISTS registros_habito (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    vicio_id INTEGER NOT NULL REFERENCES vicios(id) ON DELETE CASCADE,
+    habito_id INTEGER NOT NULL REFERENCES habitos(id) ON DELETE CASCADE,
     fecha TEXT NOT NULL,
     cantidad REAL NOT NULL DEFAULT 1,
     nota TEXT NOT NULL DEFAULT ''
@@ -48,15 +48,6 @@ CREATE TABLE IF NOT EXISTS memoria (
     texto TEXT NOT NULL,
     creada TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS media (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo TEXT NOT NULL CHECK (tipo IN ('imagen', 'video')),
-    prompt TEXT NOT NULL,
-    estado TEXT NOT NULL DEFAULT 'pendiente',
-    archivo TEXT,
-    error TEXT,
-    creado TEXT NOT NULL
-);
 """
 
 
@@ -73,9 +64,24 @@ def fecha_legible() -> str:
 
 
 def init() -> None:
-    MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
     with conexion() as c:
         c.executescript(SCHEMA)
+        _migrar_vicios(c)
+
+
+def _migrar_vicios(c) -> None:
+    """Las versiones anteriores guardaban 'vicios': se pasan a hábitos malos."""
+    if not c.execute("SELECT 1 FROM sqlite_master WHERE name = 'vicios'").fetchone():
+        return
+    for v in c.execute("SELECT * FROM vicios").fetchall():
+        cur = c.execute("INSERT OR IGNORE INTO habitos (nombre, tipo, meta_diaria, coste_unidad, objetivo, creado) "
+                        "VALUES (?, 'malo', ?, ?, ?, ?)",
+                        (v["nombre"], v["limite_diario"], v["coste_unidad"], v["objetivo"], v["creado"]))
+        if cur.rowcount:
+            c.execute("INSERT INTO registros_habito (habito_id, fecha, cantidad, nota) "
+                      "SELECT ?, fecha, cantidad, nota FROM registros_vicio WHERE vicio_id = ?", (cur.lastrowid, v["id"]))
+    c.executescript("DROP TABLE IF EXISTS registros_vicio; DROP TABLE IF EXISTS vicios; DROP TABLE IF EXISTS media;")
 
 
 @contextmanager
@@ -148,71 +154,100 @@ def resumen_dinero(dias: int = 30) -> dict:
     }
 
 
-# ---------------------------------------------------------------- Vicios
+# ---------------------------------------------------------------- Hábitos
+# bueno: algo que quieres hacer (gimnasio, leer, beber agua). meta_diaria = cuánto quieres hacer al día.
+# malo: algo que quieres dejar o reducir (tabaco, alcohol, apuestas). meta_diaria = límite al día (0 = dejarlo).
 
-def _vicio_por_nombre(c, nombre: str):
-    return c.execute("SELECT * FROM vicios WHERE nombre = ? COLLATE NOCASE", (nombre.strip(),)).fetchone()
+def _habito_por_nombre(c, nombre: str):
+    return c.execute("SELECT * FROM habitos WHERE nombre = ? COLLATE NOCASE", (nombre.strip(),)).fetchone()
 
 
-def configurar_vicio(nombre: str, limite_diario: float | None = None, coste_unidad: float | None = None,
-                     objetivo: str | None = None) -> dict:
+def configurar_habito(nombre: str, tipo: str | None = None, meta_diaria: float | None = None,
+                      coste_unidad: float | None = None, objetivo: str | None = None) -> dict:
+    if tipo not in (None, "bueno", "malo"):
+        raise ValueError("tipo debe ser 'bueno' o 'malo'")
     with conexion() as c:
-        v = _vicio_por_nombre(c, nombre)
-        if v is None:
-            c.execute("INSERT INTO vicios (nombre, limite_diario, coste_unidad, objetivo, creado) VALUES (?, ?, ?, ?, ?)",
-                      (nombre.strip(), limite_diario, coste_unidad or 0, objetivo or "", ahora()))
+        h = _habito_por_nombre(c, nombre)
+        if h is None:
+            c.execute("INSERT INTO habitos (nombre, tipo, meta_diaria, coste_unidad, objetivo, creado) "
+                      "VALUES (?, ?, ?, ?, ?, ?)",
+                      (nombre.strip(), tipo or "malo", meta_diaria, coste_unidad or 0, objetivo or "", ahora()))
         else:
             c.execute(
-                "UPDATE vicios SET limite_diario = COALESCE(?, limite_diario), coste_unidad = COALESCE(?, coste_unidad), "
-                "objetivo = COALESCE(?, objetivo) WHERE id = ?",
-                (limite_diario, coste_unidad, objetivo, v["id"]))
-        return dict(_vicio_por_nombre(c, nombre))
+                "UPDATE habitos SET tipo = COALESCE(?, tipo), meta_diaria = COALESCE(?, meta_diaria), "
+                "coste_unidad = COALESCE(?, coste_unidad), objetivo = COALESCE(?, objetivo) WHERE id = ?",
+                (tipo, meta_diaria, coste_unidad, objetivo, h["id"]))
+        return dict(_habito_por_nombre(c, nombre))
 
 
-def registrar_vicio(nombre: str, cantidad: float = 1, nota: str = "", fecha: str | None = None) -> dict:
+def registrar_habito(nombre: str, cantidad: float = 1, nota: str = "", tipo: str | None = None,
+                     fecha: str | None = None) -> dict:
     with conexion() as c:
-        v = _vicio_por_nombre(c, nombre)
-        if v is None:
-            c.execute("INSERT INTO vicios (nombre, creado) VALUES (?, ?)", (nombre.strip(), ahora()))
-            v = _vicio_por_nombre(c, nombre)
-        c.execute("INSERT INTO registros_vicio (vicio_id, fecha, cantidad, nota) VALUES (?, ?, ?, ?)",
-                  (v["id"], fecha or ahora(), float(cantidad), nota or ""))
-    return {v["nombre"]: estado_vicios().get(v["nombre"])}
+        h = _habito_por_nombre(c, nombre)
+        if h is None:
+            c.execute("INSERT INTO habitos (nombre, tipo, creado) VALUES (?, ?, ?)",
+                      (nombre.strip(), tipo if tipo in ("bueno", "malo") else "malo", ahora()))
+            h = _habito_por_nombre(c, nombre)
+        c.execute("INSERT INTO registros_habito (habito_id, fecha, cantidad, nota) VALUES (?, ?, ?, ?)",
+                  (h["id"], fecha or ahora(), float(cantidad), nota or ""))
+    return {h["nombre"]: estado_habitos().get(h["nombre"])}
 
 
-def borrar_vicio(vicio_id: int) -> bool:
+def borrar_habito(habito_id: int) -> bool:
     with conexion() as c:
-        return c.execute("DELETE FROM vicios WHERE id = ?", (vicio_id,)).rowcount > 0
+        return c.execute("DELETE FROM habitos WHERE id = ?", (habito_id,)).rowcount > 0
 
 
-def estado_vicios() -> dict:
+def _racha_buena(dias_cumplidos: set, hoy: date) -> int:
+    """Días seguidos cumpliendo. Si hoy aún no lo has hecho, la racha cuenta hasta ayer."""
+    dia = hoy if hoy in dias_cumplidos else hoy - timedelta(days=1)
+    racha = 0
+    while dia in dias_cumplidos:
+        racha += 1
+        dia -= timedelta(days=1)
+    return racha
+
+
+def estado_habitos() -> dict:
     hoy = date.today()
     hace7 = (hoy - timedelta(days=6)).isoformat()
     hace30 = (hoy - timedelta(days=29)).isoformat()
     out = {}
     with conexion() as c:
-        for v in c.execute("SELECT * FROM vicios ORDER BY nombre"):
-            q = lambda sql, *a: c.execute(sql, (v["id"], *a)).fetchone()[0]
-            ultimo = q("SELECT MAX(fecha) FROM registros_vicio WHERE vicio_id = ?")
-            hoy_n = q("SELECT COALESCE(SUM(cantidad),0) FROM registros_vicio WHERE vicio_id = ? AND substr(fecha,1,10) = ?",
-                      hoy.isoformat())
-            sem_n = q("SELECT COALESCE(SUM(cantidad),0) FROM registros_vicio WHERE vicio_id = ? AND substr(fecha,1,10) >= ?",
-                      hace7)
-            mes_n = q("SELECT COALESCE(SUM(cantidad),0) FROM registros_vicio WHERE vicio_id = ? AND substr(fecha,1,10) >= ?",
-                      hace30)
-            desde = datetime.fromisoformat(ultimo) if ultimo else datetime.fromisoformat(v["creado"])
-            out[v["nombre"]] = {
-                "id": v["id"],
-                "objetivo": v["objetivo"],
-                "limite_diario": v["limite_diario"],
-                "hoy": hoy_n,
-                "ultimos_7_dias": sem_n,
-                "ultimos_30_dias": mes_n,
-                "dinero_gastado_30_dias": round(mes_n * (v["coste_unidad"] or 0), 2),
-                "dias_sin_caer": (datetime.now() - desde).days,
+        for h in c.execute("SELECT * FROM habitos ORDER BY tipo, nombre").fetchall():
+            por_dia = {date.fromisoformat(r[0]): r[1] for r in c.execute(
+                "SELECT substr(fecha,1,10), SUM(cantidad) FROM registros_habito WHERE habito_id = ? "
+                "GROUP BY substr(fecha,1,10)", (h["id"],))}
+            suma = lambda desde: sum(v for d, v in por_dia.items() if d.isoformat() >= desde)
+            ultimo = c.execute("SELECT MAX(fecha) FROM registros_habito WHERE habito_id = ?", (h["id"],)).fetchone()[0]
+            meta = h["meta_diaria"]
+            datos = {
+                "id": h["id"],
+                "tipo": h["tipo"],
+                "objetivo": h["objetivo"],
+                "meta_diaria": meta,
+                "hoy": por_dia.get(hoy, 0),
+                "ultimos_7_dias": suma(hace7),
+                "ultimos_30_dias": suma(hace30),
                 "ultima_vez": ultimo,
-                "limite_superado_hoy": v["limite_diario"] is not None and hoy_n > v["limite_diario"],
             }
+            if h["tipo"] == "bueno":
+                minimo = meta if meta else 1
+                cumplidos = {d for d, v in por_dia.items() if v >= minimo}
+                datos.update({
+                    "racha_dias": _racha_buena(cumplidos, hoy),
+                    "cumplido_hoy": hoy in cumplidos,
+                    "dias_cumplidos_7": sum(1 for d in cumplidos if d.isoformat() >= hace7),
+                    "dias_cumplidos_30": sum(1 for d in cumplidos if d.isoformat() >= hace30),
+                })
+            else:
+                desde = datetime.fromisoformat(ultimo) if ultimo else datetime.fromisoformat(h["creado"])
+                datos.update({
+                    "dias_sin_caer": (datetime.now() - desde).days,
+                    "limite_superado_hoy": meta is not None and por_dia.get(hoy, 0) > meta,
+                    "dinero_gastado_30_dias": round(suma(hace30) * (h["coste_unidad"] or 0), 2),
+                })
+            out[h["nombre"]] = datos
     return out
 
 
@@ -267,37 +302,6 @@ def listar_memoria() -> list[dict]:
         return _filas(c.execute("SELECT * FROM memoria ORDER BY id"))
 
 
-# ---------------------------------------------------------------- Contenidos generados
-
-def crear_media(tipo: str, prompt: str) -> int:
-    with conexion() as c:
-        return c.execute("INSERT INTO media (tipo, prompt, creado) VALUES (?, ?, ?)", (tipo, prompt, ahora())).lastrowid
-
-
-def actualizar_media(media_id: int, estado: str, archivo: str | None = None, error: str | None = None) -> None:
-    with conexion() as c:
-        c.execute("UPDATE media SET estado = ?, archivo = COALESCE(?, archivo), error = ? WHERE id = ?",
-                  (estado, archivo, error, media_id))
-
-
-def obtener_media(media_id: int) -> dict | None:
-    with conexion() as c:
-        r = c.execute("SELECT * FROM media WHERE id = ?", (media_id,)).fetchone()
-        return dict(r) if r else None
-
-
-def listar_media(limite: int = 60) -> list[dict]:
-    with conexion() as c:
-        return _filas(c.execute("SELECT * FROM media ORDER BY id DESC LIMIT ?", (limite,)))
-
-
-def media_colgada_a_error() -> None:
-    """Al arrancar, los trabajos que quedaron a medias (programa cerrado) se marcan como error."""
-    with conexion() as c:
-        c.execute("UPDATE media SET estado = 'error', error = 'El programa se cerró mientras se generaba' "
-                  "WHERE estado IN ('pendiente', 'generando')")
-
-
 # ---------------------------------------------------------------- Resumen general
 
 def panorama() -> dict:
@@ -306,7 +310,7 @@ def panorama() -> dict:
     return {
         "fecha_hora": fecha_legible(),
         "dinero": {k: v for k, v in resumen_dinero(30).items() if k != "ultimos_movimientos"},
-        "vicios": estado_vicios(),
+        "habitos": estado_habitos(),
         "tareas_pendientes": len(tareas),
         "tareas_vencidas": [t for t in tareas if t["fecha_limite"] and t["fecha_limite"][:10] < hoy],
         "tareas_proximas": tareas[:8],

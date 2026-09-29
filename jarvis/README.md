@@ -2,12 +2,11 @@
 
 Un programa para tu ordenador que funciona como el JARVIS de Iron Man:
 
-- **Coach de vida**: te motiva, te hace el repaso del día, te ayuda a salir de tus vicios y recuerda tus metas.
+- **Hábitos** (lo principal): sigue tus buenos hábitos (gimnasio, leer, beber agua…) con **rachas** de días
+  seguidos, y los que quieres dejar (tabaco, alcohol, apuestas…) con **días sin caer** y lo que te cuestan.
+- **Coach de vida**: te motiva, te hace el repaso del día, te ayuda cuando tienes ganas de recaer y recuerda tus metas.
 - **Dinero**: lleva tu saldo, ingresos y gastos por categorías.
-- **Vicios**: cuenta los días sin caer, lo que consumes cada día y semana, y cuánto dinero te cuesta.
-- **Tareas y trabajos**: con prioridades, fechas límite y avisos de lo que está vencido.
-- **Estudio de contenido con IA**: crea imágenes y vídeos para tu tienda Shopify (anuncios, reels, TikTok, banners).
-  Puede animar en vídeo una imagen que haya creado o la foto de un producto de tu tienda.
+- **Tareas**: con prioridades, fechas límite y avisos de lo que está vencido.
 - **Voz**: le hablas y te contesta en voz alta. En **modo manos libres** está siempre escuchando y se activa
   cuando dices «**Jarvis**», sin tocar nada.
 
@@ -40,35 +39,30 @@ Después, Jarvis se abre en su propia ventana. Cuando te pida permiso para el **
 con tarjeta gráfica, mucho más rápido). Si va lento, abre el archivo `.env` y cambia
 `MODELO_LOCAL=qwen2.5:7b` por `MODELO_LOCAL=qwen2.5:3b` (más rápido, algo menos listo).
 
-## 3. Qué es gratis y qué es opcional
+## 3. ¿Hace falta pagar algo?
 
-| Parte | Gratis, sin claves | Mejora opcional (de pago por uso, con clave en `.env`) |
-|---|---|---|
-| Cerebro / conversación | IA local en tu PC (Ollama) | `ANTHROPIC_API_KEY` → Claude, mucho más listo |
-| Imágenes | Servicio gratuito Pollinations (necesita internet) | `REPLICATE_API_TOKEN` → modelos de Replicate |
-| Vídeos | Montaje en tu PC: zoom cinematográfico + texto grande, formato reel | `REPLICATE_API_TOKEN` → vídeo generado por IA |
-| Voz | Reconocimiento y voz del navegador | — |
-| Shopify | — | `SHOPIFY_TIENDA` + `SHOPIFY_TOKEN` para leer productos y ventas |
+No. Todo funciona gratis y sin claves: la IA corre en tu ordenador y la voz la pone el navegador.
+Solo si quieres que Jarvis sea más listo y rápido, puedes poner una clave de Claude (de pago por uso)
+en `ANTHROPIC_API_KEY` dentro del archivo `.env`.
 
 ## 4. Cómo usarlo
 
 **Hablar**: pulsa el círculo brillante y habla. O activa **«Modo manos libres»** y di, por ejemplo:
 
-- «Jarvis, buenos días» → repaso de dinero, vicios y tareas y por dónde empezar.
-- «Jarvis, tengo 850 euros en la cuenta» → fija tu saldo.
-- «Jarvis, me he gastado 12 euros en comida» → lo apunta.
-- «Jarvis, quiero dejar el tabaco, cada cigarro me cuesta 25 céntimos» → lo empieza a controlar.
+- «Jarvis, buenos días» → repaso de hábitos, dinero y tareas y por dónde empezar.
+- «Jarvis, quiero empezar a ir al gimnasio 4 días por semana» → crea el hábito.
+- «Jarvis, hoy he ido al gimnasio» / «me he bebido 3 vasos de agua» → lo apunta y te dice tu racha.
+- «Jarvis, quiero dejar el tabaco, cada cigarro me cuesta 30 céntimos» → lo empieza a controlar.
 - «Jarvis, me he fumado dos cigarros» → lo registra y te pregunta qué lo provocó.
-- «Jarvis, apúntame grabar un vídeo para la tienda el viernes, prioridad alta».
-- «Jarvis, créame una imagen para Instagram de un perro bebiendo de nuestra botella en la playa».
-- «Jarvis, hazme un vídeo para TikTok con la foto del producto».
-- «Jarvis, ¿cómo van las ventas esta semana?»
-- «Jarvis, recuerda que mi meta es llegar a 50 ventas al mes».
+- «Jarvis, tengo ganas de fumar» → te ayuda a aguantar en ese momento.
+- «Jarvis, ¿cómo voy con mis hábitos esta semana?»
+- «Jarvis, me he gastado 12 euros en comida» / «apúntame ir al médico el viernes».
+- «Jarvis, recuerda que mi meta es correr una media maratón en marzo».
 
 Después de contestarte, se queda unos segundos escuchando por si quieres seguir hablando sin repetir «Jarvis».
 Pulsa el círculo mientras habla para interrumpirle.
 
-**Sin voz**: también puedes escribirle, o usar las pestañas Dinero, Vicios, Tareas y Estudio a mano.
+**Sin voz**: también puedes escribirle, o usar las pestañas Hábitos, Dinero y Tareas a mano.
 
 ## 5. Preguntas frecuentes
 
@@ -78,10 +72,6 @@ Pulsa el círculo mientras habla para interrumpirle.
   «Microsoft Pablo» o «Google español»).
 - **«Todavía no puedo pensar»**: abre la aplicación Ollama (o vuelve a abrir `iniciar.bat` / `iniciar.command`).
 - **Responde lento**: es normal en ordenadores sin tarjeta gráfica. Usa `qwen2.5:3b` (ver arriba) o pon una clave de Claude.
-- **No me salen las imágenes**: el servicio gratuito necesita internet y a veces está saturado; espera un minuto.
-- **Quiero otro modelo de vídeo o imagen de pago**: cambia `MODELO_VIDEO` / `MODELO_IMAGEN` en `.env`
-  por cualquier modelo de <https://replicate.com>. Si el modelo de vídeo usa otro nombre para la imagen
-  de partida, cámbialo en `MODELO_VIDEO_CLAVE_IMAGEN` (lo verás en la pestaña «API» de la página del modelo).
 - **Quiero que piense más a fondo** (solo con Claude): pon `ESFUERZO_CLAUDE=medium` en `.env`.
 - **Copia de seguridad**: copia la carpeta `data/`.
 
@@ -89,11 +79,9 @@ Pulsa el círculo mientras habla para interrumpirle.
 
 ```
 jarvis.py      servidor local (Flask) y arranque de la ventana
-brain.py       herramientas del asistente + cerebro con Claude (si hay clave)
+brain.py       herramientas del asistente (hábitos, dinero, tareas, memoria) + cerebro con Claude (si hay clave)
 cerebro_local.py  cerebro gratuito con Ollama (sin clave)
 db.py          base de datos SQLite local
-media.py       imágenes (Pollinations gratis o Replicate) y vídeos (montaje local con ffmpeg o Replicate)
-shopify.py     lectura de productos y pedidos (Admin API GraphQL)
 static/        interfaz y control por voz (Web Speech API)
 ```
 

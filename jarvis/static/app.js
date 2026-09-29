@@ -42,7 +42,7 @@ document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () 
 }));
 
 function refrescar(seccion) {
-  const cargas = { jarvis: cargarPanorama, dinero: cargarDinero, vicios: cargarVicios, tareas: cargarTareas, estudio: cargarMedia, ajustes: cargarMemoria };
+  const cargas = { jarvis: cargarPanorama, dinero: cargarDinero, habitos: cargarHabitos, tareas: cargarTareas, ajustes: cargarMemoria };
   (seccion ? [cargas[seccion]] : Object.values(cargas)).forEach((f) => f && f().catch((e) => console.error(e)));
 }
 
@@ -52,8 +52,6 @@ async function cargarEstado() {
   estadoApp = await api("/api/estado");
   const filas = [
     ["Cerebro", estadoApp.cerebro.ok, estadoApp.cerebro.motivo],
-    ["Imagen / vídeo", true, estadoApp.media],
-    ["Shopify", estadoApp.shopify, estadoApp.shopify ? "conectado" : "sin configurar (opcional)"],
   ];
   $("#conexiones").innerHTML = filas.map(([n, ok, det]) => `<div title="${esc(det)}"><span class="punto ${ok ? "ok" : ""}"></span>${n}</div>`).join("");
   $("#detalleConexiones").innerHTML = filas.map(([n, ok, det]) =>
@@ -65,13 +63,19 @@ const capitalizar = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
 async function cargarPanorama() {
   const p = await api("/api/panorama");
-  const vicios = Object.entries(p.vicios);
-  const peorVicio = vicios.sort((a, b) => a[1].dias_sin_caer - b[1].dias_sin_caer)[0];
+  const habitos = Object.entries(p.habitos);
+  const buenos = habitos.filter(([, h]) => h.tipo === "bueno");
+  const malos = habitos.filter(([, h]) => h.tipo === "malo");
+  const hechosHoy = buenos.filter(([, h]) => h.cumplido_hoy).length;
+  const mejorRacha = buenos.sort((a, b) => b[1].racha_dias - a[1].racha_dias)[0];
+  const peorMalo = malos.sort((a, b) => a[1].dias_sin_caer - b[1].dias_sin_caer)[0];
   $("#miniPanel").innerHTML = [
+    buenos.length ? tarjeta("Hábitos de hoy", `${hechosHoy} / ${buenos.length}`,
+      mejorRacha ? `Mejor racha: ${mejorRacha[0]}, ${mejorRacha[1].racha_dias} ${mejorRacha[1].racha_dias === 1 ? "día" : "días"}` : "", hechosHoy === buenos.length ? "positivo" : "")
+      : tarjeta("Hábitos", "—", "Aún no sigues ninguno"),
+    peorMalo ? tarjeta(`Sin ${peorMalo[0]}`, `${peorMalo[1].dias_sin_caer} días`, `Hoy: ${peorMalo[1].hoy}`, peorMalo[1].limite_superado_hoy ? "negativo" : "positivo") : "",
     tarjeta("Saldo", euros.format(p.dinero.saldo_actual), `Gastos 30 días: ${euros.format(p.dinero.gastos_periodo)}`, p.dinero.saldo_actual < 0 ? "negativo" : ""),
     tarjeta("Tareas pendientes", p.tareas_pendientes, p.tareas_vencidas.length ? `${p.tareas_vencidas.length} vencida(s)` : "Nada vencido", p.tareas_vencidas.length ? "negativo" : ""),
-    peorVicio ? tarjeta(`Sin ${peorVicio[0]}`, `${peorVicio[1].dias_sin_caer} días`, `Hoy: ${peorVicio[1].hoy}`, peorVicio[1].limite_superado_hoy ? "negativo" : "positivo")
-      : tarjeta("Vicios", "—", "Aún no controlas ninguno"),
   ].join("");
 }
 const tarjeta = (etq, valor, sub = "", clase = "") =>
@@ -107,44 +111,79 @@ $("#listaMovimientos").addEventListener("click", async (e) => {
   if (id && confirm("¿Borrar este movimiento?")) { await api(`/api/dinero/${id}`, { method: "DELETE" }); cargarDinero(); cargarPanorama(); }
 });
 
-/* ================================================================ Vicios */
-async function cargarVicios() {
-  const v = await api("/api/vicios");
-  $("#rejillaVicios").innerHTML = Object.entries(v).map(([nombre, x]) => `
-    <div class="tarjeta vicio ${x.limite_superado_hoy ? "alerta" : ""}">
-      <h4>${esc(nombre)} <button class="peligro" data-borrar-vicio="${x.id}" data-nombre="${esc(nombre)}" title="Dejar de controlar">✕</button></h4>
-      <div class="racha">${x.dias_sin_caer} días</div><div class="meta">sin caer${x.ultima_vez ? " · última vez " + fechaCorta(x.ultima_vez) : ""}</div>
-      ${x.objetivo ? `<div class="sub">🎯 ${esc(x.objetivo)}</div>` : ""}
+/* ================================================================ Hábitos */
+function tarjetaHabito(nombre, x) {
+  const borrar = `<button class="peligro" data-borrar-habito="${x.id}" data-nombre="${esc(nombre)}" title="Dejar de seguir">✕</button>`;
+  const objetivo = x.objetivo ? `<div class="sub">🎯 ${esc(x.objetivo)}</div>` : "";
+  if (x.tipo === "bueno") {
+    const meta = x.meta_diaria ? ` / ${x.meta_diaria}` : "";
+    return `<div class="tarjeta habito bueno ${x.cumplido_hoy ? "cumplido" : ""}">
+      <h4>${esc(nombre)} ${borrar}</h4>
+      <div class="racha">${x.racha_dias} ${x.racha_dias === 1 ? "día" : "días"}</div><div class="meta">de racha${x.cumplido_hoy ? " · ✓ hecho hoy" : " · pendiente hoy"}</div>
+      ${objetivo}
       <div class="datos">
-        <span>Hoy: <b>${x.hoy}</b>${x.limite_diario !== null ? " / " + x.limite_diario : ""}</span>
-        <span>7 días: <b>${x.ultimos_7_dias}</b></span>
-        <span>30 días: <b>${x.ultimos_30_dias}</b></span>
-        <span>Coste 30 d: <b>${euros.format(x.dinero_gastado_30_dias)}</b></span>
+        <span>Hoy: <b>${x.hoy}</b>${meta}</span>
+        <span>Cumplido 7 d: <b>${x.dias_cumplidos_7}/7</b></span>
+        <span>Cumplido 30 d: <b>${x.dias_cumplidos_30}/30</b></span>
+        <span>Total 30 d: <b>${x.ultimos_30_dias}</b></span>
       </div>
-      <div class="acciones-vicio">
-        <input placeholder="¿Qué lo provocó?" data-nota="${esc(nombre)}">
-        <button class="mini" data-caida="${esc(nombre)}">+1 He caído</button>
-      </div>
-    </div>`).join("") || `<p class="ayuda">No controlas ningún vicio todavía. Añade uno abajo o díselo a Jarvis.</p>`;
+      <div class="acciones-habito">
+        <input type="number" min="0" step="0.5" value="1" data-cantidad="${esc(nombre)}" title="Cantidad">
+        <button class="mini" data-apuntar="${esc(nombre)}">✓ Hecho</button>
+      </div></div>`;
+  }
+  return `<div class="tarjeta habito malo ${x.limite_superado_hoy ? "alerta" : ""}">
+    <h4>${esc(nombre)} ${borrar}</h4>
+    <div class="racha">${x.dias_sin_caer} días</div><div class="meta">sin caer${x.ultima_vez ? " · última vez " + fechaCorta(x.ultima_vez) : ""}</div>
+    ${objetivo}
+    <div class="datos">
+      <span>Hoy: <b>${x.hoy}</b>${x.meta_diaria !== null ? " / " + x.meta_diaria : ""}</span>
+      <span>7 días: <b>${x.ultimos_7_dias}</b></span>
+      <span>30 días: <b>${x.ultimos_30_dias}</b></span>
+      <span>Coste 30 d: <b>${euros.format(x.dinero_gastado_30_dias)}</b></span>
+    </div>
+    <div class="acciones-habito">
+      <input placeholder="¿Qué lo provocó?" data-nota="${esc(nombre)}">
+      <button class="mini" data-apuntar="${esc(nombre)}">+1 He caído</button>
+    </div></div>`;
 }
 
-$("#rejillaVicios").addEventListener("click", async (e) => {
-  const nombre = e.target.dataset.caida;
+async function cargarHabitos() {
+  const h = Object.entries(await api("/api/habitos"));
+  $("#rejillaBuenos").innerHTML = h.filter(([, x]) => x.tipo === "bueno").map(([n, x]) => tarjetaHabito(n, x)).join("")
+    || `<p class="ayuda">Añade un buen hábito abajo (gimnasio, leer, beber agua…) o díselo a Jarvis.</p>`;
+  $("#rejillaMalos").innerHTML = h.filter(([, x]) => x.tipo === "malo").map(([n, x]) => tarjetaHabito(n, x)).join("")
+    || `<p class="ayuda">Ninguno. Si quieres dejar algo (tabaco, alcohol, apuestas…), añádelo abajo.</p>`;
+}
+
+$("#habitos").addEventListener("click", async (e) => {
+  const nombre = e.target.dataset.apuntar;
   if (nombre) {
-    const nota = document.querySelector(`[data-nota="${CSS.escape(nombre)}"]`)?.value || "";
-    await api("/api/vicios/registrar", { method: "POST", body: { nombre, nota } });
-    aviso("Apuntado. Mañana es otro día: tú puedes.");
-    cargarVicios(); cargarPanorama();
+    const sel = CSS.escape(nombre);
+    const nota = document.querySelector(`[data-nota="${sel}"]`)?.value || "";
+    const cantidad = Number(document.querySelector(`[data-cantidad="${sel}"]`)?.value || 1);
+    await api("/api/habitos/registrar", { method: "POST", body: { nombre, nota, cantidad } });
+    aviso(e.target.closest(".malo") ? "Apuntado. Una caída no borra tu progreso: mañana es otro día." : "¡Bien hecho! Sigue así.");
+    cargarHabitos(); cargarPanorama();
   }
-  const id = e.target.dataset.borrarVicio;
-  if (id && confirm(`¿Dejar de controlar «${e.target.dataset.nombre}» y borrar su historial?`)) {
-    await api(`/api/vicios/${id}`, { method: "DELETE" }); cargarVicios(); cargarPanorama();
+  const id = e.target.dataset.borrarHabito;
+  if (id && confirm(`¿Dejar de seguir «${e.target.dataset.nombre}» y borrar su historial?`)) {
+    await api(`/api/habitos/${id}`, { method: "DELETE" }); cargarHabitos(); cargarPanorama();
   }
 });
-$("#formVicio").addEventListener("submit", async (e) => {
+$("#formHabito [name=tipo]").addEventListener("change", (e) => {
+  const malo = e.target.value === "malo";
+  $("#metaHabito").placeholder = malo ? "Límite al día (0 = dejarlo)" : "Meta al día";
+  $("#costeHabito").hidden = !malo;
+});
+$("#formHabito").addEventListener("submit", async (e) => {
   e.preventDefault();
-  try { await api("/api/vicios", { method: "POST", body: Object.fromEntries(new FormData(e.target)) }); e.target.reset(); cargarVicios(); cargarPanorama(); }
-  catch (err) { aviso(err.message); }
+  try {
+    await api("/api/habitos", { method: "POST", body: Object.fromEntries(new FormData(e.target)) });
+    const tipo = e.target.tipo.value;
+    e.target.reset(); e.target.tipo.value = tipo;
+    cargarHabitos(); cargarPanorama();
+  } catch (err) { aviso(err.message); }
 });
 
 /* ================================================================ Tareas */
@@ -179,95 +218,6 @@ $("#listaTareas").addEventListener("click", async (e) => {
   }
 });
 
-/* ================================================================ Estudio */
-let hayPendientes = false;
-async function cargarMedia() {
-  const lista = await api("/api/media");
-  hayPendientes = lista.some((m) => m.estado === "pendiente" || m.estado === "generando");
-  $("#galeria").innerHTML = lista.map((m) => {
-    let visual;
-    if (m.estado === "lista") {
-      visual = m.tipo === "imagen" ? `<a href="/media/${esc(m.archivo)}" target="_blank"><img src="/media/${esc(m.archivo)}" loading="lazy" alt=""></a>`
-        : `<video src="/media/${esc(m.archivo)}" controls loop playsinline></video>`;
-    } else if (m.estado === "error") {
-      visual = `<div class="cargando error">✕ ${esc(m.error)}</div>`;
-    } else {
-      visual = `<div class="cargando">⟳ Generando ${m.tipo}…${m.tipo === "video" ? "<br><small>puede tardar varios minutos</small>" : ""}</div>`;
-    }
-    return `<div class="pieza">${visual}<div class="pie"><p title="${esc(m.prompt)}">#${m.id} · ${esc(m.prompt)}</p>
-      <div class="fila">${m.estado === "lista" ? `<a href="/media/${esc(m.archivo)}" download>⬇ Descargar</a>` : ""}
-      ${m.estado === "lista" && m.tipo === "imagen" ? `<a href="#" data-animar="${m.id}">▶ Animar en vídeo</a>` : ""}</div></div></div>`;
-  }).join("") || `<p class="ayuda">Todavía no has creado nada.</p>`;
-  actualizarImagenesBase(lista);
-}
-
-let productosShopify = null;
-async function actualizarImagenesBase(lista) {
-  const sel = $("#imagenBase");
-  const actual = sel.value;
-  if (productosShopify === null && estadoApp.shopify) productosShopify = await api("/api/shopify/productos").catch(() => []);
-  const imagenes = lista.filter((m) => m.tipo === "imagen" && m.estado === "lista");
-  sel.innerHTML = `<option value="">Sin imagen de partida</option>` +
-    imagenes.map((m) => `<option value="id:${m.id}">Imagen #${m.id}: ${esc(m.prompt.slice(0, 50))}</option>`).join("") +
-    (productosShopify || []).filter((p) => p.imagen_url).map((p) => `<option value="url:${esc(p.imagen_url)}">Producto: ${esc(p.titulo)}</option>`).join("");
-  sel.value = actual;
-}
-
-document.querySelectorAll('[name="tipo"]').forEach((r) => r.addEventListener("change", () => {
-  const video = document.querySelector('[name="tipo"]:checked').value === "video";
-  $("#imagenBase").hidden = !video;
-  $("#textoVideo").hidden = !video;
-  $("#formato").value = video ? "9:16" : "1:1";
-}));
-
-$("#galeria").addEventListener("click", (e) => {
-  const id = e.target.dataset.animar;
-  if (!id) return;
-  e.preventDefault();
-  document.querySelector('[name="tipo"][value="video"]').checked = true;
-  document.querySelector('[name="tipo"][value="video"]').dispatchEvent(new Event("change"));
-  $("#imagenBase").value = `id:${id}`;
-  $("#promptEstudio").focus();
-  aviso("Describe el movimiento que quieres y pulsa Generar");
-});
-
-$("#mejorarPrompt").addEventListener("click", async (e) => {
-  const idea = $("#promptEstudio").value.trim();
-  if (!idea) return aviso("Escribe primero tu idea");
-  e.target.disabled = true; $("#avisoEstudio").textContent = "Jarvis está escribiendo el prompt…";
-  try {
-    const tipo = document.querySelector('[name="tipo"]:checked').value;
-    $("#promptEstudio").value = (await api("/api/media/mejorar-prompt", { method: "POST", body: { idea, tipo } })).prompt;
-  } catch (err) { aviso(err.message); }
-  e.target.disabled = false; $("#avisoEstudio").textContent = "";
-});
-
-$("#formEstudio").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const f = Object.fromEntries(new FormData(e.target));
-  const boton = e.target.querySelector('[type="submit"]');
-  boton.disabled = true;
-  $("#avisoEstudio").textContent = f.tipo === "imagen" ? "Generando imagen…" : "Enviando vídeo a generar…";
-  try {
-    if (f.tipo === "imagen") {
-      const m = await api("/api/media/imagen", { method: "POST", body: { prompt: f.prompt, formato: f.formato } });
-      if (m.estado === "error") aviso(m.error);
-    } else {
-      const base = f.imagen_base || "";
-      await api("/api/media/video", { method: "POST", body: {
-        prompt: f.prompt, texto: f.texto || "", formato: f.formato,
-        imagen_base_id: base.startsWith("id:") ? Number(base.slice(3)) : null,
-        imagen_url: base.startsWith("url:") ? base.slice(4) : null,
-      } });
-      aviso("Vídeo en marcha. Te aparecerá aquí cuando esté listo.");
-    }
-  } catch (err) { aviso(err.message); }
-  boton.disabled = false; $("#avisoEstudio").textContent = "";
-  cargarMedia();
-});
-
-setInterval(() => { if (hayPendientes) cargarMedia(); }, 6000);
-
 /* ================================================================ Memoria */
 async function cargarMemoria() {
   const m = await api("/api/memoria");
@@ -281,11 +231,9 @@ $("#listaMemoria").addEventListener("click", async (e) => {
 /* ================================================================ Chat */
 const NOMBRES_ACCION = {
   panorama_general: "repaso general", registrar_movimiento: "dinero apuntado", resumen_dinero: "consulta de dinero",
-  borrar_movimiento: "movimiento borrado", registrar_vicio: "vicio apuntado", configurar_vicio: "vicio configurado",
-  estado_vicios: "consulta de vicios", crear_tarea: "tarea creada", completar_tarea: "tarea actualizada",
+  borrar_movimiento: "movimiento borrado", registrar_habito: "hábito apuntado", configurar_habito: "hábito configurado",
+  estado_habitos: "consulta de hábitos", crear_tarea: "tarea creada", completar_tarea: "tarea actualizada",
   listar_tareas: "consulta de tareas", borrar_tarea: "tarea borrada", recordar: "guardado en memoria", olvidar: "recuerdo borrado",
-  generar_imagen: "imagen generada", generar_video: "vídeo en marcha", estado_contenido: "estado de contenido",
-  shopify_productos: "productos de Shopify", shopify_ventas: "ventas de Shopify",
 };
 
 function mensaje(quien, texto, extra = {}) {
@@ -297,15 +245,6 @@ function mensaje(quien, texto, extra = {}) {
     a.className = "acciones";
     a.textContent = "⚙ " + [...new Set(extra.acciones.map((x) => NOMBRES_ACCION[x] || x))].join(" · ");
     div.appendChild(a);
-  }
-  for (const c of extra.contenidos || []) {
-    if (c.estado === "lista" && c.tipo === "imagen") {
-      div.insertAdjacentHTML("beforeend", `<a href="/media/${esc(c.archivo)}" target="_blank"><img src="/media/${esc(c.archivo)}" alt=""></a>`);
-    } else if (c.tipo === "video") {
-      div.insertAdjacentHTML("beforeend", `<span class="acciones">🎬 Vídeo #${c.id} generándose: lo verás en la pestaña Estudio.</span>`);
-    } else if (c.estado === "error") {
-      div.insertAdjacentHTML("beforeend", `<span class="acciones negativo">✕ ${esc(c.error)}</span>`);
-    }
   }
   $("#chat").appendChild(div);
   $("#chat").scrollTop = $("#chat").scrollHeight;
@@ -327,7 +266,6 @@ async function enviar(texto) {
   mensaje("jarvis", r.texto, r);
   ocupado = false;
   if (r.acciones?.length) refrescar();
-  if (r.contenidos?.length) cargarMedia();
   if ($("#leerRespuestas").checked) voz.decir(r.texto, () => voz.trasResponder());
   else voz.trasResponder();
 }
@@ -569,6 +507,6 @@ $("#selectorVoz").addEventListener("change", (e) => {
   document.querySelector(`.tab[data-seccion="${pestana}"]`)?.click();
   if (!$("#chat").children.length) {
     mensaje("jarvis", `A su servicio${estadoApp.usuario ? ", " + estadoApp.usuario : ""}. Puedes hablarme pulsando el círculo, `
-      + "activar el modo manos libres o escribirme. Cuéntame cuánto dinero tienes ahora mismo y empezamos.");
+      + "activar el modo manos libres o escribirme. Dime qué hábito quieres empezar o cuál quieres dejar, y empezamos.");
   }
 })();

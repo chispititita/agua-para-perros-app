@@ -1,6 +1,6 @@
 """Cerebro gratuito y sin claves: un modelo de IA que corre en tu propio ordenador con Ollama (https://ollama.com).
 
-Usa las mismas herramientas que la versión con Claude (dinero, vicios, tareas, memoria, contenidos, Shopify).
+Usa las mismas herramientas que la versión con Claude (hábitos, dinero, tareas y memoria).
 """
 import json
 import os
@@ -114,7 +114,7 @@ class SesionLocal:
     def _turno(self, texto: str) -> dict:
         inicio = len(self.mensajes)
         self.mensajes.append({"role": "user", "content": f"[{db.fecha_legible()}] {texto}"})
-        acciones, contenidos = [], []
+        acciones = []
         try:
             for _ in range(MAX_PASOS):
                 msg = _chat([{"role": "system", "content": self.sistema}] + self.mensajes)
@@ -124,13 +124,13 @@ class SesionLocal:
                 if not llamadas:
                     self._recortar()
                     return {"texto": _limpiar(msg.get("content")) or "Hecho.",
-                            "acciones": acciones, "contenidos": contenidos}
+                            "acciones": acciones}
                 for nombre, args in llamadas:
-                    salida, _ = brain.ejecutar_y_anotar(nombre, args, acciones, contenidos)
+                    salida, _ = brain.ejecutar_y_anotar(nombre, args, acciones)
                     self.mensajes.append({"role": "tool", "content": salida, "tool_name": nombre})
             self._recortar()
             return {"texto": "Me he liado con demasiados pasos. ¿Me lo repites de otra forma?",
-                    "acciones": acciones, "contenidos": contenidos}
+                    "acciones": acciones}
         except requests.ConnectionError:
             del self.mensajes[inicio:]
             return {"texto": "No encuentro mi cerebro local. Abre la aplicación Ollama y vuelve a intentarlo.",
@@ -138,9 +138,3 @@ class SesionLocal:
         except (requests.RequestException, RuntimeError, KeyError, ValueError) as err:
             del self.mensajes[inicio:]
             return {"texto": f"Ha fallado la IA local: {err}", "error": True}
-
-
-def completar(sistema: str, texto: str) -> str:
-    """Una respuesta simple, sin herramientas (para mejorar prompts)."""
-    msg = _chat([{"role": "system", "content": sistema}, {"role": "user", "content": texto}], herramientas=False)
-    return _limpiar(msg.get("content"))

@@ -1,4 +1,4 @@
-"""JARVIS — coach de vida, finanzas, vicios, tareas y estudio de contenido para tu tienda Shopify.
+"""JARVIS — coach de vida por voz: hábitos, dinero y tareas.
 
 Ejecuta:  python jarvis.py
 y se abrirá la aplicación en una ventana de Chrome/Edge (necesario para hablar por voz).
@@ -20,8 +20,6 @@ from flask import Flask, jsonify, request, send_from_directory  # noqa: E402
 
 import brain  # noqa: E402
 import db  # noqa: E402
-import media  # noqa: E402
-import shopify  # noqa: E402
 
 app = Flask(__name__, static_folder=str(BASE / "static"), static_url_path="/static")
 sesion = None
@@ -47,11 +45,6 @@ def inicio():
     return send_from_directory(app.static_folder, "index.html")
 
 
-@app.get("/media/<path:nombre>")
-def archivo_media(nombre):
-    return send_from_directory(db.MEDIA_DIR, nombre)
-
-
 @app.get("/api/estado")
 def estado():
     if brain.usar_claude():
@@ -61,10 +54,7 @@ def estado():
         cerebro = cerebro_local.estado()
     return jsonify({
         "cerebro": cerebro,
-        "media": media.modo(),
-        "shopify": shopify.disponible(),
         "usuario": os.getenv("USUARIO_NOMBRE", ""),
-        "tienda": os.getenv("TIENDA_NOMBRE", ""),
         "palabra_clave": os.getenv("PALABRA_ACTIVACION", "jarvis"),
     })
 
@@ -115,33 +105,37 @@ def borrar_movimiento(mov_id):
     return jsonify({"ok": db.borrar_movimiento(mov_id)})
 
 
-# ---------------------------------------------------------------- Vicios
+# ---------------------------------------------------------------- Hábitos
 
-@app.get("/api/vicios")
-def vicios():
-    return jsonify(db.estado_vicios())
+@app.get("/api/habitos")
+def habitos():
+    return jsonify(db.estado_habitos())
 
 
-@app.post("/api/vicios")
-def configurar_vicio():
+@app.post("/api/habitos")
+def configurar_habito():
     d = _json()
     if not (d.get("nombre") or "").strip():
         return _error("Falta el nombre")
     num = lambda k: float(d[k]) if d.get(k) not in (None, "") else None
-    return jsonify(db.configurar_vicio(d["nombre"], num("limite_diario"), num("coste_unidad"), d.get("objetivo")))
+    try:
+        return jsonify(db.configurar_habito(d["nombre"], d.get("tipo") or None, num("meta_diaria"),
+                                            num("coste_unidad"), d.get("objetivo")))
+    except ValueError as e:
+        return _error(str(e))
 
 
-@app.post("/api/vicios/registrar")
-def registrar_vicio():
+@app.post("/api/habitos/registrar")
+def registrar_habito():
     d = _json()
     if not (d.get("nombre") or "").strip():
         return _error("Falta el nombre")
-    return jsonify(db.registrar_vicio(d["nombre"], float(d.get("cantidad") or 1), d.get("nota") or ""))
+    return jsonify(db.registrar_habito(d["nombre"], float(d.get("cantidad") or 1), d.get("nota") or ""))
 
 
-@app.delete("/api/vicios/<int:vicio_id>")
-def borrar_vicio(vicio_id):
-    return jsonify({"ok": db.borrar_vicio(vicio_id)})
+@app.delete("/api/habitos/<int:habito_id>")
+def borrar_habito(habito_id):
+    return jsonify({"ok": db.borrar_habito(habito_id)})
 
 
 # ---------------------------------------------------------------- Tareas
@@ -182,57 +176,6 @@ def borrar_memoria(mem_id):
     return jsonify({"ok": db.olvidar(mem_id)})
 
 
-# ---------------------------------------------------------------- Estudio (imágenes y vídeos)
-
-@app.get("/api/media")
-def lista_media():
-    return jsonify(db.listar_media())
-
-
-@app.post("/api/media/imagen")
-def nueva_imagen():
-    d = _json()
-    if not (d.get("prompt") or "").strip():
-        return _error("Falta la descripción")
-    try:
-        return jsonify(media.generar_imagen(d["prompt"].strip(), d.get("formato") or "1:1"))
-    except RuntimeError as e:
-        return _error(str(e))
-
-
-@app.post("/api/media/video")
-def nuevo_video():
-    d = _json()
-    if not (d.get("prompt") or "").strip():
-        return _error("Falta la descripción")
-    try:
-        return jsonify(media.generar_video(d["prompt"].strip(), d.get("imagen_base_id") or None,
-                                           d.get("imagen_url") or None, d.get("texto") or "",
-                                           d.get("formato") or "9:16"))
-    except (RuntimeError, ValueError) as e:
-        return _error(str(e))
-
-
-@app.post("/api/media/mejorar-prompt")
-def mejorar_prompt():
-    d = _json()
-    idea = (d.get("idea") or "").strip()
-    if not idea:
-        return _error("Escribe primero tu idea")
-    try:
-        return jsonify({"prompt": brain.mejorar_prompt(idea, d.get("tipo") or "imagen")})
-    except Exception as e:
-        return _error(f"No se pudo mejorar el prompt: {e}", 502)
-
-
-@app.get("/api/shopify/productos")
-def productos_shopify():
-    try:
-        return jsonify(shopify.productos())
-    except Exception as e:
-        return _error(str(e), 502)
-
-
 # ---------------------------------------------------------------- Arranque
 
 def _abrir_ventana(url: str) -> None:
@@ -258,7 +201,6 @@ def _abrir_ventana(url: str) -> None:
 
 def main() -> None:
     db.init()
-    db.media_colgada_a_error()
     puerto = int(os.getenv("PUERTO", "5757"))
     url = f"http://127.0.0.1:{puerto}"
     if brain.usar_claude():
