@@ -89,14 +89,16 @@ TOOLS = [
                      "description": "1:1 feed, 4:5 post Instagram, 9:16 stories/reels/TikTok, 16:9 banner web"}},
          "required": ["prompt"]}},
     {"name": "generar_video",
-     "description": "Genera un vídeo corto con IA (anuncio, reel, TikTok). Prompt en INGLÉS describiendo la acción y "
-                    "el movimiento de cámara. Puede partir de una imagen generada antes (imagen_base_id) o de la "
-                    "foto de un producto de Shopify (imagen_url). Tarda varios minutos: se genera en segundo plano "
-                    "y aparecerá en el Estudio.",
+     "description": "Genera un vídeo corto (anuncio, reel, TikTok). Prompt en INGLÉS describiendo la escena y el "
+                    "movimiento de cámara. Puede partir de una imagen generada antes (imagen_base_id) o de la "
+                    "foto de un producto de Shopify (imagen_url). 'texto' es un gancho corto en español que se "
+                    "sobreimprime en el vídeo. Se genera en segundo plano y aparecerá en el Estudio.",
      "input_schema": {"type": "object", "properties": {
          "prompt": {"type": "string"},
          "imagen_base_id": {"type": "integer"},
-         "imagen_url": {"type": "string"}},
+         "imagen_url": {"type": "string"},
+         "texto": {"type": "string", "description": "Texto grande en pantalla, máx. 8 palabras"},
+         "formato": {"type": "string", "enum": list(media.FORMATOS), "description": "Por defecto 9:16"}},
          "required": ["prompt"]}},
     {"name": "estado_contenido",
      "description": "Consulta si una imagen o vídeo generado ya está listo.",
@@ -142,7 +144,8 @@ def _ejecutar_herramienta(nombre: str, e: dict):
     if nombre == "generar_imagen":
         return media.generar_imagen(e["prompt"], e.get("formato", "1:1"))
     if nombre == "generar_video":
-        return media.generar_video(e["prompt"], e.get("imagen_base_id"), e.get("imagen_url"))
+        return media.generar_video(e["prompt"], e.get("imagen_base_id"), e.get("imagen_url"),
+                                   e.get("texto") or "", e.get("formato") or "9:16")
     if nombre == "estado_contenido":
         return db.obtener_media(e["id"]) or {"error": "No existe ese contenido"}
     if nombre == "shopify_productos":
@@ -150,6 +153,34 @@ def _ejecutar_herramienta(nombre: str, e: dict):
     if nombre == "shopify_ventas":
         return shopify.ventas(e.get("dias") or 7)
     raise ValueError(f"Herramienta desconocida: {nombre}")
+
+
+def ejecutar_y_anotar(nombre: str, entrada: dict, acciones: list, contenidos: list) -> tuple[str, bool]:
+    """Ejecuta una herramienta, anota la acción y devuelve (resultado en JSON, hubo_error)."""
+    acciones.append(nombre)
+    try:
+        salida = _ejecutar_herramienta(nombre, entrada or {})
+        if nombre in ("generar_imagen", "generar_video") and isinstance(salida, dict):
+            contenidos.append(salida)
+        return json.dumps(salida, ensure_ascii=False, default=str), False
+    except Exception as err:
+        return f"Error: {err}", True
+
+
+def usar_claude() -> bool:
+    return bool(os.getenv("ANTHROPIC_API_KEY", "").strip())
+
+
+def nueva_sesion():
+    """Con clave de Claude usa Claude; si no, la IA local gratuita (Ollama)."""
+    if usar_claude():
+        return Sesion()
+    import cerebro_local
+    return cerebro_local.SesionLocal()
+
+
+def prompt_sistema() -> str:
+    return _prompt_sistema()
 
 
 def _prompt_sistema() -> str:
@@ -183,7 +214,7 @@ Lo que recuerdas de {usuario} (id entre corchetes):
 
 
 class Sesion:
-    """Conversación en curso. El historial solo crece (se envía tal cual a Claude en cada turno)."""
+    """Conversación en curso con Claude. El historial solo crece (se envía tal cual en cada turno)."""
 
     def __init__(self):
         self.cliente = None
@@ -232,16 +263,9 @@ class Sesion:
                 for bloque in resp.content:
                     if bloque.type != "tool_use":
                         continue
-                    acciones.append(bloque.name)
-                    try:
-                        salida = _ejecutar_herramienta(bloque.name, bloque.input)
-                        if bloque.name in ("generar_imagen", "generar_video") and isinstance(salida, dict):
-                            contenidos.append(salida)
-                        resultados.append({"type": "tool_result", "tool_use_id": bloque.id,
-                                           "content": json.dumps(salida, ensure_ascii=False, default=str)})
-                    except Exception as err:
-                        resultados.append({"type": "tool_result", "tool_use_id": bloque.id,
-                                           "content": f"Error: {err}", "is_error": True})
+                    salida, es_error = ejecutar_y_anotar(bloque.name, bloque.input, acciones, contenidos)
+                    resultados.append({"type": "tool_result", "tool_use_id": bloque.id,
+                                       "content": salida, "is_error": es_error})
                 self.mensajes.append({"role": "user", "content": resultados})
             return {"texto": "Me he liado con demasiados pasos. ¿Me lo repites de otra forma?",
                     "acciones": acciones, "contenidos": contenidos}
@@ -266,10 +290,20 @@ class Sesion:
             raise
 
 
-def mejorar_prompt(idea: str, tipo: str) -> str:
-    """Convierte una idea en español en un prompt profesional en inglés para el generador de imagen o vídeo."""
+def instrucciones_prompt(tipo: str) -> str:
     tienda = os.getenv("TIENDA_NOMBRE", "").strip()
     desc = os.getenv("TIENDA_DESCRIPCION", "").strip()
+    return (f"Escribes prompts para generadores de {'vídeo' if tipo == 'video' else 'imagen'} con IA, para "
+            f"anuncios de la tienda online «{tienda}» ({desc}). Devuelve SOLO el prompt, en inglés, "
+            "en un único párrafo muy visual: sujeto, escena, iluminación, estilo, encuadre"
+            f"{' y movimiento de cámara' if tipo == 'video' else ''}. Sin comillas ni explicaciones.")
+
+
+def mejorar_prompt(idea: str, tipo: str) -> str:
+    """Convierte una idea en español en un prompt profesional en inglés para el generador de imagen o vídeo."""
+    if not usar_claude():
+        import cerebro_local
+        return cerebro_local.completar(instrucciones_prompt(tipo), idea) or idea
     resp = anthropic.Anthropic().beta.messages.create(
         model=MODELO,
         max_tokens=4000,
@@ -277,10 +311,7 @@ def mejorar_prompt(idea: str, tipo: str) -> str:
         output_config={"effort": "low"},
         betas=BETAS,
         fallbacks="default",
-        system=(f"Escribes prompts para generadores de {'vídeo' if tipo == 'video' else 'imagen'} con IA, para "
-                f"anuncios de la tienda online «{tienda}» ({desc}). Devuelve SOLO el prompt, en inglés, "
-                "en un único párrafo muy visual: sujeto, escena, iluminación, estilo, encuadre"
-                f"{' y movimiento de cámara' if tipo == 'video' else ''}. Sin comillas ni explicaciones."),
+        system=instrucciones_prompt(tipo),
         messages=[{"role": "user", "content": idea}],
     )
     if resp.stop_reason == "refusal":

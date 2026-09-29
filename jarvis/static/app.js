@@ -50,12 +50,16 @@ function refrescar(seccion) {
 let estadoApp = {};
 async function cargarEstado() {
   estadoApp = await api("/api/estado");
-  const filas = [["claude", "Cerebro (Claude)"], ["replicate", "Imagen / vídeo"], ["shopify", "Shopify"]];
-  $("#conexiones").innerHTML = filas.map(([k, n]) => `<div><span class="punto ${estadoApp[k] ? "ok" : ""}"></span>${n}</div>`).join("");
-  $("#detalleConexiones").innerHTML = filas.map(([k, n]) =>
-    `<div class="interruptor"><span class="punto ${estadoApp[k] ? "ok" : ""}"></span>${n}: ${estadoApp[k] ? "conectado" : "sin configurar"}</div>`).join("");
+  const filas = [
+    ["Cerebro", estadoApp.cerebro.ok, estadoApp.cerebro.motivo],
+    ["Imagen / vídeo", true, estadoApp.media],
+    ["Shopify", estadoApp.shopify, estadoApp.shopify ? "conectado" : "sin configurar (opcional)"],
+  ];
+  $("#conexiones").innerHTML = filas.map(([n, ok, det]) => `<div title="${esc(det)}"><span class="punto ${ok ? "ok" : ""}"></span>${n}</div>`).join("");
+  $("#detalleConexiones").innerHTML = filas.map(([n, ok, det]) =>
+    `<div class="interruptor"><span class="punto ${ok ? "ok" : ""}"></span>${n}: ${esc(det)}</div>`).join("");
   $("#palabraClave").textContent = capitalizar(estadoApp.palabra_clave || "jarvis");
-  if (!estadoApp.claude) mensaje("jarvis", "Me falta la clave de Claude (ANTHROPIC_API_KEY) en el archivo .env para poder pensar. Mira el README.", { error: true });
+  if (!estadoApp.cerebro.ok) mensaje("jarvis", "Todavía no puedo pensar: " + estadoApp.cerebro.motivo + ". Mira el README.", { error: true });
 }
 const capitalizar = (t) => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -211,8 +215,9 @@ async function actualizarImagenesBase(lista) {
 
 document.querySelectorAll('[name="tipo"]').forEach((r) => r.addEventListener("change", () => {
   const video = document.querySelector('[name="tipo"]:checked').value === "video";
-  $("#formato").hidden = video;
   $("#imagenBase").hidden = !video;
+  $("#textoVideo").hidden = !video;
+  $("#formato").value = video ? "9:16" : "1:1";
 }));
 
 $("#galeria").addEventListener("click", (e) => {
@@ -250,7 +255,7 @@ $("#formEstudio").addEventListener("submit", async (e) => {
     } else {
       const base = f.imagen_base || "";
       await api("/api/media/video", { method: "POST", body: {
-        prompt: f.prompt,
+        prompt: f.prompt, texto: f.texto || "", formato: f.formato,
         imagen_base_id: base.startsWith("id:") ? Number(base.slice(3)) : null,
         imagen_url: base.startsWith("url:") ? base.slice(4) : null,
       } });

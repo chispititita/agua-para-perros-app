@@ -17,31 +17,38 @@ Todos tus datos se guardan **solo en tu ordenador** (carpeta `data/`).
 
 ## 1. Instalar (una sola vez)
 
+**No necesitas ninguna clave ni pagar nada.**
+
 1. Instala **Python** desde <https://www.python.org/downloads/>.
    En Windows, marca la casilla **«Add Python to PATH»** en el instalador.
-2. Instala **Google Chrome** o usa **Microsoft Edge** (son los navegadores que permiten hablar por voz).
-3. Descarga esta carpeta `jarvis` a tu ordenador.
+2. Usa **Google Chrome** o **Microsoft Edge** (son los navegadores que permiten hablar por voz).
+3. Pon la carpeta `jarvis` en tu Escritorio.
 
-## 2. Conseguir las claves
-
-Jarvis usa estos servicios (se pagan por uso, normalmente céntimos por conversación o imagen):
-
-| Para qué | Dónde conseguirla | ¿Obligatoria? |
-|---|---|---|
-| El cerebro de Jarvis (Claude) | <https://platform.claude.com/> → API Keys | **Sí** |
-| Crear imágenes y vídeos | <https://replicate.com/account/api-tokens> | Para el Estudio |
-| Leer productos y ventas de Shopify | Panel de Shopify → Configuración → Apps y canales de venta → Desarrollar apps → Crear app → permisos `read_products` y `read_orders` → Instalar → copia el «Admin API access token» | Opcional |
-
-## 3. Arrancar
+## 2. Arrancar
 
 - **Windows**: doble clic en `iniciar.bat`.
 - **Mac**: doble clic en `iniciar.command` (si macOS lo bloquea: clic derecho → Abrir).
 
-La primera vez instala lo necesario y abre el archivo `.env` para que pegues tus claves.
-Guárdalo, cierra el Bloc de notas y Jarvis se abrirá en su propia ventana.
-Cuando te pida permiso para el **micrófono**, dale a «Permitir».
+La primera vez tarda un rato porque se descarga solo:
+- **Ollama**, un programa gratuito que hace funcionar la IA **dentro de tu ordenador**.
+  Si no se instala solo, descárgalo de <https://ollama.com/download> y vuelve a abrir Jarvis.
+- El **cerebro de Jarvis** (modelo `qwen2.5:7b`, unos 5 GB).
 
-> Para cambiar las claves más adelante, edita el archivo `.env` y vuelve a abrir Jarvis.
+Después, Jarvis se abre en su propia ventana. Cuando te pida permiso para el **micrófono**, dale a «Permitir».
+
+**¿Qué ordenador hace falta?** Para el cerebro local, al menos **8 GB de RAM** (con 16 GB va más fluido;
+con tarjeta gráfica, mucho más rápido). Si va lento, abre el archivo `.env` y cambia
+`MODELO_LOCAL=qwen2.5:7b` por `MODELO_LOCAL=qwen2.5:3b` (más rápido, algo menos listo).
+
+## 3. Qué es gratis y qué es opcional
+
+| Parte | Gratis, sin claves | Mejora opcional (de pago por uso, con clave en `.env`) |
+|---|---|---|
+| Cerebro / conversación | IA local en tu PC (Ollama) | `ANTHROPIC_API_KEY` → Claude, mucho más listo |
+| Imágenes | Servicio gratuito Pollinations (necesita internet) | `REPLICATE_API_TOKEN` → modelos de Replicate |
+| Vídeos | Montaje en tu PC: zoom cinematográfico + texto grande, formato reel | `REPLICATE_API_TOKEN` → vídeo generado por IA |
+| Voz | Reconocimiento y voz del navegador | — |
+| Shopify | — | `SHOPIFY_TIENDA` + `SHOPIFY_TOKEN` para leer productos y ventas |
 
 ## 4. Cómo usarlo
 
@@ -69,19 +76,23 @@ Pulsa el círculo mientras habla para interrumpirle.
   y que tengas internet (el reconocimiento de voz del navegador funciona en línea).
 - **La voz suena rara**: elige otra voz en el desplegable bajo el círculo (en Windows suelen ir bien
   «Microsoft Pablo» o «Google español»).
-- **Quiero otro modelo de vídeo o imagen**: cambia `MODELO_VIDEO` / `MODELO_IMAGEN` en `.env`
+- **«Todavía no puedo pensar»**: abre la aplicación Ollama (o vuelve a abrir `iniciar.bat` / `iniciar.command`).
+- **Responde lento**: es normal en ordenadores sin tarjeta gráfica. Usa `qwen2.5:3b` (ver arriba) o pon una clave de Claude.
+- **No me salen las imágenes**: el servicio gratuito necesita internet y a veces está saturado; espera un minuto.
+- **Quiero otro modelo de vídeo o imagen de pago**: cambia `MODELO_VIDEO` / `MODELO_IMAGEN` en `.env`
   por cualquier modelo de <https://replicate.com>. Si el modelo de vídeo usa otro nombre para la imagen
   de partida, cámbialo en `MODELO_VIDEO_CLAVE_IMAGEN` (lo verás en la pestaña «API» de la página del modelo).
-- **Quiero que piense más a fondo**: pon `ESFUERZO_CLAUDE=medium` en `.env` (responderá algo más lento).
+- **Quiero que piense más a fondo** (solo con Claude): pon `ESFUERZO_CLAUDE=medium` en `.env`.
 - **Copia de seguridad**: copia la carpeta `data/`.
 
 ## Para quien quiera tocar el código
 
 ```
 jarvis.py      servidor local (Flask) y arranque de la ventana
-brain.py       cerebro: Claude con herramientas (dinero, vicios, tareas, memoria, contenidos, Shopify)
+brain.py       herramientas del asistente + cerebro con Claude (si hay clave)
+cerebro_local.py  cerebro gratuito con Ollama (sin clave)
 db.py          base de datos SQLite local
-media.py       imágenes y vídeos con Replicate
+media.py       imágenes (Pollinations gratis o Replicate) y vídeos (montaje local con ffmpeg o Replicate)
 shopify.py     lectura de productos y pedidos (Admin API GraphQL)
 static/        interfaz y control por voz (Web Speech API)
 ```

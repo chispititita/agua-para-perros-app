@@ -24,13 +24,13 @@ import media  # noqa: E402
 import shopify  # noqa: E402
 
 app = Flask(__name__, static_folder=str(BASE / "static"), static_url_path="/static")
-sesion: brain.Sesion | None = None
+sesion = None
 
 
-def _sesion() -> brain.Sesion:
+def _sesion():
     global sesion
     if sesion is None:
-        sesion = brain.Sesion()
+        sesion = brain.nueva_sesion()
     return sesion
 
 
@@ -54,9 +54,14 @@ def archivo_media(nombre):
 
 @app.get("/api/estado")
 def estado():
+    if brain.usar_claude():
+        cerebro = {"ok": True, "motivo": "Claude (con clave)"}
+    else:
+        import cerebro_local
+        cerebro = cerebro_local.estado()
     return jsonify({
-        "claude": bool(os.getenv("ANTHROPIC_API_KEY", "").strip()),
-        "replicate": media.disponible(),
+        "cerebro": cerebro,
+        "media": media.modo(),
         "shopify": shopify.disponible(),
         "usuario": os.getenv("USUARIO_NOMBRE", ""),
         "tienda": os.getenv("TIENDA_NOMBRE", ""),
@@ -202,7 +207,8 @@ def nuevo_video():
         return _error("Falta la descripción")
     try:
         return jsonify(media.generar_video(d["prompt"].strip(), d.get("imagen_base_id") or None,
-                                           d.get("imagen_url") or None))
+                                           d.get("imagen_url") or None, d.get("texto") or "",
+                                           d.get("formato") or "9:16"))
     except (RuntimeError, ValueError) as e:
         return _error(str(e))
 
@@ -255,8 +261,12 @@ def main() -> None:
     db.media_colgada_a_error()
     puerto = int(os.getenv("PUERTO", "5757"))
     url = f"http://127.0.0.1:{puerto}"
-    if not os.getenv("ANTHROPIC_API_KEY", "").strip():
-        print("AVISO: falta ANTHROPIC_API_KEY en el archivo .env; Jarvis no podrá pensar ni hablar.")
+    if brain.usar_claude():
+        print("Cerebro: Claude (clave encontrada en .env)")
+    else:
+        import cerebro_local
+        e = cerebro_local.estado()
+        print(f"Cerebro: IA local gratuita — {e['motivo']}")
     print(f"JARVIS en marcha en {url}  (cierra esta ventana para apagarlo)")
     if "--sin-ventana" not in sys.argv:
         threading.Timer(1.2, _abrir_ventana, args=(url,)).start()
